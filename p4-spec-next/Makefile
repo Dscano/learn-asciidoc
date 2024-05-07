@@ -1,8 +1,8 @@
 
 SPEC=P4-16-spec
 
-#all: ${SPEC}.pdf ${SPEC}.html
-all: ${SPEC}.pdf
+all: ${SPEC}.pdf ${SPEC}.html
+#all: ${SPEC}.pdf
 
 grammar.trimmed.adoc: grammar.adoc trim-asciidoc-tag-comments.py
 	./trim-asciidoc-tag-comments.py $< > $@

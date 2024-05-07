@@ -1789,7 +1789,7 @@ Boolean values are not integers or bit-strings.
 The type `string` represents strings.  There are no operations on
 string values; one cannot declare variables with a `string` type.
 Parameters with type `string` can be only directionless (see
-<<_calling_convention_call_by_copy_in_copy_out>>).
+<<_calling_convention_call_by_copy_incopy_out>>).
 P4 does not support string manipulation
 in the dataplane; the `string` type is only allowed for denoting
 compile-time constant string values.  These may be useful, for
@@ -1974,7 +1974,7 @@ with type `int` for other callable entities of a program,
 e.g. controls, parsers, or functions, must be directionless,
 indicating that all calls must provide a compile-time known value as
 an argument for such a parameter.  See
-<<_calling_convention_call_by_copy_in_copy_out>> for more details on directionless
+<<_calling_convention_call_by_copy_incopy_out>> for more details on directionless
 parameters.
 
 ===== Integer literal types
@@ -3041,7 +3041,7 @@ side-effects. P4 expressions are evaluated as follows:
 * All other expressions are evaluated left-to-right as they appear in
   the source program.
 * Method and function calls are evaluated as described in
-  <<_calling_convention_call_by_copy_in_copy_out>>.
+  <<_calling_convention_call_by_copy_incopy_out>>.
 
 === Operations on `error` types
 
@@ -4681,7 +4681,7 @@ f(y = ya, x = xa);  // match arguments by name in any order
 //f(x = xa, y = 0);  -- error: y must be a left-value
 ----
 
-The calling convention is copy-in/copy-out (<<_calling_convention_call_by_copy_in_copy_out>>).  For generic functions the type arguments
+The calling convention is copy-in/copy-out (<<_calling_convention_call_by_copy_incopy_out>>).  For generic functions the type arguments
 can be explicitly specified in the function call. The compiler only
 inserts implicit casts for direction `in` arguments to methods or
 functions as described in <<_casts>>.  The types for all
@@ -5109,7 +5109,7 @@ include::grammar.adoc[tag=optInitializer]
 
 Variable declarations without an initializer are uninitialized (except for
 headers and other header-related types, which are initialized to invalid in the
-same way as described for direction `out` parameters in <<_calling_convention_call_by_copy_in_copy_out>>). The language places few restrictions on
+same way as described for direction `out` parameters in <<_calling_convention_call_by_copy_incopy_out>>). The language places few restrictions on
 the types of the variables: most P4 types that can be written
 explicitly can be used (e.g., base types, `struct`, `header`,
 header stack, `tuple`). However, it is impossible to declare variables with type `int`,
@@ -5319,7 +5319,7 @@ this case the type of the expression must match the return type of the
 function.  Any copy-out behavior due to direction `out` or `inout`
 parameters of the enclosing `action`, `function`, or `control` are
 still performed after the execution of the `return` statement.  See
-<<_calling_convention_call_by_copy_in_copy_out>> for details on copy-out behavior.
+<<_calling_convention_call_by_copy_incopy_out>> for details on copy-out behavior.
 
 [source,bison]
 ----
@@ -5336,7 +5336,7 @@ functions.
 
 Any copy-out behavior due to direction `out` or `inout` parameters of
 the enclosing `action` or `control`, and all of its callers, are still
-performed after the execution of the `exit` statement.  See <<_calling_convention_call_by_copy_in_copy_out>> for details on copy-out behavior.
+performed after the execution of the `exit` statement.  See <<_calling_convention_call_by_copy_incopy_out>> for details on copy-out behavior.
 
 [source,bison]
 ----
@@ -8486,7 +8486,7 @@ table t {
 
 Annotation names that start with lowercase letters are reserved for
 the standard library and architecture.  This document pre-defines a
-set of "standard" annotations in <<_appendix_P4_reserved_annotations>>.
+set of "standard" annotations in <<_appendix_p4_reserved_annotations>>.
 We expect that this list will grow.
 We encourage custom architectures to define annotations starting with
 a manufacturer prefix: e.g., an organization named X would use
@@ -8590,7 +8590,7 @@ Various annotations may appear on extern function and method
 declarations to describe limitations on the behavior and interactions
 of those functions.  By default extern functions might have any effect
 on the environment of the P4 program and might interact in non-trivial
-ways (subject to a few limitations -- see <<_calling_convention_call_by_copy_in_copy_out>>).  Since externs are
+ways (subject to a few limitations -- see <<_calling_convention_call_by_copy_incopy_out>>).  Since externs are
 architecture-specific and their behavior is known to the architecture
 definition, these annotations are not strictly necessary (an
 implementation can have knowledge of how externs interact based on
@@ -8676,7 +8676,7 @@ The P4 compiler should provide:
 * Clarified that header stacks are arrays of headers or header unions.
 * Added distinctness of fields for types that have fields including error, match kind, struct, header, and header union.
 * Clarified types `bit<W>`, `int<W>`, and `varbit<W>` encompass the case where the width is a compile-time known expression evaluating to an appropriate integer (<<_unsigned_integers_bit_strings>>, <<_signed_integers>>, <<_dynamically_sized_bit_strings>>).
-* Clarified restrictions for parameters with default values (<<_calling_convention_call_by_copy_in_copy_out>>).
+* Clarified restrictions for parameters with default values (<<_calling_convention_call_by_copy_incopy_out>>).
 * Added optional trailing commas (<<_optional_trailing_commas>>).
 * Clarified the scope of parser namespaces (<<_parser_declarations>>).
 * Specified that algorithm for generating control-plane names for keys is optional (Section [#sec-cp-keys]).
@@ -8716,11 +8716,11 @@ The P4 compiler should provide:
 * Removed structure initializers as they are subsumed by structure-valued expressions (<<_operations_on_structure_valued_expressions>>).
 * Specified operations on values typed as type variables (<<_operations_on_types_that_are_type_variables>>).
 * Clarified semantics of compile-time known values (<<_compile_time_known_values>>).
-* Clarified semantics of directionless parameters (<<_calling_convention_call_by_copy_in_copy_out>>).
+* Clarified semantics of directionless parameters (<<_calling_convention_call_by_copy_incopy_out>>).
 * Clarified semantics of arbitrary precision integers (<<_arbitrary_precision_integers>>).
 * Clarified semantics of bit slices, shifts, and concatenation (<<_operations_on_fixed_width_bit_types_unsigned_integers>>).
 * Clarified semantics of optional parameters (<<_optional_parameters>>).
-* Clarified restrictions on extern method and function invocation (<<_appendix_restrictions_on_compile_time-and_run_time_calls>>).
+* Clarified restrictions on extern method and function invocation (<<_appendix_restrictions_on_compile_time_and_run_time_calls>>).
 * Clarified semantics of implicit casts (<<_implicit_casts>>).
 
 === Summary of changes made in version 1.2.2, released May 17, 2021
@@ -8747,7 +8747,7 @@ The P4 compiler should provide:
 * Added support for default values (<<_default_values>>).
 * Added support for concatenating signed strings (<<_concatenation>>).
 * Added key-value and list-structured annotations (<<_annotations>>).
-* Added `@pure` and `@noSideEffects` annotations (<<_extern_function_method_annotations>>).
+* Added `@pure` and `@noSideEffects` annotations (<<_extern_functionmethod_annotations>>).
 * Added `@noWarn` annotation (<<_no_warnings_annotation>>).
 * Generalized typing for masks to allow serializable ``enum``s (<<_masks>>).
 * Restricted the right operands of bit shifts involving
@@ -8756,7 +8756,7 @@ The P4 compiler should provide:
   statements.
 * Clarified semantics of invalid header stacks (<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>).
 * Clarified initialization semantics (<<_l_values>> and
-  <<_calling_convention_call_by_copy_in_copy_out>>), especially for headers and local
+  <<_calling_convention_call_by_copy_incopy_out>>), especially for headers and local
   variables.
 * Clarified evaluation order for table keys (<<_match_action_unit_execution_semantics>>).
 * Fixed grammar to clarify parsing of right shift operator (`>>`),
@@ -8784,7 +8784,7 @@ The P4 compiler should provide:
 
 * Top-level functions (<<_function_declarations>>)
     - Functions may be declared at the top-level of a P4 program.
-* Optional and named parameters (<<_calling_convention_call_by_copy_in_copy_out>>)
+* Optional and named parameters (<<_calling_convention_call_by_copy_incopy_out>>)
     - Parameters may be specified by name, with a default value, or designated as optional.
 * `enum` representations (<<_operations_on_enum_types>>)
     - `enum` values to be specified with a concrete representation.
@@ -8802,7 +8802,7 @@ The P4 compiler should provide:
     - Meaning of optional `size` property for tables has been defined.
 * Invalid headers (<<_operations_on_headers>>)
     - Clarified semantics of operations on invalid headers.
-* Calling restrictions (<<_appendix_restrictions_on_compile_time-and_run_time_calls>>)
+* Calling restrictions (<<_appendix_restrictions_on_compile_time_and_run_time_calls>>)
     - Added restrictions on kinds of values that may be passed as arguments to calls.
 * Bitwise operator precedence (<<_appendix_p4_grammar>>)
     - Modified precedence conventions so that bitwise operators `&` `|` and `^` have higher precedence than relation operators `<` `>` `<=` `>=`.
@@ -8851,8 +8851,8 @@ TODO: Learn how to insert proper AsciiDoc table here.
 //| `optional`    | parameter is optional                              | <<_optional_parameter_annotations>> |
 //| `tableonly`   | action cannot be a default_action                  | <<_annotations_on_the_table_action_list>> |
 //| `deprecated`  | Construct has been deprecated                      | <<_deprecated_annotation>> |
-//| `pure`        | pure function                                      | <<_extern_function_method_annotations>> |
-//| `noSideEffects` | function with no side effects                    | <<_extern_function_method_annotations>> |
+//| `pure`        | pure function                                      | <<_extern_functionmethod_annotations>> |
+//| `noSideEffects` | function with no side effects                    | <<_extern_functionmethod_annotations>> |
 //| `noWarn`      | Has a string argument; inhibits compiler warnings  | <<_no_warnings_annotation>>       |
 //|---------------|----------------------------------------------------|--------------------------|
 
@@ -9150,7 +9150,7 @@ There may not be any recursion in calls, neither by a thing calling
 itself directly, nor mutual recursion.
 
 An extern can never cause any other type of P4 program object to be
-called.  See <<_calling_convention_call_by_copy_in_copy_out>>.
+called.  See <<_calling_convention_call_by_copy_incopy_out>>.
 
 Actions may be called directly from a control `apply` block.
 

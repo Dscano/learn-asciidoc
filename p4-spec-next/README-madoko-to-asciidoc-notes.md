@@ -147,6 +147,9 @@ characters omitted:
 <<_appendix_p4_reserved_keywords>>
 ```
 
+Note that at at least `:` and `/` characters in the section title are
+omitted, _not_ replaced with an underscore.
+
 If you are not sure, look in the output of `asciidoctor` runs to see
 if there are any warning messages about `possible invalid reference`.
 
