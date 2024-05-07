@@ -184,3 +184,14 @@ code block is split across multiple pages in PDF.
 See here for how AsciiDoc specifies this:
 
 + https://docs.asciidoctor.org/asciidoc/latest/directives/include-tagged-regions/
+
+
+# Tables
+
+TODO: The markup is definitely different in Madoko and AsciiDoc.
+
+
+
+# Footnotes
+
+TOOD: Learn what the AsciiDoc way to describe footnotes is.
