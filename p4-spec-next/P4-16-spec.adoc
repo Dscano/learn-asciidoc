@@ -8064,6 +8064,8 @@ package.  The fully-qualified name of that instance is `main.c.e2`.
 Next, consider a larger example that demonstrates name generation when
 there are multiple instances.
 
+[source,P4]
+----
 control Callee() {
     table t { /* body omitted */ }
     apply { t.apply(); }
