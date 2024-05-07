@@ -1,3 +1,5 @@
+all: trybibtex.html trybibtex.pdf
+
 trybibtex.html: trybibtex.adoc
 	asciidoctor -r asciidoctor-bibtex $<
 

@@ -26,6 +26,10 @@ linux_version_warning() {
     1>&2 echo "virtual machine with one of the tested versions."
 }
 
+get_used_disk_space_in_mbytes() {
+    echo $(df --output=used --block-size=1M . | tail -n 1)
+}
+
 abort_script=0
 
 if [ ! -r /etc/os-release ]
@@ -46,9 +50,9 @@ then
 	    supported_distribution=0
 	    ;;
 	22.04)
-	    supported_distribution=0
+	    supported_distribution=1
 	    ;;
-	23.10)
+	24.04)
 	    supported_distribution=1
 	    ;;
     esac
