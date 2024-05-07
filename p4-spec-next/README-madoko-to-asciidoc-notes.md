@@ -14,6 +14,12 @@ there were # characters, because a single = in AsciiDoc is used to
 mark the title of the entire document.  Thus a "level 1 heading" line
 in AsciiDoc begins with `==`, not `=`.
 
+Put this in the document heading in AsciiDoc to enable section numbering:
+
+```
+:sectnums:
+```
+
 
 # Lists of items
 
@@ -63,6 +69,8 @@ AsciiDoc: The same!  No change needed!
 
 
 # Figure
+
+TODO: Add notes on how to control size of inserted figure.
 
 AsciiDoc:
 ```
@@ -130,3 +138,38 @@ AsciiDoc: TODO
 Madoko: solved problem
 
 AsciiDoc: TODO
+
+
+
+# Code blocks with syntax highlighting
+
+Madoko:
+
+```
+~ Begin P4Example
+control MatchActionPipe<H>(in bit<4> inputPort,
+                           inout H parsedHeaders,
+                           out bit<4> outputPort);
+~ End P4Example
+```
+
+The above required special definition in the header for a `P4Example`
+block.
+
+```
+[source,ruby]
+----
+code block goes here
+----
+```
+
+TODO: Read AsciiDoc docs on how to enable syntax highlighting for P4:
+
++ https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/
+
+TODO: In Section 6.1 "Very Simple Switch Architecture" there are some
+list items with code blocks embedded in the middle of text, and there
+was a special syntax in Madoko to make the text after the code block
+indented inside the list item as the text before the code block was.
+I do not yet know how to do that in AsciiDoc, if it provides a way.
+In Madoko, such lines consist of only the backslash character `\`.
