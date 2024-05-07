@@ -1,0 +1,20 @@
+= The Dangers of Wolpertingers
+:url-wolpertinger: https://en.wikipedia.org/wiki/Wolpertinger
+:bibtex-file: packet-classification.bib
+
+Don't worry about gumberoos or splintercats.
+Something far more fearsome plagues the days, nights, and inbetweens.
+Wolpertingers.
+
+== Origins
+
+Wolpertingers are {url-wolpertinger}[ravenous beasts].
+
+== Testing citations within a BibTex file using `asciidoctor-bibtex`
+
+Taylor et al cite:[TT2007] wrote a paper on a system called
+ClassBench.
+
+== References
+
+bibliography::[]
