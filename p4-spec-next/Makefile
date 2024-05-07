@@ -7,10 +7,10 @@ all: ${SPEC}.pdf ${SPEC}.html
 #	./trim-madoko-comments.py $< > $@
 
 ${SPEC}.pdf: ${SPEC}.adoc
-	asciidoctor-pdf $<
+	asciidoctor-pdf -v $<
 
 ${SPEC}.html: ${SPEC}.adoc
-	asciidoctor $<
+	asciidoctor -v $<
 
 clean:
 	/bin/rm -f ${SPEC}.pdf ${SPEC}.html
