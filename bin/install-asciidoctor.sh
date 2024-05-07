@@ -47,7 +47,7 @@ if [ "${ID}" = "ubuntu" ]
 then
     case "${VERSION_ID}" in
 	20.04)
-	    supported_distribution=0
+	    supported_distribution=1
 	    ;;
 	22.04)
 	    supported_distribution=1
