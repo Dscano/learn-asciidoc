@@ -146,6 +146,10 @@ gem install asciidoctor
 gem install asciidoctor-pdf
 gem install asciidoctor-bibtex
 
+which ruby
+ruby --version
+which gem
+gem --version
 which asciidoctor
 asciidoctor --version
 which asciidoctor-pdf
