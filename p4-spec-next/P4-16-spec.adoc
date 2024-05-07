@@ -367,15 +367,15 @@ unit invocations and other imperative constructs (indicated by the `control`
 keyword).  The interface between the `MatchActionPipe` block and
 the other components of the architecture can be read off from this declaration:
 
-- The first parameter is a 4-bit value named `inputPort.` The
+* The first parameter is a 4-bit value named `inputPort.` The
   direction `in` indicates that this parameter is an input that
   cannot be modified.
-- The second parameter is an object of type `H` named `parsedHeaders`,
+* The second parameter is an object of type `H` named `parsedHeaders`,
   where `H` is a type variable representing the headers that will
   be defined later by the P4 programmer.
   The direction `inout` indicates that this parameter is
   both an input and an output.
-- The third parameter is a 4-bit value named `outputPort`. The
+* The third parameter is a 4-bit value named `outputPort`. The
   direction `out` indicates that this parameter is an output
   whose value is undefined initially but can be modified.
 
@@ -430,9 +430,9 @@ pipeline, which feeds into a single deparser. After exiting the
 deparser, packets are emitted through one of 8 output Ethernet ports
 or one of 3 "special" ports:
 
-- Packets sent to the "CPU port" are sent to the control plane
-- Packets sent to the "Drop port" are discarded
-- Packets sent to the "Recirculate port" are re-injected in the switch
+* Packets sent to the "CPU port" are sent to the control plane
+* Packets sent to the "Drop port" are discarded
+* Packets sent to the "Recirculate port" are re-injected in the switch
   through a special input port
 
 The white blocks in the figure are programmable, and the user must
@@ -529,15 +529,15 @@ extern Checksum16 {
 ----
 Let us describe some of these elements:
 
-- The included file `core.p4` is described in more detail in
+* The included file `core.p4` is described in more detail in
   <<_appendix_p4_core_library>>. It defines some standard
   data-types and error codes.
-- `bit<4>` is the type of bit-strings with 4 bits.
-- The syntax `4w0xF` indicates the value 15 represented using 4
+* `bit<4>` is the type of bit-strings with 4 bits.
+* The syntax `4w0xF` indicates the value 15 represented using 4
   bits. An alternative notation is `4w15`. In many circumstances
   the width modifier can be omitted, writing just `15`.
-- `error` is a built-in P4 type for holding error codes
-- Next follows the declaration of a parser:
+* `error` is a built-in P4 type for holding error codes
+* Next follows the declaration of a parser:
 [source,P4]
 ----
 parser Parser<H>(packet_in b, out H parsedHeaders);
@@ -551,7 +551,7 @@ output (the `out` keyword) into the `parsedHeaders`
 argument. The type of this argument is `H`, yet unknown---it will
 also be provided by the programmer.
 
-- The declaration
+* The declaration
 [source,P4]
 ----
 control Pipe<H>(inout H headers,
@@ -567,7 +567,7 @@ error `parseError`, and the `inCtrl` control data.
 information. The pipeline writes its outputs into `outCtrl`, and
 it must update in place the headers to be consumed by the deparser.
 
-- The top-level package is called `VSS`; in order to program a
+* The top-level package is called `VSS`; in order to program a
   VSS, the user will have to instantiate a package of this type (shown
   in the next section). The top-level package declaration also depends
   on a type variable H:
@@ -583,14 +583,14 @@ produce the parsed representation of these headers, and the
 match-action pipeline will update the input headers in place to
 produce the output headers.
 
-- The `package VSS` declaration has three complex parameters, of
+* The `package VSS` declaration has three complex parameters, of
   types `Parser`, `Pipe`, and `Deparser` respectively; which are
   exactly the declarations we have just described. In order to program
   the target one has to supply values for these parameters.
-- In this program the `inCtrl` and `outCtrl` structures
+* In this program the `inCtrl` and `outCtrl` structures
   represent control registers. The content of the headers structure is
   stored in general-purpose registers.
-- The `extern Checksum16` declaration describes an extern object
+* The `extern Checksum16` declaration describes an extern object
   whose services can be invoked to compute checksums.
 
 === Very Simple Switch Architecture Description
@@ -612,19 +612,19 @@ this document we will provide informal descriptions in English.
 
 The input arbiter block performs the following functions:
 
-- It receives packets from one of the physical input Ethernet ports,
+* It receives packets from one of the physical input Ethernet ports,
   from the control plane, or from the input recirculation port.
-- For packets received from Ethernet ports, the block computes the
+* For packets received from Ethernet ports, the block computes the
   Ethernet trailer checksum and verifies it. If the checksum does not
   match, the packet is discarded. If the checksum does match, it is
   removed from the packet payload.
-- Receiving a packet involves running an arbitration algorithm if
+* Receiving a packet involves running an arbitration algorithm if
   multiple packets are available.
-- If the arbiter block is busy processing a previous packet and no
+* If the arbiter block is busy processing a previous packet and no
   queue space is available, input ports may drop arriving packets,
   without indicating the fact that the packets were dropped in any
   way.
-- After receiving a packet, the arbiter block sets the `inCtrl.inputPort`
+* After receiving a packet, the arbiter block sets the `inCtrl.inputPort`
   value that is an input to the match-action pipeline with the identity of the input
   port where the packet originated. Physical Ethernet ports are
   numbered 0 to 7, while the input recirculation port has a number 13
@@ -648,23 +648,23 @@ the parser, to assemble them into a new packet and to send the result
 to the correct output port. The output port is specified by the value
 of `outCtrl.ouputPort`, which is set by the match-action pipeline.
 
-- Sending the packet to the drop port causes the packet to disappear.
-- Sending the packet to an output Ethernet port numbered between 0 and
+* Sending the packet to the drop port causes the packet to disappear.
+* Sending the packet to an output Ethernet port numbered between 0 and
   7 causes it to be emitted on the corresponding physical
   interface. The packet may be placed in a queue if the output
   interface is already busy emitting another packet. When the packet is
   emitted, the physical interface computes a correct Ethernet checksum
   trailer and appends it to the packet.
-- Sending a packet to the output CPU port causes the packet to be
+* Sending a packet to the output CPU port causes the packet to be
   transferred to the control plane. In this case, the packet that is
   sent to the CPU is the **original input packet**, and not the packet
   received from the deparser---the latter packet is discarded.
-- Sending the packet to the output recirculation port causes it to
+* Sending the packet to the output recirculation port causes it to
   appear at the input recirculation port. Recirculation is useful when
   packet processing cannot be completed in a single pass.
-- If the `outputPort` has an illegal value (e.g., 9), the packet
+* If the `outputPort` has an illegal value (e.g., 9), the packet
   is dropped.
-- Finally, if the demux unit is busy processing a previous packet and there is
+* Finally, if the demux unit is busy processing a previous packet and there is
   no capacity to queue the packet coming from the deparser, **the
   demux unit may drop the packet**, irrespective of the output port indicated.
 
@@ -684,15 +684,15 @@ The VSS architecture provides an incremental checksum extern block,
 called `Checksum16`. The checksum unit has a constructor and four
 methods:
 
-- `clear()`: prepares the unit for a new computation
-- `update<T>(in T data)`: add some data to be checksummed. The
+* `clear()`: prepares the unit for a new computation
+* `update<T>(in T data)`: add some data to be checksummed. The
   data must be either a bit-string, a header-typed value, or a `struct`
   containing such values. The fields in the header/struct
   are concatenated in the order they appear in the type declaration.
-- `get()`: returns the 16-bit one's complement checksum. When
+* `get()`: returns the 16-bit one's complement checksum. When
   this function is invoked the checksum must have received an integral
   number of bytes of data.
-- `remove<T>(in T data)`: assuming that `data`
+* `remove<T>(in T data)`: assuming that `data`
   was used for computing the current checksum, `data` is removed
   from the checksum.
 
@@ -701,7 +701,7 @@ methods:
 Here we provide a complete P4 program that implements basic forwarding for
 IPv4 packets on the VSS architecture. This program does not utilize all of the
 features provided by the architecture---e.g., recirculation---but it does use
-preprocessor `#include` directives (see <<preprocessing>>).
+preprocessor `#include` directives (see <<_preprocessing>>).
 
 .Diagram of the match-action pipeline expressed by the VSS P4 program.
 [#fig-vssmau]
@@ -714,16 +714,16 @@ a `Parsed_packet` structure. The match-action pipeline is
 shown in <<fig-vssmau>>; it comprises four match-action units
 (represented by the P4 `table` keyword):
 
-- If any parser error has occurred, the packet is dropped (i.e., by assigning `outputPort`
+* If any parser error has occurred, the packet is dropped (i.e., by assigning `outputPort`
   to `DROP_PORT`)
-- The first table uses the IPv4 destination address to determine the `outputPort`
+* The first table uses the IPv4 destination address to determine the `outputPort`
   and the IPv4 address of the next hop. If this lookup fails, the packet is dropped.
   The table also decrements the IPv4 `ttl` value.
-- The second table checks the `ttl` value: if the `ttl` becomes 0, the
+* The second table checks the `ttl` value: if the `ttl` becomes 0, the
   packet is sent to the control plane through the CPU port.
-- The third table uses the IPv4 address of the next hop (which was computed by
+* The third table uses the IPv4 address of the next hop (which was computed by
   the first table) to determine the Ethernet address of the next hop.
-- Finally, the last table uses the `outputPort` to identify the
+* Finally, the last table uses the `outputPort` to identify the
   source Ethernet address of the current switch, which is set in the
   outgoing packet.
 
@@ -951,6 +951,747 @@ VSS(TopParser(),
 
 
 == P4 language definition
+
+The P4 language can be viewed as having several distinct components,
+which we describe separately:
+
+* The core language, comprising of types, variables, scoping,
+  declarations, statements, expressions, etc. We start by describing
+  this part of the language.
+* A sub-language for expressing parsers, based on state machines
+  (<<_packet_parsing>>).
+* A sub-language for expressing computations using match-action units, based on
+  traditional imperative control-flow (<<_control_blocks>>).
+* A sub-language for describing architectures (<<_architecture_description>>).
+
+=== Syntax and semantics
+
+==== Grammar
+
+The complete grammar of P4~16~ is given in <<_appendix_p4_grammar>>,
+using Yacc/Bison grammar description language. This text is based on
+the same grammar. We adopt several standard conventions when we provide
+excerpts from the grammar:
+
+* `UPPERCASE` symbols denote terminals in the grammar.
+* Excerpts from the grammar are given in BNF notation as follows:
+[source,bison]
+----
+include::grammar.adoc[tag=p4program]
+----
+
+Pseudo-code (mostly used for describing the semantics of
+various P4 constructs) are shown with fixed-size fonts as in the
+following example:
+
+[source,P4Pseudo]
+----
+ParserModel.verify(bool condition, error err) {
+    if (condition == false) {
+        ParserModel.parserError = err;
+        goto reject;
+    }
+}
+----
+
+==== Semantics and the P4 abstract machines
+
+We describe the semantics of P4 in terms of abstract machines executing
+traditional imperative code. There is an abstract machine for each P4
+sub-language (parser, control). The abstract machines are described in
+this text in pseudo-code and English.
+
+P4 compilers are free to reorganize the code they generate in any way as long as
+the externally visible behaviors of the P4 programs are preserved as
+described by this specification where externally visible behavior is defined as:
+
+* The input/output behavior of all P4 blocks, and
+* The state maintained by extern blocks.
+
+=== Preprocessing
+
+To aid composition of programs from multiple source files P4
+compilers should support the following subset of the C preprocessor
+functionality:
+
+*	`#define` for defining macros (without arguments)
+*	`#undef`
+*	`#if #else #endif #ifdef #ifndef #elif`
+*	`#include`
+
+The preprocessor should also remove the sequence backslash newline (ASCII codes 92, 10)
+to facilitate splitting content across multiple lines when convenient for formatting.
+
+Additional C preprocessor capabilities may be supported, but
+are not guaranteed---e.g., macros with arguments.  Similar to C, `#include`
+can specify a file name either within double quotes or within `<>`.
+
+[source,P4]
+----
+# include <system_file>
+# include "user_file"
+----
+
+The difference between the two forms is the order in which the
+preprocessor searches for header files when the path is incompletely
+specified.
+
+P4 compilers should correctly handle `#line` directives
+that may be generated during preprocessing.  This functionality allows
+P4 programs to be built from multiple source files, potentially
+produced by different programmers at different times:
+
+* the P4 core library, defined in this document,
+* the architecture, defining data plane interfaces and extern blocks,
+* user-defined libraries of useful components (e.g. standard
+  protocol header definitions), and
+* the P4 programs that specify the behavior of each programmable block.
+
+=== P4 core library
+
+The P4 language specification defines a core library that includes
+several common programming constructs. A
+description of the core library is provided in
+<<_appendix_p4_core_library>>. All P4 programs must include the core
+library. Including the core library is done with
+
+[source,P4]
+----
+# include <core.p4>
+----
+
+=== Lexical constructs
+
+All P4 keywords use only ASCII characters. All P4 identifiers must use
+only ASCII characters. P4 compilers should handle correctly strings
+containing 8-bit characters in comments and string literals.
+P4 is case-sensitive.
+Whitespace characters, including newlines are treated as token
+separators. Indentation is free-form; however, P4 has C-like block
+constructs, and all our examples use C-style indentation. Tab
+characters are treated as spaces.
+
+The lexer recognizes the following kinds of terminals:
+
+* `IDENTIFIER`: start with a letter or underscore, and contain
+  letters, digits and underscores
+* `TYPE_IDENTIFIER`: identifier that denotes a type name
+* `INTEGER`: integer literals
+* `DONTCARE`: a single underscore
+* Keywords such as `RETURN`. By convention, each keyword terminal corresponds to a
+  language keyword with the same spelling but using lowercase. For
+  example, the `RETURN` terminal corresponds to the `return`
+  keyword.
+
+==== Identifiers
+
+P4 identifiers may contain only letters, numbers, and the underscore
+character `_`, and must start with a letter or
+underscore. The special identifier consisting of a single underscore `_`
+is reserved to indicate a "don't care" value; its
+type may vary depending on the context. Certain keywords (e.g., `apply`)
+can be used as identifiers if the context makes it unambiguous.
+
+[source,bison]
+----
+include::grammar.adoc[tag=nonTypeName]
+
+name
+    : nonTypeName
+    | TYPE_IDENTIFIER
+    ;
+----
+
+==== Comments
+
+P4 supports several kinds of comments:
+
+* Single-line comments, introduced by `//` and spanning to the end of line,
+* Multi-line comments, enclosed between `/*` and `*/`
+* Nested multi-line comments are not supported.
+* Javadoc-style comments, starting with `/**` and ending with `*/`
+
+Use of Javadoc-style comments is strongly encouraged for the tables and actions
+that are used to synthesize the interface with the control-plane.
+
+P4 treats comments as token separators and no comments are allowed within a
+token---e.g. `bi/**/t` is parsed as two tokens, `bi` and `t`, and
+not as a single token `bit`.
+
+==== Literal constants
+
+===== Boolean literals
+
+There are two Boolean literal constants: `true` and `false`.
+
+===== Integer literals
+
+Integer literals are non-negative arbitrary-precision integers.
+By default, literals are represented in base 10. The following prefixes
+must be employed to specify the base explicitly:
+
+* `0x` or `0X` indicates base 16 (hexadecimal)
+* `0o` or `0O` indicates base 8 (octal)
+* `0d` or `0D` indicates base 10 (decimal)
+* `0b` or `0B` indicates base 2
+
+The width of a numeric literal in bits can be specified by an unsigned
+number prefix consisting of a number of bits and a signedness
+indicator:
+
+* `w` indicates unsigned numbers
+* `s` indicates signed numbers
+
+Note that a leading zero by itself does not indicate an
+octal (base 8) constant.  The underscore character is considered a
+digit within number literals but is ignored when computing the
+value of the parsed number. This allows long constant numbers to be
+more easily read by grouping digits together. The underscore cannot be
+used in the width specification or as the first character of an
+integer literal. No comments or whitespaces are allowed within a
+literal. Here are some examples of numeric literals:
+
+[source,P4]
+----
+32w255         // a 32-bit unsigned number with value 255
+32w0d255       // same value as above
+32w0xFF        // same value as above
+32s0xFF        // a 32-bit signed number with value 255
+8w0b10101010   // an 8-bit unsigned number with value 0xAA
+8w0b_1010_1010 // same value as above
+8w170          // same value as above
+8s0b1010_1010  // an 8-bit signed number with value -86
+16w0377        // 16-bit unsigned number with value 377 (not 255!)
+16w0o377       // 16-bit unsigned number with value 255 (base 8)
+----
+
+===== String literals
+
+String literals (string constants) are specified as an arbitrary
+sequence of 8-bit characters, enclosed within double quote characters `"`
+(ASCII code 34). Strings start with a double quote character
+and extend to the first double quote sign which is not immediately
+preceded by an odd number of backslash characters (ASCII code 92). P4
+does not make any validity checks on strings (i.e., it does not check
+that strings represent legal UTF-8 encodings).
+
+Since P4 does not provide any operations on strings,
+string literals are generally passed unchanged through the P4 compiler to
+other third-party tools or compiler-backends, including the
+terminating quotes. These tools can define their own handling of
+escape sequences (e.g., how to specify Unicode characters, or handle
+unprintable ASCII characters).
+
+Here are 3 examples of string literals:
+[source,P4]
+----
+"simple string"
+"string \" with \" embedded \" quotes"
+"string with embedded
+line terminator"
+----
+
+==== Optional trailing commas
+
+The P4 grammar allows several kinds of comma-separated lists to end in
+an optional comma.
+
+[source,bison]
+----
+include::grammar.adoc[tag=optTrailingComma]
+----
+
+For example, the following declarations are both legal, and
+have the same meaning:
+
+[source,P4]
+----
+enum E {
+     a, b, c
+}
+
+enum E {
+     a, b, c,
+}
+----
+
+This is particularly useful in combination with preprocessor
+directives:
+
+[source,P4]
+----
+enum E {
+#if SUPPORT_A
+    a,
+#endif
+    b,
+    c,
+}
+----
+
+=== Naming conventions
+
+P4 provides a rich assortment of types. Base types include bit-strings, numbers, and errors.
+There are also built-in types for
+representing constructs such as parsers, pipelines, actions, and
+tables. Users can
+construct new types based on these: structures, enumerations, headers,
+header stacks, header unions, etc.
+
+In this document we adopt the following conventions:
+
+* Built-in types are written with lowercase characters---e.g., `int<20>`,
+* User-defined types are capitalized---e.g., `IPv4Address`,
+* Type variables are always uppercase---e.g., `parser P<H, IH>()`,
+* Variables are uncapitalized--- e.g., `ipv4header`,
+* Constants are written with uppercase characters---e.g., `CPU_PORT`, and
+* Errors and enumerations are written in camel-case--- e.g. `PacketTooShort`.
+
+=== P4 programs
+
+A P4 program is a list of declarations:
+
+[source,bison]
+----
+include::grammar.adoc[tag=p4program]
+
+include::grammar.adoc[tag=declaration]
+----
+
+An empty declarations is indicated with a single semicolon. (Allowing empty
+declarations accommodates the
+habits of C/C++ and Java programmers---e.g., certain constructs, like `struct`,
+do not require a terminating semicolon).
+
+==== Scopes
+
+Some P4 constructs act as namespaces that create local scopes for names including:
+
+* Derived type declarations (`struct`, `header`, `header_union`, `enum`),
+  which introduce local scopes for field names,
+* Block statements, which introduce local lexically-enclosed scopes,
+* `parser`, `table`, `action`, and `control` blocks, which
+  introduce local scopes
+* Declarations with type variables, which introduce a new scope for those
+  variables. For example, in the following `extern` declaration,
+  the scope of the type variable `H` extends to the end of the
+  declaration:
+
+[source,P4]
+----
+extern E<H>(/* parameters omitted */) { /* body omitted */ } // scope of H ends here.
+----
+
+The order of declarations is important; with the exception of parser
+states, all uses of a symbol must follow the symbol's
+declaration. (This is a departure from P4~14~, which
+allows declarations in any order. This requirement significantly simplifies the implementation of
+compilers for P4, allowing compilers to use additional information
+about declared identifiers to resolve ambiguities.)
+
+==== Stateful elements
+
+Most P4 constructs are stateless: given some inputs they produce a
+result that solely depends on these inputs. There are only two stateful constructs
+that may retain information across packets:
+
+* `table`s: Tables are read-only for the data plane, but their
+  entries can be modified by the control-plane,
+
+* `extern` objects: many objects have state that can be read and
+  written by the control plane and data plane. All constructs from the P4~14~ language
+  version that encapsulate state (e.g., counters, meters, registers) are
+  represented using `extern` objects in P4~16~.
+
+In P4 all stateful elements must be explicitly allocated at
+compilation-time through the process called "instantiation".
+
+In addition, ``parser``s, `control` blocks, and ``package``s
+may contain stateful element instantiations. Thus, they are also
+treated as stateful elements, even if they appear to contain no state,
+and must be instantiated before they can be used. However, although
+they are stateful, ``table``s do not need to be instantiated
+explicitly---declaring a `table` also creates an instance of
+it. This convention is designed to support the common case, since most
+tables are used just once. To have finer-grained control over when
+a `table` is instantiated, a programmer can declare it within
+a `control`.
+
+Recall the example in <<_a_complete_very_simple_switch_program>>: `TopParser`, `TopPipe`, `TopDeparser`, `Checksum16`,
+and `Switch` are types. There are two instances of `Checksum16`, one in `TopParser` and
+one in `TopDeparser`, both called `ck`. The `TopParser`, `TopDeparser`, `TopPipe`,
+and `Switch` are instantiated at the end of the program, in the
+declaration of the `main` instance object, which is an instance of
+the `Switch` type (a `package`).
+
+=== L-values
+
+L-values are expressions that may appear on the left side of an
+assignment operation or as arguments corresponding to `out` and `inout`
+function parameters. An l-value represents a storage reference.  The
+following expressions are legal l-values:
+
+[source,bison]
+----
+include::grammar.adoc[tag=prefixedNonTypeName]
+
+include::grammar.adoc[tag=lvalue]
+----
+
+* Identifiers of a base or derived type.
+* Structure, header, and header union field member access operations
+  (using the dot notation).
+* References to elements within header stacks (see
+  <<_operations_on_header_stacks>>): indexing, and references to `last` and `next`.
+* The result of a bit-slice operator `[m:l]`.
+
+The following is a legal l-value: `headers.stack[4].field`.  Note
+that method and function calls cannot return l-values.
+
+=== Calling convention: call by copy in/copy out
+
+P4 provides multiple constructs for writing modular programs: extern
+methods, parsers, controls, actions. All these constructs behave
+similarly to procedures in standard general-purpose programming languages:
+
+* They have named and typed parameters.
+* They introduce a new local scope for parameters and local variables.
+* They allow arguments to be passed by binding them to their
+  parameters.
+
+Invocations are executed using copy-in/copy-out semantics.
+
+Each parameter may be labeled with a direction:
+
+* `in` parameters are read-only. It is an error to use an `in`
+  parameter on the left-hand side of an assignment or to
+  pass it to a callee as a non-`in` argument. `in` parameters
+  are initialized by copying the value of the corresponding
+  argument when the invocation is executed.
+* `out` parameters are, with a few exceptions listed below,
+  uninitialized and are treated as l-values
+  (See <<_L_values>>) within the body of the method or function.
+  An argument passed as an `out`
+  parameter must be an l-value; after the execution of the
+  call, the value of the parameter is copied to the corresponding storage location
+  for that l-value.
+* `inout` parameters behave like a combination of `in` and `out` parameters simultaneously:
+   On entry the value of the arguments is copied to the parameters.  On return the
+   value of the parameters is copied back to the arguments.  In consequence, an argument
+   passed as an `inout` parameter must be an l-value.
+* The meaning of parameters with no direction depends upon the kind of
+  entity the parameter is for:
+** For anything other than an action, e.g. a control, parser, or
+   function, a directionless parameter means that the value supplied
+   as an argument in a call must be a compile-time known value
+   (see <<_compile_time_known_values>>).
+** For an action, a directionless parameter indicates that it is
+   "action data".  See <<_actions>> for the meaning of
+   action data, but its meaning includes the following possibilities:
+*** The parameter's value is provided in the P4 program.  In this
+    case, the parameter behaves as if the direction were `in`.  Such
+    an argument expression need not be a compile-time known value.
+*** The parameter's value is provided by the control plane software
+    when an entry is added to a table that uses that action.  See
+    <<_actions>>.
+
+Direction `out` parameters are always initialized at the beginning of
+execution of the portion of the program that has the `out` parameters,
+e.g. `control`, `parser`, `action`, function, etc.  This
+initialization is not performed for parameters with any direction that
+is not `out`.
+
+* If a direction `out` parameter is of type `header` or
+  `header_union`, it is set to "invalid".
+* If a direction `out` parameter is of type header stack, all elements
+  of the header stack are set to "invalid", and its `nextIndex` field
+  is initialized to 0 (see <<_operations_on_header_stacks>>).
+* If a direction `out` parameter is a compound type, e.g. a struct or
+  tuple, other than one of the types listed above, then apply these
+  rules recursively to its members.
+* If a direction `out` parameter has any other type, e.g. `bit<W>`, an
+  implementation need not initialize it to any predictable value.
+
+For example, if a direction `out` parameter has type `s2_t` named `p`:
+
+[source,P4]
+----
+header h1_t {
+    bit<8> f1;
+    bit<8> f2;
+}
+struct s1_t {
+    h1_t h1a;
+    bit<3> a;
+    bit<7> b;
+}
+struct s2_t {
+    h1_t h1b;
+    s1_t s1;
+    bit<5> c;
+}
+----
+
+then at the beginning of execution of the part of the program that has
+the `out` parameter `p`, it must be initialized so that `p.h1b` and
+and `p.s1.h1a` are invalid.  No other parts of `p` are required to be
+initialized.
+
+Arguments are evaluated from left to right prior to the invocation of the
+function itself. The order of evaluation is important when the
+expression supplied for an argument can have side-effects. Consider
+the following example:
+
+[source,P4]
+----
+extern void f(inout bit x, in bit y);
+extern bit g(inout bit z);
+bit a;
+f(a, g(a));
+----
+
+Note that the evaluation of `g` may mutate its argument `a`, so the
+compiler has to ensure that the value passed to `f` for its first
+parameter is not changed by the evaluation of the second argument. The
+semantics for evaluating a function call is given by the following
+algorithm (implementations can be different as long as they provide
+the same result):
+
+1.	Arguments are evaluated from left to right as they appear in the
+      function call expression.
+2.      If a parameter has a default value and no corresponding argument is
+      supplied, the default value is used as an argument.
+3.	For each `out` and `inout` argument the corresponding
+      l-value is saved (so it cannot be changed by the evaluation of
+      the following arguments). This is important if the argument
+      contains indexing operations into a header stack.
+4.	The value of each argument is saved into a temporary.
+5.	The function is invoked with the temporaries as arguments. We are
+      guaranteed that the temporaries that are passed as arguments are
+      never aliased to each other, so this "generated" function call
+      can be implemented using call-by-reference if supported by the
+      architecture.
+6.	On function return, the temporaries that correspond to `out`
+      or `inout` arguments are copied in order from left to right
+      into the l-values saved in Step 3.
+
+According to this algorithm, the previous function call is equivalent
+to the following sequence of statements:
+
+[source,P4]
+----
+bit tmp1 = a;     // evaluate a; save result
+bit tmp2 = g(a);  // evaluate g(a); save result; modifies a
+f(tmp1, tmp2);    // evaluate f; modifies tmp1
+a = tmp1;         // copy inout result back into a
+----
+
+To see why Step 3 in the above algorithm is important, consider the following
+example:
+
+[source,P4]
+----
+header H { bit z; }
+H[2] s;
+f(s[a].z, g(a));
+----
+
+The evaluation of this call is equivalent to the following sequence of
+statements:
+
+[source,P4]
+----
+bit tmp1 = a;          // save the value of a
+bit tmp2 = s[tmp1].z;  // evaluate first argument
+bit tmp3 = g(a);       // evaluate second argument; modifies a
+f(tmp2, tmp3);         // evaluate f; modifies tmp2
+s[tmp1].z = tmp2;      // copy inout result back; dest is not s[a].z
+----
+
+When used as arguments, `extern` objects can only be passed as
+directionless parameters---e.g., see the packet argument in the
+very simple switch example.
+
+==== Justification
+
+The main reason for using copy-in/copy-out semantics (instead of the more common
+call-by-reference semantics) is for controlling the side-effects of `extern`
+functions and methods. `extern` methods and functions
+are the main mechanism by which a P4 program communicates with its
+environment. With copy-in/copy-out semantics `extern` functions
+cannot hold references to P4 program objects; this enables the
+compiler to limit the side-effects that `extern` functions may
+have on the P4 program both in space (they can only affect `out`
+parameters) and in time (side-effects can only occur at function call
+time).
+
+In general, `extern` functions are arbitrarily powerful: they can store
+information in global storage, spawn separate threads, "collude" with
+each other to share information --- but they cannot access any
+variable in a P4 program. With copy-in/copy-out semantics the compiler
+can still reason about P4 programs that invoke `extern`
+functions.
+
+There are additional benefits of using copy-in copy-out semantics:
+
+* It enables P4 to be compiled for architectures that do not support
+  references (e.g., where all data is allocated to named
+  registers. Such architectures may require indices into header stacks that appear
+  in a program to be compile-time known values.)
+* It simplifies some compiler analyses, since function parameters can
+  never alias to each other within the function body.
+
+[source,bison]
+----
+include::grammar.adoc[tag=parameterList]
+
+include::grammar.adoc[tag=nonEmptyParameterList]
+
+include::grammar.adoc[tag=parameter]
+
+include::grammar.adoc[tag=direction]
+----
+
+Following is a summary of the constraints imposed by the parameter
+directions:
+
+* When used as arguments, extern objects can only be passed as
+  directionless parameters.
+* All constructor parameters are evaluated at compilation-time, and in
+  consequence they must all be directionless (they cannot be `in`,
+  `out`, or `inout`); this applies to `package`, `control`, `parser`,
+  and `extern` objects. Values for these parameters must be specified
+  at compile-time, and must evaluate to compile-time known values.
+  See <<_parameterization>> for further details.
+* For actions all directionless parameters must be at the end of the
+  parameter list.  When an action appears in a `table`'s `actions`
+  list, only the parameters with a direction must be bound.
+  See <<_actions>> for further details.
+* Actions can also be explicitly invoked using function call syntax,
+  either from a control block or from another action. In this case,
+  values for all action parameters must be supplied explicitly,
+  including values for the directionless parameters. The directionless
+  parameters in this case behave like `in` parameters.
+  See <<_invoking_actions>> for further details.
+* Default parameter values are only allowed for 'in' or direction-less parameters;
+  these values must evaluate to compile-time constants.
+* If parameters with default values do not appear at the
+  end of the list of parameters, invocations that use
+  the default values must use named arguments, as in the following
+  example:
+
+[source,P4]
+----
+extern void f(in bit a, in bit<3> b = 2, in bit<5> c);
+
+void g()
+{
+  f(a = 1, b = 2, c = 3);  // ok
+  f(a = 1, c = 3);  // ok, equivalent to the previous call, b uses default value
+  f(1, 2, 3);       // ok, equivalent to the previous call
+  // f(1, 3); // illegal, since the parameter b is not the last in the list
+}
+----
+
+==== Optional parameters
+
+A parameter that is annotated with the `@optional` annotation is
+optional: the user may omit the value for that parameter in an
+invocation.  Optional parameters can only appear for arguments of:
+packages, parser types, control types, extern functions, extern methods, and extern object
+constructors.  Optional parameters cannot have default values.  If a
+procedure-like construct has both optional parameters and default values then it
+can only be called using named arguments.  It is recommended, but not
+mandatory, for all optional parameters to be at the end of a parameter
+list.
+
+The implementation of such objects is not expressed in P4, so the
+meaning and implementation of optional parameters should be specified
+by the target architecture.  For example, we can imagine a two-stage
+switch architecture where the second stage is optional. This could be
+declared as a package with an optional parameter:
+
+[source,P4]
+----
+package pipeline(/* parameters omitted */);
+package switch(pipeline first, @optional pipeline second);
+
+pipeline(/* arguments omitted */) ingress;
+switch(ingress) main;   // a switch with a single-stage pipeline
+----
+
+Here the target architecture could implement the elided optional argument using an empty pipeline.
+
+The following example shows optional parameters and parameters with
+default values.
+
+[source,P4]
+----
+extern void h(in bit<32> a, in bool b = true);  // default value
+
+// function calls
+h(10);  // same as h(10, true);
+h(a = 10);  // same as h(10, true);
+h(a = 10, b = true);
+
+struct Empty {}
+control nothing(inout Empty h, inout Empty m) {
+   apply {}
+}
+
+parser parserProto<H, M>(packet_in p, out H h, inout M m);
+control controlProto<H, M>(inout H h, inout M m);
+
+package pack<HP, MP, HC, MC>(@optional parserProto<HP, MP> _parser,  // optional parameter
+                             controlProto<HC, MC> _control = nothing()); // default parameter value
+
+pack() main;   // No value for _parser, _control is an instance of nothing()
+----
+
+=== Name resolution
+
+P4 objects that introduce namespaces are organized in a hierarchical
+fashion. There is a top-level unnamed namespace containing all
+top-level declarations.
+
+Identifiers prefixed with a dot are always resolved in the top-level
+namespace.
+
+[source,P4]
+----
+const bit<32> x = 2;
+control c() {
+   int<32> x = 0;
+   apply {
+       x = x + (int<32>).x;  // x is the int<32> local variable,
+                             // .x is the top-level bit<32> variable
+   }
+}
+----
+
+References to resolve an identifier are attempted inside-out, starting
+with the current scope and proceeding to all lexically enclosing
+scopes. The compiler may provide a warning if multiple resolutions are
+possible for the same name (name shadowing).
+
+[source,P4]
+----
+const bit<4> x = 1;
+control p() {
+    const bit<8> x = 8;    // x declaration shadows global x
+    const bit<4> y = .x;   // reference to top-level x
+    const bit<8> z = x;    // reference to p's local x
+    apply {}
+}
+----
+
+=== Visibility
+
+Identifiers defined in the top-level namespace are globally
+visible. Declarations within a `parser` or `control` are
+private and cannot be referred to from outside of the enclosing `parser`
+or `control`.
+
 
 == P4 data types
 

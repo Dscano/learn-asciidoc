@@ -6,10 +6,10 @@ all: ${SPEC}.pdf ${SPEC}.html
 #grammar.trimmed.mdk: grammar.mdk trim-madoko-comments.py
 #	./trim-madoko-comments.py $< > $@
 
-${SPEC}.pdf: ${SPEC}.adoc
+${SPEC}.pdf: ${SPEC}.adoc grammar.adoc
 	asciidoctor-pdf -v $<
 
-${SPEC}.html: ${SPEC}.adoc
+${SPEC}.html: ${SPEC}.adoc grammar.adoc
 	asciidoctor -v $<
 
 clean:

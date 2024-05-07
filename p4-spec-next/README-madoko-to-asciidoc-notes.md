@@ -173,3 +173,14 @@ was a special syntax in Madoko to make the text after the code block
 indented inside the list item as the text before the code block was.
 I do not yet know how to do that in AsciiDoc, if it provides a way.
 In Madoko, such lines consist of only the backslash character `\`.
+
+TODO: See if AsciiDoctor has a feature to avoid "widow lines",
+i.e. only one or two lines of a block appearing on a page, when the
+code block is split across multiple pages in PDF.
+
+
+# Including text from part of a file, marked by tags
+
+See here for how AsciiDoc specifies this:
+
++ https://docs.asciidoctor.org/asciidoc/latest/directives/include-tagged-regions/
