@@ -39,6 +39,31 @@ AsciiDoc:
 ** Sub-item
 ```
 
+TODO: There are two numbered lists in the original Madoko version.  I
+have tried to replace them with AsciiDoc auto-numbered lists like
+these:
+
+```
+. First item
+. Second item
+```
+
+but I keep seeing a message like this in the `asciidoctor` output for
+such files.  How to correct this?
+
+```
+asciidoctor: WARNING: P4-16-spec.adoc: line 9205: unterminated listing block
+```
+
+TODO: The list in section "Operations on arbitrary-precision integers"
+that has sub-bullets, followed by text at the original top level list
+item level, is not parsed as desired by AsciiDoctor.  Learn how to do
+this in AsciiDoc, if it is possible.
+
+Answer: I found one answer on how to do this here:
+
++ https://docs.asciidoctor.org/asciidoc/latest/lists/continuation/#enclose-in-open-block
+
 
 # Bold text
 
@@ -125,6 +150,13 @@ characters omitted:
 If you are not sure, look in the output of `asciidoctor` runs to see
 if there are any warning messages about `possible invalid reference`.
 
+TODO: A few section names in the P4 spec are identical, e.g. at least
+"keys" and "actions".  Learn how to reference a specific section even
+when their names are identical.
+
+TODO: Find all identically-named sections in the P4 spec, and give
+them unique cross-reference tag names.
+
 
 # em dash
 
@@ -195,3 +227,59 @@ TODO: The markup is definitely different in Madoko and AsciiDoc.
 # Footnotes
 
 TOOD: Learn what the AsciiDoc way to describe footnotes is.
+
+
+# Miscellaneous
+
+TODO: In section "Operations on arbitrary-precision integers", an
+occurrence of `<=` comes out as a different symbol, not the two
+fixed-width symbols `<` followed by `=`, as desired.
+
+TODO: In section "Operations on arbitrary-precision integers", there
+are occurrences of LaTeX in-line math formulas like these that are not
+rendering as desired.  Learn how to update them:
+
+```
+  The expression `a << b` is equal to $a \times 2^b$ while `a >> b`
+  is equal to $\lfloor{a / 2^b}\rfloor$.
+```
+
+
+# Special characters
+
++ arrow pointing left and right with a single horizontal line between
+  them, called `&harr;` in Madoko source.
+  + Some old discussion here: https://discuss.asciidoctor.org/Double-Arrow-chars-td3918.html
+  + Tried `&#8660;`.  Came out as an empty rectangle in PDF output.
+  + Tried `&#x12d4;`.  Also came out as an empty rectangle in PDF output.
+
+
++ `&rarr;` in Madoko source, arrow pointing right only
+  + See here: https://asciidoctor.org/docs/asciidoc-writers-guide/#replacements
+  + Tried `&#8594;`.  Produced desired output in PDF output from AsciiDoctor.
+
+
+Note that a hash mark `#` is used to enclose text to be highlighted.
+If you want a literal hash mark in the output, or nearly any literal
+text, enclose it in `+literal text without substitutions here+`, i.e.
+start with a backtick followed by a plus sign, and end with a plus
+sign followed by a backtick.
+
+If you want literal text like this in Madoko source:
+
+```
+A list of `select`s
+```
+
+Where there is normal text immediately butting up against the
+monospace text, then you must use double backticks surrounding the
+monospace text in AsciiDoc, like shown below:
+
+```
+A list of ``select``s
+```
+
+TODO: The auto-numbering of section headings works for section numbers
+3 levels deep, e.g. 2.3.4, but not further.  See if there is a global
+setting that can increase this to 5 levels, which should be enough for
+all sections that I know of in P4 language spec.
