@@ -79,8 +79,6 @@ AsciiDoc: The same!  No change needed!
 
 # Figure
 
-TODO: Add notes on how to control size of inserted figure.
-
 AsciiDoc:
 ```
 .Caption goes here on one line.
