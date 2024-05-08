@@ -135,12 +135,25 @@ omitted, _not_ replaced with an underscore.
 If you are not sure, look in the output of `asciidoctor` runs to see
 if there are any warning messages about `possible invalid reference`.
 
-TODO: A few section names in the P4 spec are identical, e.g. at least
-"keys" and "actions".  Learn how to reference a specific section even
-when their names are identical.
+There are some sections with identical names.  I have learned what all
+of these are, and put unique IDs on each of them, like in the example
+below:
 
-TODO: Find all identically-named sections in the P4 spec, and give
-them unique cross-reference tag names.
+```
+[#sec-table-keys]
+===== Keys
+
+[#sec-cp-keys]
+===== Keys
+```
+
+Then you can cross-reference each section using its unique ID,
+e.g. `<<sec-table-keys>>` to reference the first of the above two
+sections.
+
+Learned how to do this in the AsciiDocs here:
+
++ https://docs.asciidoctor.org/asciidoc/latest/sections/custom-ids/
 
 
 # em dash

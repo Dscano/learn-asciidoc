@@ -1396,14 +1396,14 @@ Each parameter may be labeled with a direction:
    as an argument in a call must be a compile-time known value
    (see <<_compile_time_known_values>>).
 ** For an action, a directionless parameter indicates that it is
-   "action data".  See <<_actions>> for the meaning of
+   "action data".  See <<sec-actions>> for the meaning of
    action data, but its meaning includes the following possibilities:
 *** The parameter's value is provided in the P4 program.  In this
     case, the parameter behaves as if the direction were `in`.  Such
     an argument expression need not be a compile-time known value.
 *** The parameter's value is provided by the control plane software
     when an entry is added to a table that uses that action.  See
-    <<_actions>>.
+    <<sec-actions>>.
 
 Direction `out` parameters are always initialized at the beginning of
 execution of the portion of the program that has the `out` parameters,
@@ -1576,7 +1576,7 @@ directions:
 * For actions all directionless parameters must be at the end of the
   parameter list.  When an action appears in a `table`'s `actions`
   list, only the parameters with a direction must be bound.
-  See <<_actions>> for further details.
+  See <<sec-actions>> for further details.
 * Actions can also be explicitly invoked using function call syntax,
   either from a control block or from another action. In this case,
   values for all action parameters must be supplied explicitly,
@@ -2301,6 +2301,7 @@ parsing steps.
 Notice that the names `isValid`, `setValid`, `minSizeInBits`, etc. are all
 valid header field names.
 
+[#sec-header-stacks]
 ==== Header stacks
 
 A header stack represents an array of headers or header unions. A header stack type is
@@ -5540,6 +5541,7 @@ use to implement generalized switch statements.
 
 This section describes the P4 constructs specific to parsing network packets.
 
+[#sec-parser-states]
 === Parser states
 
 .Parser FSM structure.
@@ -5652,6 +5654,7 @@ such packets are passed to the next block after the
 parser, with intrinsic metadata indicating that the parser reached
 the `reject` state, along with the error recorded.
 
+[#sec-parser-state-stmt]
 === Parser states
 
 A parser state is declared with the following syntax:
@@ -6177,6 +6180,7 @@ void packet_in.advance(bit<32> bits) {
 }
 ----
 
+[#sec-parse-header-stacks]
 === Header stacks
 
 A header stack has two properties, `next` and `last`, which
@@ -6394,6 +6398,7 @@ be performed explicitly by the programmer.
 The rest of this section describes the core components of a `control` block,
 starting with actions.
 
+[#sec-actions]
 === Actions
 
 .Actions contain code and data. The code is in the P4 program, while the data is provided in the table entries, typically populated by the control plane. Other parameters are bound by the data plane.
@@ -6427,8 +6432,8 @@ action Forward_a(out bit<9> outputPort, bit<9> port) {
 Action parameters may not have `extern` types. Action parameters that
 have no direction (e.g., `port` in the previous example) indicate
 "action data." All such parameters must appear at the end of the
-parameter list. When used in a match-action table (see Section
-[#sec-table-action-list]), these parameters will be provided by the
+parameter list. When used in a match-action table (see
+<<sec-table-action-list>>), these parameters will be provided by the
 table entries (e.g., as specified by the control plane, the
 `default_action` table property, or the `entries` table
 property).
@@ -6452,6 +6457,7 @@ Actions can be executed in two ways:
   parameters. In this case, the directionless parameters behave like `in`
   parameters.
 
+[#sec-tables]
 === Tables
 
 .Match-Action Unit Dataflow.
@@ -6537,6 +6543,7 @@ constant, so the `const` keyword is not needed for these.
 
 ==== Table properties
 
+[#sec-table-keys]
 ===== Keys
 
 The `key` is a table property which specifies the data-plane
@@ -6639,6 +6646,7 @@ Note some implementations might only support a limited number of keys or
 a limited combinations of match_kind for the keys. The implementation
 should reject those cases with an error message in this case.
 
+[#sec-table-action-list]
 ===== Actions
 
 A table must declare all possible actions that may appear within the
@@ -6777,7 +6785,7 @@ allowed to later change or remove.
 
 Entries declared in the P4 source are installed in the
 table when the program is loaded onto the target. Entries cannot be
-specified for a table with no key (see <<_keys>>).
+specified for a table with no key (see <<sec-table-keys>>).
 
 Table entries are defined using the following syntax:
 
@@ -7972,6 +7980,7 @@ value_set<vsk_t>(4) pvs;
 
 This value_set's local name is `pvs`.
 
+[#sec-cp-tables]
 ===== Tables
 
 For each `table` construct, its syntactic name becomes the local
@@ -7986,6 +7995,7 @@ control c(/* parameters omitted */)() {
 
 This table's local name is `t`.
 
+[#sec-cp-keys]
 ===== Keys
 
 Syntactically, table keys are expressions.  For simple expressions,
@@ -8037,6 +8047,7 @@ table t {
 Here, the `@name("f1_mask")` annotation assigns the local name `"f1_mask"`
 to this key.
 
+[#sec-cp-actions]
 ===== Actions
 
 For each `action` construct, its syntactic name is the local name
@@ -8729,9 +8740,9 @@ The P4 compiler should provide:
 * Clarified restrictions for parameters with default values (<<_calling_convention_call_by_copy_incopy_out>>).
 * Added optional trailing commas (<<_optional_trailing_commas>>).
 * Clarified the scope of parser namespaces (<<_parser_declarations>>).
-* Specified that algorithm for generating control-plane names for keys is optional (Section [#sec-cp-keys]).
+* Specified that algorithm for generating control-plane names for keys is optional (<<sec-cp-keys>>).
 * Clarified types of expressions that may appear in `select` (<<_select_expressions>>).
-* Added description of semantics of the core.p4 match kinds (<<_keys>>).
+* Added description of semantics of the core.p4 match kinds (<<sec-table-keys>>).
 * Explicitly disallow overloading of parsers, controls, and packages (<<_extern_objects>>).
 * Clarified implicit casts present in select expressions (<<_select_expressions>>).
 * Clarified that slices can be applied to arbitrary-precision integers (<<_operations_on_arbitrary_precision_integers>>).
@@ -8744,7 +8755,7 @@ The P4 compiler should provide:
 * Specified type produced by the `*sizeInB*` methods (<<_compile_time_size_determination>>).
 * Added section with operations on `match_kind` values (<<_operations_on_match_kind_types>>).
 * Renamed infinite-precision integers to arbitrary-precision integers (<<_arbitrary_precision_integers>>).
-* compiler-inserted `default_action` is not `const` (Section [#sec-tables]).
+* compiler-inserted `default_action` is not `const` (<<sec-tables>>).
 * Clarified the restrictions on run time for tables with `const entries` (<<_entries>>).
 * renamed list expressions to tuple expressions
 * Added `list` type (<<_list_types>>).
@@ -8752,14 +8763,14 @@ The P4 compiler should provide:
   installed when the P4 program is loaded, but the control plane can
   later change them or add to them (<<_entries>>).
 * Clarified behavior of table with no `key` property, or if its list
-  of keys is empty (<<_keys>>).
+  of keys is empty (<<sec-table-keys>>).
 
 === Summary of changes made in version 1.2.3, released July 11, 2022.
 
 * Extended `minSizeInBits` and `minSizeInBytes` to apply to more expressions (<<_compile_time_size_determination>>).
 * Added support for `maxSizeInBits` and `maxSizeInBytes` (<<_compile_time_size_determination>>).
 * Added support for empty lists of const entries in tables (<<_entries>>).
-* Added support for `switch` statements in actions (Section [#sec-actions]).
+* Added support for `switch` statements in actions (<<sec-actions>>).
 * Added support for direct invocation of controls and parsers (<<_parameterization>>).
 * Added parser `value_set` to list of control-plane visible names (<<_control_plane_names>>).
 * Added `match_kind` as a base type (<<_the_match_kind_type>>).
@@ -8780,14 +8791,14 @@ The P4 compiler should provide:
 * Added support for integers, ``enum``s, and ``error``s in `switch` statements (<<_switch_statement>>).
 * Added support for additional enumeration types (<<_enumeration_types>>).
 * Added support for abstract methods (<<_abstract_methods>>).
-* Added support for conditional statements and empty statements in parsers (Section [#sec-parser-state-stmt]).
+* Added support for conditional statements and empty statements in parsers (<<sec-parser-state-stmt>>).
 * Added support for casts from `int` to `bool` (<<_casts>>).
 * Added support for 0-width bitstrings and varbits (<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>).
-* Clarified that `default_action` is `NoAction` if otherwise unspecified (Section [#sec-tables]).
+* Clarified that `default_action` is `NoAction` if otherwise unspecified (<<sec-tables>>).
 * Clarified the types of expressions that may be used as indexes for header stacks (<<_operations_on_header_stacks>>).
 * Clarified representation of Booleans in headers (<<_header_types>>).
 * Clarified representation of empty types (<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>).
-* Clarified that action data can be specified by the control plane, `default_action` table property, or `const entries` table property (Section [#sec-actions]).
+* Clarified that action data can be specified by the control plane, `default_action` table property, or `const entries` table property (<<sec-actions>>).
 * Fixed several typos and inconsistencies in grammar (<<_appendix_p4_grammar>>).
 * Eliminated annotations on `const` entries in grammar (<<_appendix_p4_grammar>>).
 
@@ -8810,7 +8821,7 @@ The P4 compiler should provide:
   variables.
 * Clarified evaluation order for table keys (<<_match_action_unit_execution_semantics>>).
 * Fixed grammar to clarify parsing of right shift operator (`>>`),
-  allow empty statements in parser (Section [#sec-parser-state-stmt]),
+  allow empty statements in parser (<<sec-parser-state-stmt>>),
   and eliminate annotations on const entries (<<_entries>>).
 
 === Summary of changes made in version 1.2.0, released October 14, 2019
