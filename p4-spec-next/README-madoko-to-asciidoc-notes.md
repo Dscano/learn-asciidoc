@@ -156,13 +156,6 @@ Learned how to do this in the AsciiDocs here:
 + https://docs.asciidoctor.org/asciidoc/latest/sections/custom-ids/
 
 
-# em dash
-
-Madoko: `---`
-
-AsciiDoc: TODO
-
-
 # Code blocks with syntax highlighting
 
 Madoko:
@@ -223,14 +216,15 @@ TODO: The markup is definitely different in Madoko and AsciiDoc.
 
 # Footnotes
 
-TODO: Learn what the AsciiDoc way to describe footnotes is.
-
 AsciiDoc documentation on footnotes:
 
 + https://docs.asciidoctor.org/asciidoc/latest/macros/footnote/
 
 
 # Miscellaneous
+
+TODO: Replace occurrences of `---` for Madoko em dash with whatever
+markup is for AsciiDoc em dash.
 
 TODO: In section "Operations on arbitrary-precision integers", an
 occurrence of `<=` comes out as a different symbol, not the two
