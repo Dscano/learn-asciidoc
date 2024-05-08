@@ -2446,37 +2446,43 @@ header unions, structs, tuples, and lists.  Note that `int` by itself
 (i.e. not as part of an `int<N>` type expression) means an
 arbitrary-precision integer, without a width specified.
 
-TODO: Learn how to insert proper AsciiDoc table here.
+[.center,%autowidth]
+|===
+| Element type       | header    | header_union | struct or tuple | list | header stack
 
-//|--------------------|------------------------------------------------|||||
-//|                    | Container type                                 |||||
-//|                    |-----------|--------------|-----------------|------|--------------|
-//| Element type       | header    | header_union | struct or tuple | list | header stack |
-//+:-------------------+:----------+:-------------+:----------------+:-----+:-------------+
-//| `bit<W>`       | allowed   | error   |  allowed | allowed | error |
-//| `int<W>`       | allowed   | error   |  allowed | allowed | error |
-//| `varbit<W>`    | allowed   | error   |  allowed | allowed | error |
-//| `int`          | error     | error   |  error   | allowed | error |
-//| `void`         | error     | error   |  error   | error   | error |
-//| `string`       | error     | error   |  error   | allowed | error |
-//| `error`        | error     | error   |  allowed | allowed | error |
-//| `match_kind`   | error     | error   |  error   | allowed | error |
-//| `bool`         | allowed   | error   |  allowed | allowed | error |
-//| `enum`         | allowed[^enum_header]     | error   |  allowed | allowed | error |
-//| `header`       | error     | allowed |  allowed | allowed | allowed |
-//| header stack   | error     | error   |  allowed | allowed | error |
-//| `header_union` | error     | error   |  allowed | allowed | allowed |
-//| `struct`       | allowed[^struct_header]   | error   |  allowed | allowed | error |
-//| `tuple`        | error     | error   |  allowed | allowed | error |
-//| `list`         | error     | error   |  error   | allowed | error |
-//|----------------|-----------|---------|----------|---------|-------|
+| `bit<W>`       | allowed   | error   |  allowed | allowed | error
 
-[^enum_header]: an `enum` type used as a field in a `header` must specify a
-    underlying type and representation for `enum` elements.
-[^struct_header]: a `struct` or nested `struct` type that has the same properties,
-    used as a field in a `header` must contain only
-    `bit<W>`, `int<W>`, a serializable `enum`, or a `bool`.
+| `int<W>`       | allowed   | error   |  allowed | allowed | error
 
+| `varbit<W>`    | allowed   | error   |  allowed | allowed | error
+
+| `int`          | error     | error   |  error   | allowed | error
+
+| `void`         | error     | error   |  error   | error   | error
+
+| `string`       | error     | error   |  error   | allowed | error
+
+| `error`        | error     | error   |  allowed | allowed | error
+
+| `match_kind`   | error     | error   |  error   | allowed | error
+
+| `bool`         | allowed   | error   |  allowed | allowed | error
+
+| `enum`         | allowed footnote:enum_header[an `enum` type used as a field in a `header` must specify a underlying type and representation for `enum` elements.]     | error   |  allowed | allowed | error
+
+| `header`       | error     | allowed |  allowed | allowed | allowed
+
+| header stack   | error     | error   |  allowed | allowed | error
+
+| `header_union` | error     | error   |  allowed | allowed | allowed
+
+| `struct`       | allowed footnote:struct_header[a `struct` or nested `struct` type that has the same properties, used as a field in a `header` must contain only `bit<W>`, `int<W>`, a serializable `enum`, or a `bool`.]   | error   |  allowed | allowed | error
+
+| `tuple`        | error     | error   |  allowed | allowed | error
+
+| `list`         | error     | error   |  error   | allowed | error
+
+|===
 
 Rationale: `int` does not have precise storage requirements,
 unlike `bit<>` or `int<>` types. `match_kind`
