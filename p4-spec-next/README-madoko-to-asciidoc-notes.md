@@ -39,26 +39,10 @@ AsciiDoc:
 ** Sub-item
 ```
 
-TODO: There are two numbered lists in the original Madoko version.  I
-have tried to replace them with AsciiDoc auto-numbered lists like
-these:
-
-```
-. First item
-. Second item
-```
-
-but I keep seeing a message like this in the `asciidoctor` output for
-such files.  How to correct this?
-
-```
-asciidoctor: WARNING: P4-16-spec.adoc: line 9205: unterminated listing block
-```
-
-TODO: The list in section "Operations on arbitrary-precision integers"
-that has sub-bullets, followed by text at the original top level list
-item level, is not parsed as desired by AsciiDoctor.  Learn how to do
-this in AsciiDoc, if it is possible.
+Former problem: The list in section "Operations on arbitrary-precision
+integers" that has sub-bullets, followed by text at the original top
+level list item level, is not parsed as desired by AsciiDoctor.  Learn
+how to do this in AsciiDoc, if it is possible.
 
 Answer: I found one answer on how to do this here:
 
@@ -202,12 +186,17 @@ TODO: Read AsciiDoc docs on how to enable syntax highlighting for P4:
 
 + https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/
 
-TODO: In Section 6.1 "Very Simple Switch Architecture" there are some
-list items with code blocks embedded in the middle of text, and there
-was a special syntax in Madoko to make the text after the code block
-indented inside the list item as the text before the code block was.
-I do not yet know how to do that in AsciiDoc, if it provides a way.
-In Madoko, such lines consist of only the backslash character `\`.
+Former problem: In Section 6.1 "Very Simple Switch Architecture" there
+are some list items with code blocks embedded in the middle of text,
+and there was a special syntax in Madoko to make the text after the
+code block indented inside the list item as the text before the code
+block was.  I do not yet know how to do that in AsciiDoc, if it
+provides a way.  In Madoko, such lines consist of only the backslash
+character `\`.
+
+Answer: I found one answer on how to do this here:
+
++ https://docs.asciidoctor.org/asciidoc/latest/lists/continuation/#enclose-in-open-block
 
 TODO: See if AsciiDoctor has a feature to avoid "widow lines",
 i.e. only one or two lines of a block appearing on a page, when the
@@ -229,7 +218,7 @@ TODO: The markup is definitely different in Madoko and AsciiDoc.
 
 # Footnotes
 
-TOOD: Learn what the AsciiDoc way to describe footnotes is.
+TODO: Learn what the AsciiDoc way to describe footnotes is.
 
 
 # Miscellaneous
@@ -282,7 +271,13 @@ monospace text in AsciiDoc, like shown below:
 A list of ``select``s
 ```
 
-TODO: The auto-numbering of section headings works for section numbers
-3 levels deep, e.g. 2.3.4, but not further.  See if there is a global
-setting that can increase this to 5 levels, which should be enough for
-all sections that I know of in P4 language spec.
+Former problem: The auto-numbering of section headings works for
+section numbers 3 levels deep, e.g. 2.3.4, but not further.  See if
+there is a global setting that can increase this to 5 levels, which
+should be enough for all sections that I know of in P4 language spec.
+
+Answer:
+
+Use `sectnumlevels` document property described on this page:
+
++ https://docs.asciidoctor.org/asciidoc/latest/sections/numbers/

@@ -4,6 +4,7 @@ The P4 Language Consortium
 :toclevels: 5
 :imagesdir: figs
 :sectnums:
+:sectnumlevels: 5
 :xrefstyle: short
 :stem: latexmath
 
@@ -539,10 +540,14 @@ Let us describe some of these elements:
   the width modifier can be omitted, writing just `15`.
 * `error` is a built-in P4 type for holding error codes
 * Next follows the declaration of a parser:
++
+--
 [source,P4]
 ----
 parser Parser<H>(packet_in b, out H parsedHeaders);
 ----
+--
++
 This declaration describes the interface for a parser, but not yet its
 implementation, which will be provided by
 the programmer. The parser reads its input from a `packet_in`, which is
@@ -553,6 +558,8 @@ argument. The type of this argument is `H`, yet unknown---it will
 also be provided by the programmer.
 
 * The declaration
++
+--
 [source,P4]
 ----
 control Pipe<H>(inout H headers,
@@ -560,6 +567,8 @@ control Pipe<H>(inout H headers,
                 in InControl inCtrl,
                 out OutControl outCtrl);
 ----
+--
++
 describes the interface of a Match-Action pipeline named `Pipe`.
 
 The pipeline receives three inputs: the headers `headers`, a parser
@@ -1458,7 +1467,23 @@ semantics for evaluating a function call is given by the following
 algorithm (implementations can be different as long as they provide
 the same result):
 
-TODO: Put correct numbered list here.
+1. Arguments are evaluated from left to right as they appear in the
+      function call expression.
+2. If a parameter has a default value and no corresponding argument is
+      supplied, the default value is used as an argument.
+3. For each `out` and `inout` argument the corresponding
+      l-value is saved (so it cannot be changed by the evaluation of
+      the following arguments). This is important if the argument
+      contains indexing operations into a header stack.
+4. The value of each argument is saved into a temporary.
+5. The function is invoked with the temporaries as arguments. We are
+      guaranteed that the temporaries that are passed as arguments are
+      never aliased to each other, so this "generated" function call
+      can be implemented using call-by-reference if supported by the
+      architecture.
+6. On function return, the temporaries that correspond to `out`
+      or `inout` arguments are copied in order from left to right
+      into the l-values saved in Step 3.
 
 According to this algorithm, the previous function call is equivalent
 to the following sequence of statements:
@@ -7860,7 +7885,32 @@ Switch(TopParser(ck16),
 
 The evaluation of this program proceeds as follows:
 
-TODO: Put correct numbered list here.
+. The declarations of `P`, `C`, `D`, `Switch`, and `Checksum16` all
+      evaluate to themselves.
+. The `Checksum16() ck16` instantiation is evaluated and it
+      produces an object named `ck16` with type `Checksum16`.
+. The declarations for `TopParser`, `Pipe`, and `TopDeparser`
+    evaluate as themselves.
+. The `main` variable instantiation is evaluated:
+  ..	The arguments to the constructor are evaluated recursively
+  ..	`TopParser(ck16)` is a constructor invocation
+     ... Its argument is evaluated recursively; it evaluates to the `ck16`
+        object
+  ..	The constructor itself is evaluated, leading to the
+        instantiation of an object of type `TopParser`
+  ..	Similarly, `Pipe()` and `TopDeparser(ck16)` are
+        evaluated as constructor calls.
+  ..	All the arguments of the `Switch` package constructor have
+        been evaluated (they are an instance of `TopParser`, an
+        instance of `Pipe`, and an instance of `TopDeparser`).
+        Their signatures are matched with the `Switch` declaration.
+  ..	Finally, the `Switch` constructor can be evaluated. The
+        result is an instance of the `Switch` package (that
+        contains a `TopParser` named `prs` the first
+        parameter of the `Switch`; a `Pipe` named `ctrl`;
+        and a `TopDeparser` named `dep`).
+. The result of the program evaluation is the value of the `main`
+    variable, which is the above instance of the `Switch` `package`.
 
 <<fig-compileeval>> shows the result of the evaluation in a
 graphical form. The result is always a graph of instances. There is
