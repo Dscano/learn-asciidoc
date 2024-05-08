@@ -163,14 +163,6 @@ Madoko: `---`
 AsciiDoc: TODO
 
 
-# automatic P4_16 code syntax colorization in code blocks
-
-Madoko: solved problem
-
-AsciiDoc: TODO
-
-
-
 # Code blocks with syntax highlighting
 
 Madoko:
@@ -194,6 +186,8 @@ code block goes here
 ```
 
 TODO: Read AsciiDoc docs on how to enable syntax highlighting for P4:
+
++ https://docs.asciidoctor.org/asciidoctor/latest/syntax-highlighting/
 
 + https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/
 
@@ -230,6 +224,10 @@ TODO: The markup is definitely different in Madoko and AsciiDoc.
 # Footnotes
 
 TODO: Learn what the AsciiDoc way to describe footnotes is.
+
+AsciiDoc documentation on footnotes:
+
++ https://docs.asciidoctor.org/asciidoc/latest/macros/footnote/
 
 
 # Miscellaneous
