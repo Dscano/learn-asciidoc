@@ -74,9 +74,10 @@ AsciiDoc cross-reference to that section:
 <<sec-p4-keywords>>
 ```
 
-Note that you should _not_ preceded the markup for the cross-reference
-with the word "Section", as AsciiDoc by default expands the
-cross-reference to include that word.
+Note that you should _not_ put the word "Section" before the markup
+for the cross-reference, because AsciiDoc by default expands the
+cross-reference to include that word (or "Figure", or "Appendix", as
+appropriate for the target of the cross-reference).
 
 You can choose to omit the explicit id, `[#sec-p4-keywords]`, in the
 AsciiDoc, _if_ the section name is unique throughout the document.  In
@@ -125,7 +126,16 @@ integers" that has sub-bullets, followed by text at the original top
 level list item level, is not parsed as desired by AsciiDoctor.  Learn
 how to do this in AsciiDoc, if it is possible.
 
-Answer: I found one answer on how to do this here:
+Former problem: In Section 6.1 "Very Simple Switch Architecture" there
+are some list items with code blocks embedded in the middle of text,
+and there was a special syntax in Madoko to make the text after the
+code block indented inside the list item as the text before the code
+block was.  I do not yet know how to do that in AsciiDoc, if it
+provides a way.  In Madoko, such lines consist of only the backslash
+character `\`.
+
+Answer: I found one answer on how to fix both of the above former
+problems, here:
 
 + https://docs.asciidoctor.org/asciidoc/latest/lists/continuation/#enclose-in-open-block
 
@@ -157,12 +167,14 @@ Madoko: enclose text within backticks
 
 AsciiDoc: Usually the same, except if a backtick ends up in the middle
 of a word as in one of the examples above, you must use
-double-backticks instead, as shown below.
+double-backticks instead, as shown below in the example on the second
+line.
 
 Also the `#` character is used to surround text to be highlighted in
 AsciiDoc, which can trigger if you try to use a single such character
 somewhere.  One way to avoid that for monospace text is to surround it
-the a backtick and plus sign combination, as shown below.
+with a backtick and plus sign combination, as shown below in the last
+two examples:
 
 ```
 `select`
@@ -223,7 +235,7 @@ The above required special definition in the header for a `P4Example`
 block.
 
 ```
-[source,ruby]
+[source,P4]
 ----
 code block goes here
 ----
@@ -234,18 +246,6 @@ TODO: Read AsciiDoc docs on how to enable syntax highlighting for P4:
 + https://docs.asciidoctor.org/asciidoctor/latest/syntax-highlighting/
 
 + https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/
-
-Former problem: In Section 6.1 "Very Simple Switch Architecture" there
-are some list items with code blocks embedded in the middle of text,
-and there was a special syntax in Madoko to make the text after the
-code block indented inside the list item as the text before the code
-block was.  I do not yet know how to do that in AsciiDoc, if it
-provides a way.  In Madoko, such lines consist of only the backslash
-character `\`.
-
-Answer: I found one answer on how to do this here:
-
-+ https://docs.asciidoctor.org/asciidoc/latest/lists/continuation/#enclose-in-open-block
 
 TODO: See if AsciiDoctor has a feature to avoid "widow lines",
 i.e. only one or two lines of a block appearing on a page, when the
