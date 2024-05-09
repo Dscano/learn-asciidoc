@@ -2497,7 +2497,9 @@ arbitrary-precision integer, without a width specified.
 
 [.center,%autowidth]
 |===
-| Element type       | header    | header_union | struct or tuple | list | header stack
+| Element type 5+^| Container type
+
+|                | header    | header_union | struct or tuple | list | header stack
 
 | `bit<W>`       | allowed   | error   |  allowed | allowed | error
 
