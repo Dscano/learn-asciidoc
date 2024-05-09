@@ -274,8 +274,15 @@ See here for how AsciiDoc specifies this:
 
 # Tables
 
-TODO: The markup is definitely different in Madoko and AsciiDoc.
+The markup is definitely different in Madoko and AsciiDoc.  I have
+updated the existing tables to use AsciiDoc markup, including at least
+fairly closely approximating the look of the tables that had header
+cells spanning multiple columns, but not the one that spanned multiple
+rows.
 
+See documentation here:
+
++ https://docs.asciidoctor.org/asciidoc/latest/tables/build-a-basic-table/
 
 
 # Footnotes
