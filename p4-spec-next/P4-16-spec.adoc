@@ -20,6 +20,7 @@ semantics of the language at a deeper level.
 
 toc::[]
 
+[#sec-scope]
 == Scope
 
 This specification document defines the structure and interpretation
@@ -253,7 +254,7 @@ libraries including counters, checksum units, meters, etc.
 
 Hence, the language has been transformed from a complex language (more than 70
 keywords) into a relatively small core language (less than 40 keywords, shown in
-<<_appendix_p4_reserved_keywords>>) accompanied by a library of fundamental
+<<sec-p4-keywords>>) accompanied by a library of fundamental
 constructs that are needed for writing most P4.
 
 The v1.1 version of P4 introduced a language construct called `extern` that
@@ -277,6 +278,7 @@ breaking backwards compatibility, we will seek to provide an easy path
 for migrating P4~16~ programs to the new version.
 
 
+[#sec-arch]
 == Architecture Model
 
 .P4 program interfaces.
@@ -340,6 +342,7 @@ register. However, P4 programs written for a given architecture should
 be portable across all targets that faithfully implement the
 corresponding model, provided there are sufficient resources.
 
+[#sec-p4-std-arch]
 === Standard architectures
 
 We expect that the P4 community will evolve a small set of standard architecture
@@ -348,6 +351,7 @@ architectures will promote portability of P4 programs across different targets.
 However, defining these
 standard architectures is outside of the scope of this document.
 
+[#sec-dp-interfaces]
 === Data plane interfaces
 
 To describe a functional block that can be programmed in P4, the
@@ -380,6 +384,7 @@ the other components of the architecture can be read off from this declaration:
   direction `out` indicates that this parameter is an output
   whose value is undefined initially but can be modified.
 
+[#sec-external-units]
 === Extern objects and functions
 
 P4 programs can also interact with objects and functions provided by the architecture.
@@ -404,6 +409,7 @@ extern Checksum16 {
 ----
 
 
+[#sec-vss-example]
 == Example: A very simple switch
 
 As an example to illustrate the features of architectures, consider
@@ -421,7 +427,7 @@ We call our architecture the "Very Simple Switch" (VSS).
 special about VSS---it is just a pedagogical example that
 illustrates how programmable switches can be described and programmed
 in P4. VSS has a number of fixed-function blocks (shown in cyan in our
-example), whose behavior is described in <<_very_simple_switch_architecture_description>>. The
+example), whose behavior is described in <<sec_vssarch>>. The
 white blocks are programmable using P4.
 
 VSS receives packets through one of 8 input Ethernet ports, through a
@@ -445,6 +451,7 @@ blocks and the programmable blocks---exposed in the P4 program as
 intrinsic metadata.
 
 
+[#sec-vss-arch]
 === Very Simple Switch Architecture
 
 The following P4 program provides a declaration of VSS in P4, as it
@@ -531,7 +538,7 @@ extern Checksum16 {
 Let us describe some of these elements:
 
 * The included file `core.p4` is described in more detail in
-  <<_appendix_p4_core_library>>. It defines some standard
+  <<sec-p4-core-lib>>. It defines some standard
   data-types and error codes.
 * `bit<4>` is the type of bit-strings with 4 bits.
 * The syntax `4w0xF` indicates the value 15 represented using 4
@@ -602,6 +609,7 @@ produce the output headers.
 * The `extern Checksum16` declaration describes an extern object
   whose services can be invoked to compute checksums.
 
+[#sec_vssarch]
 === Very Simple Switch Architecture Description
 
 In order to fully understand VSS's behavior and write meaningful P4
@@ -687,6 +695,7 @@ an additional information flow from the parser to the demux: the
 packet being processed as well as the offset within the packet where
 parsing ended (i.e., the start of the packet payload).
 
+[#sec-vss-extern]
 ==== Available extern blocks
 
 The VSS architecture provides an incremental checksum extern block,
@@ -705,12 +714,13 @@ methods:
   was used for computing the current checksum, `data` is removed
   from the checksum.
 
+[#sec-vss-all]
 === A complete Very Simple Switch program
 
 Here we provide a complete P4 program that implements basic forwarding for
 IPv4 packets on the VSS architecture. This program does not utilize all of the
 features provided by the architecture---e.g., recirculation---but it does use
-preprocessor `+#include+` directives (see <<_preprocessing>>).
+preprocessor `+#include+` directives (see <<sec-preprocessor>>).
 
 .Diagram of the match-action pipeline expressed by the VSS P4 program.
 [#fig-vssmau]
@@ -959,6 +969,7 @@ VSS(TopParser(),
 ----
 
 
+[#sec-p4-lang-def]
 == P4 language definition
 
 The P4 language can be viewed as having several distinct components,
@@ -968,16 +979,18 @@ which we describe separately:
   declarations, statements, expressions, etc. We start by describing
   this part of the language.
 * A sub-language for expressing parsers, based on state machines
-  (<<_packet_parsing>>).
+  (<<sec-packet-parsing>>).
 * A sub-language for expressing computations using match-action units, based on
-  traditional imperative control-flow (<<_control_blocks>>).
-* A sub-language for describing architectures (<<_architecture_description>>).
+  traditional imperative control-flow (<<sec-control>>).
+* A sub-language for describing architectures (<<sec-arch-desc>>).
 
+[#sec-syntax]
 === Syntax and semantics
 
+[#sec-grammar-intro]
 ==== Grammar
 
-The complete grammar of P4~16~ is given in <<_appendix_p4_grammar>>,
+The complete grammar of P4~16~ is given in <<sec-grammar>>,
 using Yacc/Bison grammar description language. This text is based on
 the same grammar. We adopt several standard conventions when we provide
 excerpts from the grammar:
@@ -1017,6 +1030,7 @@ described by this specification where externally visible behavior is defined as:
 * The input/output behavior of all P4 blocks, and
 * The state maintained by extern blocks.
 
+[#sec-preprocessor]
 === Preprocessing
 
 To aid composition of programs from multiple source files P4
@@ -1061,7 +1075,7 @@ produced by different programmers at different times:
 The P4 language specification defines a core library that includes
 several common programming constructs. A
 description of the core library is provided in
-<<_appendix_p4_core_library>>. All P4 programs must include the core
+<<sec-p4-core-lib>>. All P4 programs must include the core
 library. Including the core library is done with
 
 [source,P4]
@@ -1069,6 +1083,7 @@ library. Including the core library is done with
 # include <core.p4>
 ----
 
+[#sec-lexical]
 === Lexical constructs
 
 All P4 keywords use only ASCII characters. All P4 identifiers must use
@@ -1092,6 +1107,7 @@ The lexer recognizes the following kinds of terminals:
   example, the `RETURN` terminal corresponds to the `return`
   keyword.
 
+[#sec-identifiers]
 ==== Identifiers
 
 P4 identifiers may contain only letters, numbers, and the underscore
@@ -1111,6 +1127,7 @@ name
     ;
 ----
 
+[#sec-comments]
 ==== Comments
 
 P4 supports several kinds of comments:
@@ -1127,12 +1144,15 @@ P4 treats comments as token separators and no comments are allowed within a
 token---e.g. `bi/**/t` is parsed as two tokens, `bi` and `t`, and
 not as a single token `bit`.
 
+[#sec-literals]
 ==== Literal constants
 
+[#sec-Boolean-literals]
 ===== Boolean literals
 
 There are two Boolean literal constants: `true` and `false`.
 
+[#sec-integer-literals]
 ===== Integer literals
 
 Integer literals are non-negative arbitrary-precision integers.
@@ -1174,6 +1194,7 @@ literal. Here are some examples of numeric literals:
 16w0o377       // 16-bit unsigned number with value 255 (base 8)
 ----
 
+[#sec-string-literals]
 ===== String literals
 
 String literals (string constants) are specified as an arbitrary
@@ -1200,6 +1221,7 @@ Here are 3 examples of string literals:
 line terminator"
 ----
 
+[#sec-trailing-commas]
 ==== Optional trailing commas
 
 The P4 grammar allows several kinds of comma-separated lists to end in
@@ -1238,6 +1260,7 @@ enum E {
 }
 ----
 
+[#sec-naming-conventions]
 === Naming conventions
 
 P4 provides a rich assortment of types. Base types include bit-strings, numbers, and errors.
@@ -1256,6 +1279,7 @@ In this document we adopt the following conventions:
 * Constants are written with uppercase characters---e.g., `CPU_PORT`, and
 * Errors and enumerations are written in camel-case--- e.g. `PacketTooShort`.
 
+[#sec-p4-prog-structure]
 === P4 programs
 
 A P4 program is a list of declarations:
@@ -1272,6 +1296,7 @@ declarations accommodates the
 habits of C/C++ and Java programmers---e.g., certain constructs, like `struct`,
 do not require a terminating semicolon).
 
+[#sec-scopes]
 ==== Scopes
 
 Some P4 constructs act as namespaces that create local scopes for names including:
@@ -1298,6 +1323,7 @@ allows declarations in any order. This requirement significantly simplifies the 
 compilers for P4, allowing compilers to use additional information
 about declared identifiers to resolve ambiguities.)
 
+[#sec-stateful-elems]
 ==== Stateful elements
 
 Most P4 constructs are stateless: given some inputs they produce a
@@ -1326,13 +1352,14 @@ tables are used just once. To have finer-grained control over when
 a `table` is instantiated, a programmer can declare it within
 a `control`.
 
-Recall the example in <<_a_complete_very_simple_switch_program>>: `TopParser`, `TopPipe`, `TopDeparser`, `Checksum16`,
+Recall the example in <<sec-vss-all>>: `TopParser`, `TopPipe`, `TopDeparser`, `Checksum16`,
 and `Switch` are types. There are two instances of `Checksum16`, one in `TopParser` and
 one in `TopDeparser`, both called `ck`. The `TopParser`, `TopDeparser`, `TopPipe`,
 and `Switch` are instantiated at the end of the program, in the
 declaration of the `main` instance object, which is an instance of
 the `Switch` type (a `package`).
 
+[#sec-lvalues]
 === L-values
 
 L-values are expressions that may appear on the left side of an
@@ -1351,12 +1378,13 @@ include::grammar.adoc[tag=lvalue]
 * Structure, header, and header union field member access operations
   (using the dot notation).
 * References to elements within header stacks (see
-  <<_operations_on_header_stacks>>): indexing, and references to `last` and `next`.
+  <<sec-expr-hs>>): indexing, and references to `last` and `next`.
 * The result of a bit-slice operator `[m:l]`.
 
 The following is a legal l-value: `headers.stack[4].field`.  Note
 that method and function calls cannot return l-values.
 
+[#sec-calling-convention]
 === Calling convention: call by copy in/copy out
 
 P4 provides multiple constructs for writing modular programs: extern
@@ -1379,7 +1407,7 @@ Each parameter may be labeled with a direction:
   argument when the invocation is executed.
 * `out` parameters are, with a few exceptions listed below,
   uninitialized and are treated as l-values
-  (See <<_l_values>>) within the body of the method or function.
+  (See <<sec-lvalues>>) within the body of the method or function.
   An argument passed as an `out`
   parameter must be an l-value; after the execution of the
   call, the value of the parameter is copied to the corresponding storage location
@@ -1393,7 +1421,7 @@ Each parameter may be labeled with a direction:
 ** For anything other than an action, e.g. a control, parser, or
    function, a directionless parameter means that the value supplied
    as an argument in a call must be a compile-time known value
-   (see <<_compile_time_known_values>>).
+   (see <<sec-ct-constants>>).
 ** For an action, a directionless parameter indicates that it is
    "action data".  See <<sec-actions>> for the meaning of
    action data, but its meaning includes the following possibilities:
@@ -1414,7 +1442,7 @@ is not `out`.
   `header_union`, it is set to "invalid".
 * If a direction `out` parameter is of type header stack, all elements
   of the header stack are set to "invalid", and its `nextIndex` field
-  is initialized to 0 (see <<_operations_on_header_stacks>>).
+  is initialized to 0 (see <<sec-expr-hs>>).
 * If a direction `out` parameter is a compound type, e.g. a struct or
   tuple, other than one of the types listed above, then apply these
   rules recursively to its members.
@@ -1521,6 +1549,7 @@ When used as arguments, `extern` objects can only be passed as
 directionless parameters---e.g., see the packet argument in the
 very simple switch example.
 
+[#sec-calling-convention-justification]
 ==== Justification
 
 The main reason for using copy-in/copy-out semantics (instead of the more common
@@ -1571,7 +1600,7 @@ directions:
   `out`, or `inout`); this applies to `package`, `control`, `parser`,
   and `extern` objects. Values for these parameters must be specified
   at compile-time, and must evaluate to compile-time known values.
-  See <<_parameterization>> for further details.
+  See <<sec-parameterization>> for further details.
 * For actions all directionless parameters must be at the end of the
   parameter list.  When an action appears in a `table`'s `actions`
   list, only the parameters with a direction must be bound.
@@ -1581,7 +1610,7 @@ directions:
   values for all action parameters must be supplied explicitly,
   including values for the directionless parameters. The directionless
   parameters in this case behave like `in` parameters.
-  See <<_invoking_actions>> for further details.
+  See <<sec-invoke-actions>> for further details.
 * Default parameter values are only allowed for 'in' or direction-less parameters;
   these values must evaluate to compile-time constants.
 * If parameters with default values do not appear at the
@@ -1602,6 +1631,7 @@ void g()
 }
 ----
 
+[#sec-optional-parameters]
 ==== Optional parameters
 
 A parameter that is annotated with the `@optional` annotation is
@@ -1657,6 +1687,7 @@ package pack<HP, MP, HC, MC>(@optional parserProto<HP, MP> _parser,  // optional
 pack() main;   // No value for _parser, _control is an instance of nothing()
 ----
 
+[#sec-name-resolution]
 === Name resolution
 
 P4 objects that introduce namespaces are organized in a hierarchical
@@ -1694,6 +1725,7 @@ control p() {
 }
 ----
 
+[#sec-name-visibility]
 === Visibility
 
 Identifiers defined in the top-level namespace are globally
@@ -1702,6 +1734,7 @@ private and cannot be referred to from outside of the enclosing `parser`
 or `control`.
 
 
+[#sec-p4-type]
 == P4 data types
 
 P4~16~ is a statically-typed language. Programs that do not pass
@@ -1712,6 +1745,7 @@ casts. However, to make user intents clear, implicit casts are only allowed in
 a few circumstances and the range of casts available is intentionally
 restricted.
 
+[#sec-base-types]
 === Base types
 
 P4 supports the following built-in base types:
@@ -1758,7 +1792,7 @@ defined. `error` is similar to an enumeration (`enum`)
 type in other languages. A program can contain multiple `error` declarations, which
 the compiler will merge together. It is an error to declare the same
 identifier multiple times. Expressions of type `error` are
-described in <<_operations_on_error_types>>.
+described in <<sec-error-exprs>>.
 
 For example, the following declaration creates two constants of `error`
 type (these errors are declared in the P4 core library):
@@ -1770,11 +1804,12 @@ error { ParseError, PacketTooShort }
 
 The underlying representation of errors is target-dependent.
 
+[#sec-match-kind-type]
 ==== The match kind type
 
 The `match_kind` type is very similar to the `error` type and
 is used to declare a set of distinct names that may be
-used in a table's key property (described in <<_table_properties>>).
+used in a table's key property (described in <<sec-table-props>>).
 All identifiers are inserted into the
 top-level namespace.
 It is an error to declare the same `match_kind`
@@ -1801,19 +1836,21 @@ declaration of new ``match_kind``s can only occur within model
 description files; P4 programmers cannot declare new match kinds.
 
 Operations on values of type `match_kind` are described in
-<<_operations_on_match_kind_types>>.
+<<sec-match-kind-exprs>>.
 
+[#sec-bool-type]
 ==== The Boolean type
 
 The Boolean type `bool` contains just two values, `false` and `true`.
 Boolean values are not integers or bit-strings.
 
+[#sec-string-type]
 ==== Strings
 
 The type `string` represents strings.  There are no operations on
 string values; one cannot declare variables with a `string` type.
 Parameters with type `string` can be only directionless (see
-<<_calling_convention_call_by_copy_incopy_out>>).
+<<sec-calling-convention>>).
 P4 does not support string manipulation
 in the dataplane; the `string` type is only allowed for denoting
 compile-time constant string values.  These may be useful, for
@@ -1826,7 +1863,7 @@ extern void log(string message);
 ----
 
 The only strings that can appear in a P4 program are constant string
-literals, described in <<_string_literals>>.  For example,
+literals, described in <<sec-string-literals>>.  For example,
 the following annotation indicates that a specific name should be used
 for a table when generating the control-plane API:
 
@@ -1835,6 +1872,7 @@ for a table when generating the control-plane API:
 @name("acl") table t1 { /* body omitted */ }
 ----
 
+[#sec-integers]
 ==== Integers (signed and unsigned)
 
 P4 supports arbitrary-size integer values. The typing rules for the
@@ -1884,17 +1922,18 @@ well-typed P4 program and still be conformant to the P4 spec. However,
 if an architecture accepts a P4 program as valid, the runtime program
 behavior should match this specification.
 
+[#sec-unsigned-integers]
 ===== Unsigned integers (bit-strings)
 
 An unsigned integer (which we also call a "bit-string") has an
 arbitrary width, expressed in bits. A bit-string of width `W` is
 declared as: `bit<W>`. `W` must be an expression that evaluates to a
-compile-time known value (see <<_compile_time_known_values>>) that is a
+compile-time known value (see <<sec-ct-constants>>) that is a
 non-negative integer.  When using an expression for
 the size, the expression must be parenthesized and compile-time known.
 Bitstrings with width 0 are
 allowed; they have no actual bits, and can only have the value 0.  See
-<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>> for additional details.
+<<sec-uninitialized-values-and-writing-invalid-headers>> for additional details.
 Note that `bit<W>` type refers to both cases of `bit<W>`
 and `bit<(expression)>` where the width is compile-time known.
 
@@ -1920,8 +1959,9 @@ some arithmetic operations on certain sizes (e.g., 16-, 32-, and 64-
 bit values).
 
 All operations that can be performed on unsigned integers are
-described in <<_operations_on_fixed_width_bit_types_unsigned_integers>>.
+described in <<sec-bit-ops>>.
 
+[#sec-signed-integers]
 ===== Signed Integers
 
 Signed integers are represented using two's complement. An integer with `W`
@@ -1943,10 +1983,11 @@ some arithmetic operations on certain sizes (e.g., 16-, 32-, and 64-
 bit values).
 
 All operations that can be performed on signed integers are described
-in <<_operations_on_fixed_width_signed_integers>>.
+in <<sec-bit-ops>>.
 
 A signed integer with width 1 can only have two legal values: 0 and -1.
 
+[#sec-dynamically-sized-integers]
 ===== Dynamically-sized bit-strings
 
 Some network protocols use fields whose size is only known at runtime
@@ -1968,8 +2009,9 @@ for example, they may limit the maximum size, or they may require `varbit`
 values to always contain an integer number of bytes at runtime.
 
 All operations that can be performed on varbits are described in
-<<_operations_on_variable_size_bit_types>>.
+<<sec-varbit-string>>.
 
+[#sec-arbitrary-precision-integers]
 ===== Arbitrary-precision integers
 
 The arbitrary-precision data type describes integers with an unlimited
@@ -1982,7 +2024,7 @@ have a runtime component to fixed-width types, according to the rules
 described below.
 
 All operations that can be performed on arbitrary-precision integers
-are described in <<_operations_on_arbitrary_precision_integers>>.  The following example
+are described in <<sec-varint-ops>>.  The following example
 shows three constant definitions whose values are arbitrary-precision
 integers.
 
@@ -1998,7 +2040,7 @@ with type `int` for other callable entities of a program,
 e.g. controls, parsers, or functions, must be directionless,
 indicating that all calls must provide a compile-time known value as
 an argument for such a parameter.  See
-<<_calling_convention_call_by_copy_incopy_out>> for more details on directionless
+<<sec-calling-convention>> for more details on directionless
 parameters.
 
 ===== Integer literal types
@@ -2012,7 +2054,7 @@ The types of integer literals (constants) are as follows:
   has type `int<N>`.
 
 The table below shows several examples of integer literals and their
-types. For additional examples of literals see <<_literal_constants>>.
+types. For additional examples of literals see <<sec-literals>>.
 
 [.center,cols=">1,4",width=70%]
 |===
@@ -2031,6 +2073,7 @@ types. For additional examples of literals see <<_literal_constants>>.
 | `1s1`   | Type is `int<1>`, value is -1, overflow warning
 |===
 
+[#sec-derived-types]
 === Derived types
 
 P4 provides a number of type constructors that can be used to derive
@@ -2055,7 +2098,7 @@ referred to using this identifier.
 
 Other types cannot be declared, but are synthesized by the compiler
 internally to represent the type of certain language constructs. These
-types are described in <<_synthesized_data_types>>: set types and
+types are described in <<sec-synth-types>>: set types and
 function types. For example, the programmer cannot declare a variable
 with type "set", but she can write an expression whose value evaluates
 to a `set` type. These types are used during type-checking.
@@ -2075,6 +2118,7 @@ include::grammar.adoc[tag=prefixedType]
 include::grammar.adoc[tag=typeName]
 ----
 
+[#sec-enum-types]
 ==== Enumeration types
 
 An enumeration type is defined using the following syntax:
@@ -2160,11 +2204,12 @@ would raise an error because `300`, the value associated with
 The `initializer` expression must be a compile-time known value.
 
 Annotations, represented by the non-terminal `optAnnotations`, are
-described in <<_annotations>>.
+described in <<sec-annotations>>.
 
 Operations on `enum` values are described in
-<<_operations_on_enum_types>>.
+<<sec-enum-exprs>>.
 
+[#sec-header-types]
 ==== Header types
 
 The declaration of a `header` type is given by the following
@@ -2195,7 +2240,7 @@ addition, a header also contains a hidden Boolean "validity" field. When the
 variable with a header type is
 declared, its "validity" bit is automatically set to `false`. The "validity"
 bit can be manipulated by using the header methods `isValid()`, `setValid()`,
-and `setInvalid()`, as described in <<_operations_on_headers>>.
+and `setInvalid()`, as described in <<sec-ops-on-hdrs>>.
 
 Note, nesting of headers is not supported. One reason is that it leads to
 complications in defining the behavior of arbitrary sequences of `setValid`,
@@ -2270,7 +2315,7 @@ Ethernet_h ethernetHeader;
 
 P4's parser language provides an `extract` method that can be used to
 "fill in" the fields of a header from a network packet, as described
-in <<_data_extraction>>. The successful execution of
+in <<sec-packet-data-extraction>>. The successful execution of
 an `extract` operation also sets the validity bit of the extracted
 header to `true`.
 
@@ -2295,7 +2340,7 @@ header IPv4_h {
 }
 ----
 
-As demonstrated by a code example in <<_variable_width_extraction>>,
+As demonstrated by a code example in <<sec-packet-extract-two>>,
 another way to support headers that contain
 variable-length fields is to define two headers -- one fixed length,
 one containing a `varbit` field -- and extract each part in separate
@@ -2320,7 +2365,7 @@ the term `n` is the maximum defined size, and must be
 a positive integer that is a compile-time known value. Nested header
 stacks are not supported. At runtime a stack contains `n` values
 with type `typeName`, only some of which may be valid. Expressions
-on header stacks are discussed in <<_operations_on_header_stacks>>.
+on header stacks are discussed in <<sec-expr-hs>>.
 
 For example, the following declarations,
 
@@ -2338,8 +2383,9 @@ Mpls_h[10] mpls;
 introduce a header stack called `mpls` containing ten entries, each
 of type `Mpls_h`.
 
-Operations on header stacks are described in <<_operations_on_header_stacks>>.
+Operations on header stacks are described in <<sec-expr-hs>>.
 
+[#sec-header-unions]
 ==== Header unions
 
 A header union represents an alternative containing at most one of several different
@@ -2372,8 +2418,9 @@ header_union IP_h {
 
 A header union is not considered a type with fixed length.
 
-Operation on header unions are described in <<_operations_on_header_unions>>.
+Operation on header unions are described in <<sec-expr-hu>>.
 
+[#sec-struct-types]
 ==== Struct types
 
 P4 `struct` types are defined with the following syntax:
@@ -2399,6 +2446,7 @@ struct Parsed_headers {
 }
 ----
 
+[#sec-tuple-types]
 ==== Tuple types
 
 A tuple is similar to a `struct`, in that it holds multiple values.
@@ -2415,10 +2463,11 @@ include::grammar.adoc[tag=tupleType]
 ----
 
 Operations that manipulate tuple types are described in
-<<_operations_on_tuple_expressions>>.
+<<sec-tuple-exprs>>.
 
 The type `tuple<>` is a tuple type with no components.
 
+[#sec-list-types]
 ==== List types
 
 A list holds zero or more values, where every element must have the
@@ -2436,8 +2485,9 @@ include::grammar.adoc[tag=p4listType]
 ----
 
 Operations that manipulate list types are described in
-<<_operations_on_lists>>.
+<<sec-list-exprs>>.
 
+[#sec-type-nesting]
 ==== Type nesting rules
 
 The table below lists all types that may appear as members of headers,
@@ -2493,7 +2543,7 @@ formats as sequences of bits in order for them to be parsed or
 deparsed.
 
 Note the two-argument `extract` method (see
-<<_variable_width_extraction>>) on packets only supports a single `varbit`
+<<sec-packet-extract-two>>) on packets only supports a single `varbit`
 field in a header.
 
 The table below lists all types that may appear as base types in a
@@ -2537,6 +2587,7 @@ The table below lists all types that may appear as base types in a
 |===
 
 
+[#sec-synth-types]
 ==== Synthesized data types
 
 For the purposes of type-checking the P4 compiler can synthesize some
@@ -2544,6 +2595,7 @@ type representations which cannot be directly expressed by
 users. These are described in this section: set types and function
 types.
 
+[#sec-set-types]
 ===== Set types
 
 The type `set<T>` describes _sets_ of values of some type `T`. Set
@@ -2551,12 +2603,13 @@ types can only appear in restricted contexts in P4 programs. For
 example, the range expression `8w5 .. 8w8` describes a set
 containing the 8-bit numbers 5, 6, 7, and 8, so its type is `set<bit<8>>;`.
 This expression can be used as a label in a `select` expression
-(see <<_select_expressions>>), matching any value in this range. Set
+(see <<sec-select>>), matching any value in this range. Set
 types cannot be named or declared by P4 programmers, they are only
 synthesized by the compiler internally and used for
 type-checking. Expressions with set types are described in
-<<_operations_on_sets>>.
+<<sec-set-exprs>>.
 
+[#sec-function-type]
 ===== Function types
 
 Function types are created by the P4 compiler internally to represent the types
@@ -2587,6 +2640,7 @@ These declarations describe two objects:
     - the function has two inputs
     - both inputs have direction `in` and type `bit<32>`
 
+[#sec_extern]
 ==== Extern types
 
 P4 supports extern object declarations and extern function declarations using the following syntax.
@@ -2607,8 +2661,9 @@ include::grammar.adoc[tag=functionPrototype]
 ----
 
 For an example of an `extern` function declaration, see
-<<_function_types>>.
+<<sec-function-type>>.
 
+[#sec-extern-objects]
 ===== Extern objects
 
 An extern object declaration declares an object and all methods that
@@ -2640,7 +2695,7 @@ include::grammar.adoc[tag=typeParameterList]
 
 For example, the P4 core library introduces two extern objects `packet_in`
 and `packet_out` used for manipulating packets
-(see <<_data_extraction>> and <<_deparsing>>). Here
+(see <<sec-packet-data-extraction>> and <<sec-deparse>>). Here
 is an example showing how the methods of these objects can be invoked
 on a packet:
 
@@ -2678,6 +2733,7 @@ parser p(packet_in p, out bit<32> value) {
 //}
 ----
 
+[#sec-abstract-methods]
 ====== Abstract methods
 
 Typical extern object methods are built-in, and are implemented by the
@@ -2701,8 +2757,9 @@ extern Balancer {
 ----
 
 When such an object is instantiated the user has to supply an
-implementation of all the `abstract` methods (see <<_instantiating_objects_with_abstract_methods>>).
+implementation of all the `abstract` methods (see <<sec-instantiating-abstract-methods>>).
 
+[#sec-type-spec]
 ==== Type specialization
 
 A generic type may be specialized by specifying arguments for its type
@@ -2781,6 +2838,7 @@ header_union HU<T> {
 HU<bit> hu;
 ----
 
+[#sec-parser-control-types]
 ==== Parser and control blocks types
 
 Parsers and control blocks types are similar to function types: they
@@ -2792,7 +2850,7 @@ in architectures may be generic
 The types `parser`, `control`, and `package` cannot be used as
 types of arguments for methods, parsers, controls, tables, or actions.
 They _can_ be used as types for the arguments passed to
-constructors (see <<_parameterization>>).
+constructors (see <<sec-parameterization>>).
 
 ===== Parser type declarations
 
@@ -2832,6 +2890,7 @@ include::grammar.adoc[tag=controlTypeDeclaration]
 Control type declarations are similar to parser type
 declarations.
 
+[#sec-pkg-types]
 ==== Package types
 
 A package type describes the signature of a package.
@@ -2847,6 +2906,7 @@ or `inout`). Otherwise package types are very similar to
 parser type declarations. Packages can only be instantiated; there are
 no runtime behaviors associated with them.
 
+[#sec-dont-care-types]
 ==== Don't care types
 
 A don't care (underscore, "`_`") can be used in some circumstances as
@@ -2855,8 +2915,9 @@ bound type variable.  The
 underscore can be used to reduce code complexity---when it is not
 important what the type variable binds to (during type unification the
 don't care type can unify with any other type).  An example is given
-<<_example_architecture_description>>.
+<<sec-arch-desc-example>>.
 
+[#sec-default-values]
 === Default values
 
 Some P4 types define a "default value," which can be used to
@@ -2888,20 +2949,22 @@ Note that some types do not have default values, e.g., `match_kind`,
 set types, function types, extern types, parser types, control types,
 package types.
 
+[#sec-numeric-values]
 === Numeric types
 
 Many P4 operations are restrained to expressions that evaluate to numeric values.
 Such expressions must have one of the following numeric types:
 
   - `int` - an arbitrary-precision integer
-    (<<_arbitrary_precision_integers>>)
+    (<<sec-arbitrary-precision-integers>>)
   - `bit<W>` - a `W`-bit unsigned integer where `W >= 0`
-    (<<_unsigned_integers_bit_strings>>)
+    (<<sec-unsigned-integers>>)
   - `int<W>` - a `W`-bit signed integer where `W >= 1`
-    (<<_signed_integers>>)
+    (<<sec-signed-integers>>)
   - a serializable `enum` with an underlying type that is `bit<W>` or
-    `int<W>` (<<_enumeration_types>>).
+    `int<W>` (<<sec-enum-types>>).
 
+[#sec-typedef]
 === typedef
 
 A `typedef` declaration can be used to give an alternative name to
@@ -2939,6 +3002,7 @@ struct S<T> {
 typedef S<bit<32>> X;  // -- legal
 ----
 
+[#sec-newtype]
 === Introducing new types
 
 Similarly to `typedef`, the keyword `type` can be used to introduce a
@@ -2983,6 +3047,7 @@ that automatically converts values of type `PortId_t` to a different
 representation when exchanged with the control-plane software).
 
 
+[#sec-exprs]
 == Expressions
 
 This section describes all expressions that can be used in P4,
@@ -3058,7 +3123,7 @@ include::grammar.adoc[tag=typeArg]
 include::grammar.adoc[tag=typeArgumentList]
 ----
 
-See <<_appendix_p4_grammar>> for the complete P4 grammar.
+See <<sec-grammar>> for the complete P4 grammar.
 
 This grammar does not indicate the precedence of the various
 operators.  The precedence mostly follows the C precedence
@@ -3072,8 +3137,9 @@ addition. Bit-slicing `a[m:l]` has the same precedence as array
 indexing (`a[i]`).
 
 In addition to these expressions, P4 also supports `select` expressions (described
-in <<_select_expressions>>), which may be used only in parsers.
+in <<sec-select>>), which may be used only in parsers.
 
+[#sec-expr-eval-order]
 === Expression evaluation order
 
 Given a compound expression, the order in which sub-expressions are
@@ -3087,8 +3153,9 @@ side-effects. P4 expressions are evaluated as follows:
 * All other expressions are evaluated left-to-right as they appear in
   the source program.
 * Method and function calls are evaluated as described in
-  <<_calling_convention_call_by_copy_incopy_out>>.
+  <<sec-calling-convention>>.
 
+[#sec-error-exprs]
 === Operations on `error` types
 
 Symbolic names declared by an `error` declaration belong to the `error`
@@ -3104,6 +3171,7 @@ error errorFromParser;
 if (errorFromParser != error.NoError) { /* code omitted */ }
 ----
 
+[#sec-enum-exprs]
 === Operations on `enum` types
 
 Symbolic names declared by an enum belong to the namespace introduced by the enum declaration rather than the top-level namespace.
@@ -3161,7 +3229,7 @@ fixed-width unsigned integer representation for `E.e2`, i.e. `1`.  The variable 
 to the symbolic value `E.e2`, which corresponds to the fixed-width unsigned integer value `1`.
 
 Because it is always safe to cast from an `enum` to its underlying fixed-width integer type,
-implicit casting from an `enum` to its fixed-width (signed or unsigned) integer type is also supported (see <<_implicit_casts>>):
+implicit casting from an `enum` to its fixed-width (signed or unsigned) integer type is also supported (see <<sec-implicit-casts>>):
 
 [source,P4]
 ----
@@ -3310,8 +3378,9 @@ serialization data type and representation.
 
 Additionally, the size of a serializable enum can be determined at
 compile-time. However, the size of an enum without an
-underlying type cannot be determined at compile-time (<<_compile_time_size_determination>>).
+underlying type cannot be determined at compile-time (<<sec-minsizeinbits>>).
 
+[#sec-match-kind-exprs]
 === Operations on `match_kind` types
 
 Values of type `match_kind` are similar to `enum` values.  They
@@ -3323,6 +3392,7 @@ match_kind { fuzzy }
 const bool same = exact == fuzzy;  // always 'false'
 ----
 
+[#sec-bool-exprs]
 === Expressions on Booleans
 
 The following operations are provided on Boolean expressions:
@@ -3335,7 +3405,7 @@ The precedence of these operators is similar to C and uses short-circuited
 evaluation where relevant.
 
 Additionally, the size of a boolean can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
 P4 does not implicitly cast from bit-strings to Booleans or
 vice versa. As a consequence, a program that is valid in a language like C such as,
@@ -3353,7 +3423,7 @@ if (x != 0) /* body omitted */
 ----
 
 See the discussion on arbitrary-precision types and implicit casts
-in <<_implicit_casts>> for details on how the `0` in this
+in <<sec-implicit-casts>> for details on how the `0` in this
 expression is evaluated.
 
 ==== Conditional operator
@@ -3369,6 +3439,7 @@ itself can be evaluated at compilation time. This restriction is
 designed to ensure that the width of the result of the conditional
 expression can be inferred statically at compile time.
 
+[#sec-bit-ops]
 === Operations on fixed-width bit types (unsigned integers)
 
 This section discusses all operations that can be performed on
@@ -3451,7 +3522,7 @@ Bit-strings also support the following operations:
 * Extraction of a set of contiguous bits, also known as a slice,
   denoted by `[H:L]`, where `H` and `L` must be expressions that evaluate to
   non-negative compile-time known values, and `H >= L`. The types of `H` and `L`
-  (which do not need to be identical) must be numeric (<<_numeric_types>>).
+  (which do not need to be identical) must be numeric (<<sec-numeric-values>>).
   The result is a bit-string of width `H - L + 1`, including the bits numbered
   from `L` (which becomes the least significant bit of the result) to `H` (the
   most significant bit of the result) from the source operand. The conditions
@@ -3471,8 +3542,9 @@ Bit-strings also support the following operations:
   In concatenation, the left operand is placed as the most significant bits.
 
 Additionally, the size of a bit-string can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
+[#sec-int-ops]
 === Operations on fixed-width signed integers
 
 This section discusses all operations that can be performed on expressions of type `int<W>`
@@ -3542,7 +3614,7 @@ The `int<W>` datatype also support the following operations:
   denoted by `[H:L]`, where `H` and `L` must be expressions that evaluate to
   non-negative compile-time known values, and `H >= L` must be true.
   The types of `H` and `L` (which do not need to be identical)
-  must be numeric (<<_numeric_types>>).
+  must be numeric (<<sec-numeric-values>>).
   The result is an unsigned bit-string of width `H - L + 1`, including the bits
   numbered from `L` (which becomes the least significant bit of the result)
   to `H` (the most significant bit of the result) from the source operand.
@@ -3561,8 +3633,9 @@ The `int<W>` datatype also support the following operations:
   In concatenation, the left operand is placed as the most significant bits.
 
 Additionally, the size of a fixed-width signed integer can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
+[#sec-varint-ops]
 === Operations on arbitrary-precision integers
 
 The type `int` denotes arbitrary-precision integers. In P4, all
@@ -3590,13 +3663,13 @@ expressions of type `int` must be compile-time known values.  The type
 +
 --
 ** `int` - an arbitrary-precision integer
-   (<<_arbitrary_precision_integers>>)
+   (<<sec-arbitrary-precision-integers>>)
 ** `bit<W>` - a `W`-bit unsigned integer where `W >= 0`
-   (<<_unsigned_integers_bit_strings>>)
+   (<<sec-unsigned-integers>>)
 ** `int<W>` - a `W`-bit signed integer where `W >= 1`
-   (<<_signed_integers>>)
+   (<<sec-signed-integers>>)
 ** a serializable `enum` with an underlying type that is `bit<W>` or `int<W>`
-   (<<_enumeration_types>>).
+   (<<sec-enum-types>>).
 --
 +
 The result is an unsigned bit-string of width `H - L + 1`, including the bits
@@ -3614,7 +3687,7 @@ Each operand that participates in any of these operation must have
 type `int` (except shifts). Binary operations cannot
 be used to combine values of type `int` with values of a fixed-width
 type (except shifts). However, the compiler automatically inserts casts from `int`
-to fixed-width types in certain situations---see <<_casts>>.
+to fixed-width types in certain situations---see <<sec-casts>>.
 
 All computations on `int` values are carried out without loss of
 information. For example, multiplying two 1024-bit values may produce
@@ -3632,6 +3705,7 @@ Note: saturating arithmetic is not supported for arbitrary-precision integers.
 
 === Concatenation and shifts
 
+[#sec-concatenation]
 ==== Concatenation
 
 Concatenation is applied to two bit-strings (signed or unsigned).
@@ -3680,6 +3754,7 @@ whose width exceeds a certain bound.  For example, a target may forbid
 shifting an 8-bit value by a non-constant value whose width is greater
 than 3 bits.
 
+[#sec-varbit-string]
 === Operations on variable-size bit types
 
 To support parsing headers with variable-length fields, P4 offers a
@@ -3710,14 +3785,15 @@ finding this information in a section dedicated to type `varbit`.
   extern object (see <_variable_width_extraction>>). This
   operation sets the dynamic width of the field.
 * The `emit` method of a `packet_out` extern object can be performed
-  on a header and a few other types (see <<_deparsing>>) that
+  on a header and a few other types (see <<sec-deparse>>) that
   contain a field with type `varbit`. Such an `emit` method call
   inserts a variable-sized bit-string with a known dynamic width into
   the packet being constructed.
 
 Additionally, the size of a variable-length bit-string can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
+[#sec-casts]
 === Casts
 
 P4 provides a limited set of casts between types. A cast is written
@@ -3757,13 +3833,14 @@ The following casts are legal in P4:
 * casts between a typedef and the original type.
 * casts between a type introduced by `type` and the original type.
 * casts between an `enum` with an explicit type and its underlying type
-* casts of a key-value list to a struct type or a header type (see <<_operations_on_structure_valued_expressions>>)
+* casts of a key-value list to a struct type or a header type (see <<sec-structure-expressions>>)
 * casts of a tuple expression to a header stack type
 * casts of an invalid expression `+{#}+` to a header or a header union type
 * casts where the destination type is the same as the source type
   if the destination type appears in this list (this excludes 
   e.g., parsers or externs).
 
+[#sec-implicit-casts]
 ==== Implicit casts
 
 To keep the language simple and avoid introducing hidden costs, P4
@@ -3803,12 +3880,13 @@ the compiler will add implicit casts as follows:
 
 The compiler also adds implicit casts when types of different
 expressions need to "match"; for example, as described in
-<<_select_expressions>>, since select labels are compared against the selected
+<<sec-select>>, since select labels are compared against the selected
 expression, the compiler will insert implicit casts for the select
 labels when they have `int` types.  Similarly, when assigning a
 structure-valued expression to a structure or header, the compiler will
 add implicit casts for `int` fields.
 
+[#sec-illegal-arith]
 ==== Illegal arithmetic expressions
 
 Many arithmetic expressions that would be allowed in other languages
@@ -3869,6 +3947,7 @@ cannot guess the user intent, so P4 requires the user to disambiguate.
 |===
 
 
+[#sec-tuple-exprs]
 === Operations on tuple expressions
 
 Tuples can be assigned to other tuples with the same type, passed as
@@ -3903,7 +3982,7 @@ expression ...
 include::grammar.adoc[tag=expressionList]
 ----
 
-The type of a tuple expression is a tuple type (<<_tuple_types>>).
+The type of a tuple expression is a tuple type (<<sec-tuple-types>>).
 Tuple expressions can be assigned to expressions
 of type `tuple`, `struct` or `header`, and can also be
 passed as arguments to methods. Tuples may be nested. However, tuple
@@ -3940,7 +4019,7 @@ const S x = { 10, 20 }; //a = 10, b = 20
 
 A tuple expression can have an explicit structure or header type
 specified, and then it is converted automatically to a
-structure-valued expression (see <<_operations_on_structure_valued_expressions>>):
+structure-valued expression (see <<sec-structure-expressions>>):
 
 [source,P4]
 ----
@@ -3964,6 +4043,7 @@ tuple<bit<32>, bool> x = { 10, false };
 
 The empty tuple expression has type `tuple<>` - a tuple with no components.
 
+[#sec-structure-expressions]
 === Operations on structure-valued expressions
 
 One can write expressions that evaluate to a structure or header.  The
@@ -4016,7 +4096,7 @@ once.
 Structure-valued expressions that have `...` as their last element are
 allowed to give values to only a subset of the fields of the struct or
 header type to which it evaluates.  Any field names not given a value
-explicitly will be given their default value (see <<_initializing_with_default_values>>).
+explicitly will be given their default value (see <<sec-initializing-with-default-values>>).
 
 The order of the fields of the `struct` or `header` type does not need
 to match the order of the values of the structure-valued expression.
@@ -4024,6 +4104,7 @@ to match the order of the values of the structure-valued expression.
 It is a compile-time error if a field name appears more than once in
 the same structure-valued expression.
 
+[#sec-list-exprs]
 === Operations on lists
 
 The value of a list is written using curly braces, with each element
@@ -4052,15 +4133,16 @@ control c() {
 ----
 
 Additionally, the size of a list can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
+[#sec-set-exprs]
 === Operations on sets
 
 Some P4 expressions denote sets of values (`set<T>`, for some type `T`;
-see <<_set_types>>). These expressions can
+see <<sec-set-types>>). These expressions can
 appear only in a few contexts---parsers and table
 entries. For example, the `select` expression
-(<<_select_expressions>>) has the following structure:
+(<<sec-select>>) has the following structure:
 
 [source,P4]
 ----
@@ -4091,6 +4173,7 @@ include::grammar.adoc[tag=simpleKeysetExpression]
 The mask (`&&&`) and range (`..`) operators have the same
 precedence; the just above the `?:` operator.
 
+[#sec-singleton-set]
 ==== Singleton sets
 
 In a set context, expressions denote singleton sets. For example, in
@@ -4105,6 +4188,7 @@ select (hdr.ipv4.version) {
 
 The label `4` denotes the singleton set containing the `int` value `4`.
 
+[#sec-universal-set]
 ==== The universal set
 
 In a set context, the expressions `default` or `_` denote the
@@ -4118,9 +4202,10 @@ select (hdr.ipv4.version) {
 }
 ----
 
+[#sec-cubes]
 ==== Masks
 
-The infix operator `&&&` takes two arguments of the same numeric type (<<_numeric_types>>),
+The infix operator `&&&` takes two arguments of the same numeric type (<<sec-numeric-values>>),
 and creates a value of the same type.
 The right value is used as a
 "mask", where each bit set to `0` in the mask indicates a "don't care"
@@ -4147,16 +4232,17 @@ keyset as in the example above.
 
 Similar to other binary operations,
 the mask operator allows the compiler to automatically insert casts
-to unify the argument types in certain situations (<<_implicit_casts>>).
+to unify the argument types in certain situations (<<sec-implicit-casts>>).
 
 P4 architectures may impose additional restrictions on the expressions
 on the left and right-hand side of a mask operator: for example, they
 may require that either or both sub-expressions be compile-time known
 values.
 
+[#sec-ranges]
 ==== Ranges
 
-The infix operator `..` takes two arguments of the same numeric type `T` (<<_numeric_types>>),
+The infix operator `..` takes two arguments of the same numeric type `T` (<<sec-numeric-values>>),
 and creates a value of
 the type `set<T>`. The set contains all values numerically between the
 first and the second, inclusively. For example:
@@ -4170,11 +4256,12 @@ denotes a set of 4 consecutive `int<4>` values `4s5, 4s6, 4s7`, and `4s8`.
 
 Similar to other binary operations,
 the range operator allows the compiler to automatically insert casts
-to unify the argument types in certain situations (<<_implicit_casts>>).
+to unify the argument types in certain situations (<<sec-implicit-casts>>).
 
 A range where the second value is smaller than the first one
 represents an empty set.
 
+[#sec-tuples-of-sets]
 ==== Products
 
 Multiple sets can be combined using Cartesian product:
@@ -4191,6 +4278,7 @@ select(hdr.ipv4.ihl, hdr.ipv4.protocol) {
 The type of a product of sets is a set of tuples.
 
 
+[#sec-ops-on-structs]
 === Operations on struct types
 
 The only operation defined on expressions whose type is a `struct` is
@@ -4198,11 +4286,11 @@ field access, written using dot (".") notation---e.g., `s.field`. If
 `s` is an l-value, then `s.field` is also an l-value. P4 also allows
 copying ``struct``s using assignment when the source and target of the
 assignment have the same type. Finally, ``struct``s can be initialized
-with a tuple expression, as discussed in <<_operations_on_tuple_expressions>>, or
+with a tuple expression, as discussed in <<sec-tuple-exprs>>, or
 with a structure-valued expression, as described in
-<<_operations_on_structure_valued_expressions>>.  Both of these cases must initialize all
+<<sec-structure-expressions>>.  Both of these cases must initialize all
 fields of the structure. The size of a struct can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
 Two structs can be compared for equality (==) or inequality (!=) only
 if they have the same type and all of their fields can be recursively
@@ -4223,10 +4311,11 @@ const S x = { a = 10, b = 20 };     // structure-valued expression
 const S x = (S) { a = 10, b = 20 }; // structure-valued expression
 ----
 
-See <<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>
+See <<sec-uninitialized-values-and-writing-invalid-headers>>
 for a description of the behavior if `struct` fields are read without
 being initialized.
 
+[#sec-ops-on-hdrs]
 === Operations on headers
 
 Headers provide the same operations as ``struct``s. Assignment between
@@ -4242,9 +4331,9 @@ of the header.
 "false". It can only be applied to an l-value.
 
 Similar to a `struct`, a header object can be initialized with a tuple
-expression (see <<_operations_on_tuple_expressions>>) --- the tuple fields are assigned to the
+expression (see <<sec-tuple-exprs>>) --- the tuple fields are assigned to the
 header fields in the order they appear --- or with a structure-valued
-expression (see <<_operations_on_struct_types>>).  When initialized the header
+expression (see <<sec-ops-on-structs>>).  When initialized the header
 automatically becomes valid:
 
 [source,P4]
@@ -4261,7 +4350,7 @@ if they have the same type.  Two headers are equal if and only if they
 are both invalid, or they are both valid and all their corresponding
 fields are equal.
 Furthermore, the size of a header can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
 The expression `+{#}+` represents an invalid header of some type, but it
 can be any header or header union type.  A P4 compiler may require an
@@ -4292,11 +4381,12 @@ directive, since it cannot be the first character on a line when it
 occurs in the single lexical token `+{#}+`, which may not have
 whitespace or any other characters between those shown.
 
-See <<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>
+See <<sec-uninitialized-values-and-writing-invalid-headers>>
 for a description of the behavior if header fields are read without
 being initialized, or header fields are written to a currently invalid
 header.
 
+[#sec-expr-hs]
 === Operations on header stacks
 
 A header stack is a fixed-size array of headers with the same
@@ -4337,10 +4427,10 @@ expressions are legal:
   if an index value that is a compile-time constant is out of range.
 +
 Accessing a header stack `hs` with an index less than `0` or
-greater than or equal to `hs.size` results in an undefined value.  See <<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>> for more
+greater than or equal to `hs.size` results in an undefined value.  See <<sec-uninitialized-values-and-writing-invalid-headers>> for more
 details.
 +
-The `index` is an expression that must be of numeric types (<<_numeric_types>>).
+The `index` is an expression that must be of numeric types (<<sec-numeric-values>>).
 
 * `hs.size`: produces a 32-bit unsigned integer that returns the
   size of the header stack (a compile-time constant).
@@ -4424,13 +4514,14 @@ void pop_front(int count) {
 ----
 
 Similar to structs and headers, the size of a header stack can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
 Two header stacks can be compared for equality (`==`) or inequality (`!=`)
 only if they have the same element type and the same length.  Two
 stacks are equal if and only if all their corresponding elements are
 equal.  Note that the `nextIndex` value is not used in the equality comparison.
 
+[#sec-hs-init]
 ==== Header stack expressions
 
 One can write expressions that evaluate to a header stack.  The
@@ -4466,6 +4557,7 @@ H<bit<32>>[3] s2 = { {0, 1}, {2, 3}, ... };
 
 The values of `s`, `s1`, and `s2` in the above example are identical.
 
+[#sec-expr-hu]
 === Operations on header unions
 
 A variable declared with a union type is initially invalid. For example:
@@ -4681,7 +4773,7 @@ parser Tcp_option_parser(packet_in b, out Tcp_option_stack vec) {
 ----
 
 Similar to headers, the size of a header union can be determined at
-compile-time (<<_compile_time_size_determination>>).
+compile-time (<<sec-minsizeinbits>>).
 
 The expression `+{#}+` represents an invalid header union of some type,
 but it can be any header or header union type.  A P4 compiler may require an
@@ -4700,6 +4792,7 @@ their corresponding fields are equal (i.e., either all fields are
 invalid in both unions, or in both unions the same field is valid, and
 the values of the valid fields are equal as headers).
 
+[#sec-invocations]
 === Method invocations and function calls
 
 Method invocations and function calls can be invoked using the
@@ -4744,10 +4837,10 @@ f(y = ya, x = xa);  // match arguments by name in any order
 //f(x = xa, y = 0);  -- error: y must be a left-value
 ----
 
-The calling convention is copy-in/copy-out (<<_calling_convention_call_by_copy_incopy_out>>).  For generic functions the type arguments
+The calling convention is copy-in/copy-out (<<sec-calling-convention>>).  For generic functions the type arguments
 can be explicitly specified in the function call. The compiler only
 inserts implicit casts for direction `in` arguments to methods or
-functions as described in <<_casts>>.  The types for all
+functions as described in <<sec-casts>>.  The types for all
 other arguments must match the parameter types exactly.
 
 The result returned by a function call is discarded when the function
@@ -4759,6 +4852,7 @@ is ignored by subsequent computations.  When used in generic functions
 or methods, the compiler may reject the program if it is unable to
 infer a type for the don't care argument.
 
+[#sec-constructor]
 === Constructor invocations
 
 Several P4 constructs denote resources that are allocated at
@@ -4773,11 +4867,11 @@ Allocation of such objects can be performed in two ways:
 
 * Using constructor invocations, which are expressions that return an
   object of the corresponding type.
-* Using instantiations, described in <<_instantiations>>.
+* Using instantiations, described in <<sec-instantiations>>.
 
 The syntax for a constructor invocation is similar to a function call;
 constructors can also be called using named arguments.
-Constructors are evaluated entirely at compilation time (see <<_p4_abstract_machine_evaluation>>). In consequence, all constructor arguments
+Constructors are evaluated entirely at compilation time (see <<sec-p4-abstract-mach>>). In consequence, all constructor arguments
 must also be expressions that can be evaluated at compilation time.
 When performing type inference and overload resolution, constructor
 invocations are treated similar to methods or functions.
@@ -4796,15 +4890,16 @@ table tbl {
 }
 ----
 
+[#sec-extern-operations]
 === Operations on `extern` objects
 
 The only operations that can be performed on `extern` objects are the
 following:
 
 * Instantiating an extern object using a constructor invocation, as described in
-  <<_constructor_invocations>>.
+  <<sec-constructor>>.
 * Invoking a method of an extern object instance using a method call expression, as
-  described in <<_method_invocations_and_function_calls>>.
+  described in <<sec-invocations>>.
 
 Controls, parsers, packages, and extern constructors can have
 parameters of type `extern` only if they are directionless parameters.
@@ -4814,6 +4909,7 @@ construction of such objects.
 No other operations are available on extern objects, e.g., equality
 comparison is not defined.
 
+[#sec-newtype-operations]
 === Operations on types introduced by `type`
 
 Values with a type introduced by the `type` keyword provide only a few operations:
@@ -4833,6 +4929,7 @@ bool b1 = (bit<32>)x == z;  // cast needed
 bool b2 = x == y;  // no cast needed
 ----
 
+[#sec-type-variable-operations]
 === Operations on types that are type variables
 
 Because functions, methods, control, and parsers can be generic,
@@ -4860,9 +4957,10 @@ A future version of P4 may introduce a notion of _type constraints_
 which would enable more operations on such values.  Because of this
 limitation, such values are currently of limited utility.
 
+[#sec-uninitialized-values-and-writing-invalid-headers]
 === Reading uninitialized values and writing fields of invalid headers
 
-As mentioned in <<_operations_on_header_stacks>>, any reference to an element of
+As mentioned in <<sec-expr-hs>>, any reference to an element of
 a header stack `hs[index]` where `index` is a compile-time constant
 expression must give an error at compile time if the value of the
 index is out of range.  That section also defines the run time
@@ -4977,10 +5075,11 @@ they do not have to be explicitly initialized to have a legal value.
 
 (Header types with no fields always have a validity bit.)
 
+[#sec-initializing-with-default-values]
 === Initializing with default values
 
 A left-value can be initialized automatically with a default value of the
-suitable type using the syntax `...` (see <<_default_values>>).  A value
+suitable type using the syntax `...` (see <<sec-default-values>>).  A value
 of type `struct`, `header`, or `tuple` can also be initialized using a mix of
 explicit values and default values by using the notation `...` in a tuple
 expression initializer; in this case all fields not explicitly
@@ -5031,6 +5130,7 @@ H h2 = { f2=5, ... };   // initialize h2 with a header that is valid, field f1 0
 H h3 = { ... };  // initialize h3 with a header that is valid, field f1 0, field f2 0
 ----
 
+[#sec-minsizeinbits]
 == Compile-time size determination
 
 The method calls `minSizeInBits`, `minSizeInBytes`, `maxSizeInBits`,
@@ -5100,6 +5200,7 @@ These methods are defined for:
 
 Every other case is undefined and will produce a compile-time error.
 
+[#sec-functions]
 == Function declarations
 
 Functions can only be declared at the top level and all parameters must have a direction.
@@ -5127,8 +5228,10 @@ with a return type of `void` can simply use the `return` statement with no
 arguments.  A function with a non-void return type must return a value
 of the suitable type on all possible execution paths.
 
+[#sec-consts-and-vars]
 == Constants and variable declarations
 
+[#sec-constants]
 === Constants
 
 Constant values are defined with the syntax:
@@ -5155,6 +5258,7 @@ const Version version = { 32w0, 32w0 };
 
 The `initializer` expression must be a compile-time known value.
 
+[#sec-variables]
 === Variables
 
 Local variables are declared with a type, a name, and an optional
@@ -5169,13 +5273,13 @@ include::grammar.adoc[tag=optInitializer]
 
 Variable declarations without an initializer are uninitialized (except for
 headers and other header-related types, which are initialized to invalid in the
-same way as described for direction `out` parameters in <<_calling_convention_call_by_copy_incopy_out>>). The language places few restrictions on
+same way as described for direction `out` parameters in <<sec-calling-convention>>). The language places few restrictions on
 the types of the variables: most P4 types that can be written
 explicitly can be used (e.g., base types, `struct`, `header`,
 header stack, `tuple`). However, it is impossible to declare variables with type `int`,
 or with types that are only synthesized by the compiler (e.g., `set`)
 In addition, variables of type  `parser`, `control`, `package`,
-or `extern` types must be declared using instantiations (see <<_instantiations>>).
+or `extern` types must be declared using instantiations (see <<sec-instantiations>>).
 
 Reading the value of a variable that has not been initialized yields
 an undefined result. The compiler should attempt to detect and emit a warning in such situations.
@@ -5195,6 +5299,7 @@ in languages such as C. The value of a variable is never preserved
 from one invocation of its enclosing block to the next. In particular,
 variables cannot be used to maintain state between different network packets.
 
+[#sec-instantiations]
 === Instantiations
 
 Instantiations are similar to variable declarations,
@@ -5210,7 +5315,7 @@ instantiation
 ----
 
 An instantiation is written as a constructor invocation followed by a name.
-Instantiations are always executed at compilation time (<<_compile_time_known_values>>).
+Instantiations are always executed at compilation time (<<sec-ct-constants>>).
 The effect is to allocate an object with the specified name,
 and to bind it to the result of the constructor invocation.
 Note that instantiation arguments can be specified by name.
@@ -5237,6 +5342,7 @@ control c(/* parameters omitted */) {
 }
 ----
 
+[#sec-instantiating-abstract-methods]
 ==== Instantiating objects with abstract methods
 
 When instantiating an extern type that has `abstract` methods users
@@ -5304,6 +5410,7 @@ c() c1;  // illegal top-level instantiation
 because control `c1` is instantiated at the top-level. Note that top-level declarations of
 constants and instantiations of extern objects are permitted.
 
+[#sec-stmts]
 == Statements
 
 Every statement in P4 except block statements must end with a semicolon.
@@ -5333,8 +5440,9 @@ statement
 include::grammar.adoc[tag=assignmentOrMethodCallStatement]
 ----
 
-In addition, parsers support a `transition` statement (<<_transition_statements>>).
+In addition, parsers support a `transition` statement (<<sec-transition>>).
 
+[#sec-assignment]
 === Assignment statement
 
 An assignment, written with the `=` sign, first evaluates its left
@@ -5344,6 +5452,7 @@ types (e.g. ``struct``s) are copied recursively, and all components
 of ``header``s are copied, including "validity" bits. Assignment is
 not defined for `extern` values.
 
+[#sec-empty-stmt]
 === Empty statement
 
 The empty statement, written `;` is a no-op.
@@ -5353,6 +5462,7 @@ The empty statement, written `;` is a no-op.
 include::grammar.adoc[tag=emptyStatement]
 ----
 
+[#sec-block-stmt]
 === Block statement
 
 A block statement is denoted by curly braces. It contains a
@@ -5369,6 +5479,7 @@ include::grammar.adoc[tag=statOrDeclList]
 include::grammar.adoc[tag=statementOrDeclaration]
 ----
 
+[#sec-return-stmt]
 === Return statement
 
 The `return` statement immediately terminates the execution of the
@@ -5379,13 +5490,14 @@ this case the type of the expression must match the return type of the
 function.  Any copy-out behavior due to direction `out` or `inout`
 parameters of the enclosing `action`, `function`, or `control` are
 still performed after the execution of the `return` statement.  See
-<<_calling_convention_call_by_copy_incopy_out>> for details on copy-out behavior.
+<<sec-calling-convention>> for details on copy-out behavior.
 
 [source,bison]
 ----
 include::grammar.adoc[tag=returnStatement]
 ----
 
+[#sec-exit-stmt]
 === Exit statement
 
 The `exit` statement immediately terminates the execution of all
@@ -5396,7 +5508,7 @@ functions.
 
 Any copy-out behavior due to direction `out` or `inout` parameters of
 the enclosing `action` or `control`, and all of its callers, are still
-performed after the execution of the `exit` statement.  See <<_calling_convention_call_by_copy_incopy_out>> for details on copy-out behavior.
+performed after the execution of the `exit` statement.  See <<sec-calling-convention>> for details on copy-out behavior.
 
 [source,bison]
 ----
@@ -5407,24 +5519,24 @@ There are some expressions whose evaluation might cause an `exit`
 statement to be executed.  Examples include:
 
 * `table.apply().action_run`, which can only appear as the expression
-  of a `switch` statement (see <<_switch_statement>>), and when
+  of a `switch` statement (see <<sec-switch-stmt>>), and when
   it appears there, it must be the entire expression.
 * Any expression containing `table.apply().hit` or
-  `table.apply().miss` (see <<_match_action_unit_invocation>>), which can be
+  `table.apply().miss` (see <<sec-invoke-mau>>), which can be
   part of arbitrarily complex expressions in many places of a P4
   program, such as:
 ** the expression in an `if` statement.
 ** the expression `e1` in a conditional expression `e1 ? e2 : e3`.
 ** in an assignment statement, in the left and/or right hand sides.
 ** an argument passed to a function or method call.
-** an expression to calculate a table key (see <<_match_action_unit_execution_semantics>>).
+** an expression to calculate a table key (see <<sec-mau-semantics>>).
 
 This list is not intended to be exhaustive.
 
 If applying the table causes an action to be executed, which in turn
 causes an `exit` statement to be executed, then evaluation of the
 expression ends immediately, and the rest of the current expression or
-statement does not complete its execution.  See <<_expression_evaluation_order>> for the order of evaluation of the parts of an
+statement does not complete its execution.  See <<sec-expr-eval-order>> for the order of evaluation of the parts of an
 expression.  For the examples listed above, it also means the
 following behavior after the expression evaluation is interrupted.
 
@@ -5444,6 +5556,7 @@ following behavior after the expression evaluation is interrupted.
    call, then the function/method call does not occur.
 ** If the expression is a table key, then the table is not applied.
 
+[#sec-cond-stmt]
 === Conditional statement
 
 The conditional statement uses standard syntax and semantics familiar from many programming languages.
@@ -5459,6 +5572,7 @@ include::grammar.adoc[tag=conditionalStatement]
 When several `if` statements are nested, the `else` applies to the
 innermost `if` statement that does not have an `else` statement.
 
+[#sec-switch-stmt]
 === Switch statement
 
 The `switch` statement can only be used within `control` blocks.
@@ -5477,7 +5591,7 @@ include::grammar.adoc[tag=nonBraceExpression]
 ----
 
 The `nonBraceExpression` is the same as `expression` as defined in
-<<_expressions>>, except it does not include any cases that can
+<<sec-exprs>>, except it does not include any cases that can
 begin with a left brace `{` character, to avoid syntactic ambiguity
 with a block statement.
 
@@ -5488,7 +5602,7 @@ separately in the following two subsections.
 
 For this variant of `switch` statement, the expression must be of the
 form `t.apply().action_run`, where `t` is the name of a table (see
-<<_match_action_unit_invocation>>).  All switch labels must be names of
+<<sec-invoke-mau>>).  All switch labels must be names of
 actions of the table `t`, or `default`.
 
 [source,P4]
@@ -5518,7 +5632,7 @@ to a result with one of these types:
 
 All switch labels must be expressions with compile-time known values,
 and must have a type that can be implicitly cast to the type of the
-`switch` expression (see <<_implicit_casts>>).  Switch
+`switch` expression (see <<sec-implicit-casts>>).  Switch
 labels must not begin with a left brace character `{`, to avoid
 ambiguity with a block statement.
 
@@ -5571,6 +5685,7 @@ use to implement generalized switch statements.
 
 [GeneralizedSwitchStatements]: <https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md>
 
+[#sec-packet-parsing]
 == Packet parsing
 
 This section describes the P4 constructs specific to parsing network packets.
@@ -5590,6 +5705,7 @@ is part of the parser, while the `accept` and `reject` states
 are distinct from the states provided by the programmer and are logically outside of the parser.  <<fig-parserstatemachine>>
 illustrates the general structure of a parser state machine.
 
+[#sec-parser-decl]
 === Parser declarations
 
 A parser declaration comprises a name, a list of parameters, an
@@ -5608,7 +5724,7 @@ include::grammar.adoc[tag=parserStates]
 ----
 
 For a description of `optConstructorParameters`, which are useful for
-building parameterized parsers, see <<_parameterization>>.
+building parameterized parsers, see <<sec-parameterization>>.
 
 Unlike parser type declarations, parser declarations may not be
 generic---e.g., the following declaration is illegal:
@@ -5658,8 +5774,9 @@ parser p() {
 ----
 
 For an example containing a complete declaration of a parser see
-<<_a_complete_very_simple_switch_program>>.
+<<sec-vss-all>>.
 
+[#sec-parser-abstract-machine]
 === The Parser abstract machine
 
 The semantics of a P4 parser can be formulated in terms of an abstract
@@ -5705,9 +5822,9 @@ transitions to that state, including:
 - Assignment statements,
 - Method calls, which serve several purposes:
   * Invoking functions (e.g., using `verify` to check the validity of data already parsed), and
-  * Invoking methods (e.g., extracting data out of packets or computing checksums) and other parsers (see <<_sub_parsers>>), and
+  * Invoking methods (e.g., extracting data out of packets or computing checksums) and other parsers (see <<sec-invoke-subparser>>), and
 - Conditional statements,
-- Transitions to other states (discussed in <<_transition_statements>>).
+- Transitions to other states (discussed in <<sec-transition>>).
 
 The syntax for parser statements is given by the following grammar rules:
 
@@ -5728,6 +5845,7 @@ of local variables that may be used.
 In terms of the `ParserModel`, the sequence of statements in a state
 are executed sequentially.
 
+[#sec-transition]
 === Transition statements
 
 The last statement in a parser state is an optional `transition`
@@ -5771,6 +5889,7 @@ statement, the implied statement is
 transition reject;
 ----
 
+[#sec-select]
 === Select expressions
 
 A `select` expression evaluates to a state. The syntax for a `select`
@@ -5862,7 +5981,7 @@ select (p.tcp.port) {
 The expression `16w0 &&& 16w0xFC00` describes the set of 16-bit
 values whose most significant six bits are zero.
 
-Some targets may support parser value sets; see <<_parser_value_sets>>. Given
+Some targets may support parser value sets; see <<sec-value-set>>. Given
 a type `T` for the type parameter of the value set, the type of the value set
 is `set<T>`. The type of the value set must match to the type of all other
 ``keysetExpression``s in the same `select` expression. If there is a mismatch, the
@@ -5894,6 +6013,7 @@ specified on a struct field, by default it is assumed to be `@match(exact)`.
 A single non-exact field must be placed into a struct by itself, with the
 desired `@match` annotation.
 
+[#sec-verify]
 === verify
 
 The `verify` statement provides a simple form of error
@@ -5924,6 +6044,7 @@ ParserModel.verify(bool condition, error err) {
 }
 ----
 
+[#sec-packet-data-extraction]
 === Data extraction
 
 The P4 core library contains the following declaration of a built-in `extern`
@@ -5981,6 +6102,7 @@ packet_in {
 }
 ----
 
+[#sec-packet-extract-one]
 ==== Fixed-width extraction
 
 The single-argument `extract` method handles fixed-width headers,
@@ -5992,7 +6114,7 @@ void extract<T>(out T headerLeftValue);
 ----
 
 The expression `headerLeftValue` must evaluate to an l-value (see
-<<_l_values>>) of type `header` with a fixed width. If
+<<sec-lvalues>>) of type `header` with a fixed width. If
 this method executes successfully, on completion the `headerLvalue`
 is filled with data from the packet and its validity bit is set to `true`. This
 method may fail in various ways---e.g., if there are not
@@ -6034,6 +6156,7 @@ void packet_in.extract<T>(out T headerLValue) {
 }
 ----
 
+[#sec-packet-extract-two]
 ==== Variable-width extraction
 
 The two-argument `extract` handles variable-width headers, and is declared in P4 as follows:
@@ -6126,6 +6249,7 @@ parser Top(packet_in b, out Parsed_headers headers) {
 }
 ----
 
+[#sec-packet-lookahead]
 ==== Lookahead
 
 The `lookahead` method provided by the `packet_in` packet abstraction
@@ -6161,7 +6285,7 @@ T packet_in.lookahead<T>() {
 }
 ----
 
-The TCP options example from <<_operations_on_header_unions>> also illustrates how `lookahead` can be used:
+The TCP options example from <<sec-expr-hu>> also illustrates how `lookahead` can be used:
 
 [source,P4]
 ----
@@ -6184,6 +6308,7 @@ state parse_tcp_option_sack {
 }
 ----
 
+[#sec-skip-bits]
 ==== Skipping bits
 
 P4 provides two ways to skip over bits in an input packet without
@@ -6275,7 +6400,8 @@ parser P(packet_in b, out Pkthdr p) {
 }
 ----
 
-===  Sub-parsers
+[#sec-invoke-subparser]
+=== Sub-parsers
 
 P4 allows parsers to invoke the services of other parsers, similar to
 subroutines. To invoke the services of another parser, the sub-parser
@@ -6323,7 +6449,7 @@ inner parser instances, etc. Thus, in general, invoking a parser
 instance twice is not the same as invoking two copies of the same
 parser instance. Note however that local variables do not persist
 across invocations of the parser. This semantics also applies to
-direct invocation (see <<_direct_type_invocation>>).
+direct invocation (see <<sec-direct-invocation>>).
 
 Architectures may impose (static or dynamic) constraints on the
 number of parser states that can be traversed for processing each
@@ -6335,7 +6461,8 @@ the time budget allocated for parsing, the parser should transition to
 `reject` and set
 the standard error `error.ParserTimeout`.
 
-===  Parser Value Sets
+[#sec-value-set]
+=== Parser Value Sets
 
 In some cases, the values that determine the transition from one parser state
 to another need to be determined at run time. MPLS is one example where the
@@ -6380,6 +6507,7 @@ accompanying English specification document here:
 <https://github.com/p4lang/p4runtime>]
 
 
+[#sec-control]
 == Control blocks
 
 P4 parsers are responsible for extracting bits from a packet into
@@ -6409,7 +6537,7 @@ include::grammar.adoc[tag=controlBody]
 It is illegal to instantiate a `parser` within a `control`
 block.
 For a description of the `optConstructorParameters`, which
-can be used to build parameterized control blocks, see <<_parameterization>>.
+can be used to build parameterized control blocks, see <<sec-parameterization>>.
 
 Unlike control type declarations, control declarations may not be
 generic---e.g., the following declaration is illegal:
@@ -6479,6 +6607,7 @@ Some targets may impose additional restrictions on action
 bodies---e.g., only allowing straight-line code, with no conditional
 statements or expressions.
 
+[#sec-invoke-actions]
 ==== Invoking actions
 
 Actions can be executed in two ways:
@@ -6557,9 +6686,9 @@ In addition, the tables may optionally define the following properties,
   program is loaded, some or all of which may be unchangeable by the
   control plane software.
 - `largest_priority_wins` - Only useful for some tables with the
-  `entries` property.  See <<_entries>> for details.
+  `entries` property.  See <<sec-entries>> for details.
 - `priority_delta` - Only useful for some tables with the `entries`
-  property.  See <<_entries>> for details.
+  property.  See <<sec-entries>> for details.
 
 The compiler must set the `default_action` to `NoAction` (and also
 insert it into the list of `actions`) for tables that do not define
@@ -6568,12 +6697,13 @@ as having a `default_action` property, either implicitly or
 explicitly.
 
 In addition, tables may contain architecture-specific properties (see
-<<_additional_properties>>).
+<<sec-additional-table-properties>>).
 
 A property marked as `const` cannot be changed dynamically by the
 control plane. The `key`, `actions`, and `size` properties are always
 constant, so the `const` keyword is not needed for these.
 
+[#sec-table-props]
 ==== Table properties
 
 [#sec-table-keys]
@@ -6583,7 +6713,7 @@ The `key` is a table property which specifies the data-plane
 values that should be used to look up an entry. A key is a list of
 pairs of the form `(e : m)`, where `e` is an expression that describes
 the data to be matched in the table, and `m` is a `match_kind`
-constant that describes the algorithm used to perform the lookup (see <<_the_match_kind_type>>).
+constant that describes the algorithm used to perform the lookup (see <<sec-match-kind-type>>).
 
 [source,bison]
 ----
@@ -6633,7 +6763,7 @@ influences only the control-plane API and the implementation of
 the look-up table. From the point of view of the P4 program, a look-up
 table is an abstract finite map that is given a key and produces as a
 result either an action or a "miss" indication, as described in
-<<_match_action_unit_execution_semantics>>.
+<<sec-mau-semantics>>.
 
 The expected meaning of these values is as follows:
 
@@ -6645,7 +6775,7 @@ The expected meaning of these values is as follows:
 - a `ternary` match kind on a key field means that the field in the
   table specifies a set of values for the key field using a value and
   a mask. The meaning of the `(value, mask)` pair is similar to the P4
-  mask expressions, as described in <<_masks>>: a key field
+  mask expressions, as described in <<sec-cubes>>: a key field
   `k` matches the table entry when `k & mask == value & mask`.
 
 - a `lpm` (longest prefix match) match kind on a key field is a
@@ -6665,7 +6795,7 @@ specification does not mandate whether "higher" priorities are
 represented by higher or lower numeric values; this choice is left to
 the target implementation.
 
-An example specifying entries for a table is given in <<_entries>>.
+An example specifying entries for a table is given in <<sec-entries>>.
 
 If a table has no `key` property, or if the value of its `key`
 property is the empty tuple, i.e. `key = {}`, then it contains no
@@ -6694,7 +6824,7 @@ include::grammar.adoc[tag=actionRef]
 ----
 
 To illustrate, recall the example Very Simple Switch program in
-<<_a_complete_very_simple_switch_program>>:
+<<sec-vss-all>>:
 
 [source,P4]
 ----
@@ -6756,6 +6886,7 @@ table t {
 }
 ----
 
+[#sec-default-action]
 ===== Default action
 
 The default action for a table is an action that is invoked
@@ -6798,6 +6929,7 @@ and illegal specifications of default actions for the `table t`:
   // default_action = b(x, 3); -- illegal: x parameter of b bound to x instead of z
 ----
 
+[#sec-entries]
 ===== Entries
 
 While table entries are typically installed by the control plane,
@@ -6855,11 +6987,11 @@ limitations), unlike tables declared with `const entries`.
 
 Whether the control plane is allowed to modify a table's default
 action at run time is determined by the table's `default_action` table
-property (see <<_default_action>>), independently of whether
+property (see <<sec-default-action>>), independently of whether
 the control plane is allowed to modify the entries of the table.
 
 The `keysetExpression` component of an entry is a tuple that must
-provide a field for each key in the table keys (see <<_table_properties>>). The table key type must match the type of the
+provide a field for each key in the table keys (see <<sec-table-props>>). The table key type must match the type of the
 element of the set. The `actionRef` component must be an action which
 appears in the table actions list (and must not have the
 `@defaultonly` annotation), with all its arguments bound.
@@ -6936,6 +7068,7 @@ invokes action `a`. Once the program is loaded, these entries are
 installed in the table in the order they are enumerated in the
 program.
 
+[#sec-entry-priorities]
 ====== Entry priorities
 
 If a table has fields where their ``match_kind``s are all `exact` or
@@ -7107,7 +7240,7 @@ ever issued by the compiler for this table.  This option is provided
 for developers who explicitly choose to specify entries in an order
 that does not match their relative priority order.
 
-The following example is the same as the first example in <<_entries>>, except for the definition of table `t_exact_ternary`
+The following example is the same as the first example in <<sec-entries>>, except for the definition of table `t_exact_ternary`
 shown below.
 
 [source,P4]
@@ -7148,6 +7281,7 @@ Normally this program would cause a warning about multiple entries
 with the same priority of 40, but those warnings will be suppressed
 because of the `@noWarn("duplicate_priorities")` annotation.
 
+[#sec-size-table-property]
 ===== Size
 
 The `size` is an optional property of a table.  When present, its
@@ -7176,6 +7310,7 @@ resources at run time.  If a `size` value is specified in the P4
 program, it is recommended that such an implementation uses the `size`
 value as the initial capacity of the table.
 
+[#sec-additional-table-properties]
 ===== Additional properties
 
 A `table` declaration defines its essential control and data plane
@@ -7222,6 +7357,7 @@ distinct values. Introducing a layer of indirection enables sharing
 identical entries, which can significantly reduce the table's storage
 requirements.
 
+[#sec-invoke-mau]
 ==== Match-action unit invocation
 
 A `table` can be invoked by calling its `apply`
@@ -7273,6 +7409,7 @@ switch (dmac.apply().action_run) {
 }
 ----
 
+[#sec-mau-semantics]
 ==== Match-action unit execution semantics
 
 The semantics of a table invocation statement:
@@ -7374,6 +7511,7 @@ statements to implement side-effecting key expressions, but does
 not insert them when there are no side-effecting key expressions,
 then in typical programs they will almost never be inserted.]
 
+[#sec-mau-abstract-mach]
 === The Match-Action Pipeline Abstract Machine
 
 We can describe the computational model of a match-action pipeline,
@@ -7392,6 +7530,7 @@ program:
 - Applying a `table` executes the corresponding
   match-action unit, as described above.
 
+[#sec-invoke-controls]
 === Invoking controls
 
 P4 allows controls to invoke the services of other controls, similar
@@ -7419,7 +7558,7 @@ objects, inner control instances, etc. Thus, in general, invoking a
 control instance twice is not the same as invoking two copies of the
 same control instance. Note however, that local variables do not
 persist across invocations of the control. This semantics also applies
-to direct invocation (see <<_direct_type_invocation>>).
+to direct invocation (see <<sec-direct-invocation>>).
 
 When a control is instantiated, all its local declarations of stateful
 instantiations are evaluated recursively.  Each instantiation of a
@@ -7434,8 +7573,9 @@ whether in the `apply` block or out, and whether with initializers or not, they 
 when a control instance is invoked. That is, local variables in a control never persist across invocations. For variables
 declared outside the `apply` block, they are evaluated at the beginning of execution.
 
-All the behavior above also applies to direct invocation (see <<_direct_type_invocation>>).
+All the behavior above also applies to direct invocation (see <<sec-direct-invocation>>).
 
+[#sec-parameterization]
 == Parameterization
 
 In order to support libraries of useful P4 components, both ``parser``s
@@ -7503,6 +7643,7 @@ the `udpSupport` parameter, as in the following example:
 GenericParser(false) topParser;
 ----
 
+[#sec-direct-invocation]
 === Direct type invocation
 
 Controls and parsers are often instantiated exactly once.  As a light
@@ -7568,13 +7709,14 @@ than once is defined as follows.
   multiple controllable entities with the same fully-qualified control
   name.
 
-See <<_annotations_controlling_naming>> for details of `@name`
+See <<sec-name-annotations>> for details of `@name`
 annotations.
 
 No direct invocation is possible for controls or parsers that require
 constructor arguments.  These need to be instantiated before they are
 invoked.
 
+[#sec-deparse]
 == Deparsing
 
 The inverse of parsing is deparsing, or packet construction. P4 does
@@ -7598,6 +7740,7 @@ Emitting a header appends the header to the `packet_out` only if
 the header is valid. Emitting a header stack will emit all elements of
 the stack in order of increasing indices.
 
+[#sec-deparse-insert]
 === Data insertion into packets
 
 The `packet_out` datatype is defined in the P4 core library, and
@@ -7663,13 +7806,14 @@ fields for header unions and structs `(f : data.fields$)`.  The
 iteration order for a struct is the order those fields appear in the
 type declaration.
 
+[#sec-arch-desc]
 == Architecture description
 
 The architecture description must be provided by the target
 manufacturer in the form of a library P4 source file that contains at
 least one declaration for a `package`; this `package` must be
 instantiated by the user to construct a program for a target. For an
-example see the Very Simple Switch declaration from <<_very_simple_switch_architecture>>.
+example see the Very Simple Switch declaration from <<sec-vss-arch>>.
 
 The architecture description file may pre-define data types,
 constants, helper package implementations, and errors. It must also
@@ -7684,6 +7828,7 @@ using type variables, which must be used parametrically in the
 program---i.e., type variables are checked similar to Java generics,
 not C++ templates.
 
+[#sec-arch-desc-example]
 === Example architecture description
 
 .Fragment of example switch architecture.
@@ -7749,6 +7894,7 @@ separate channels between the ingress and egress pipeline:
 - A channel that can pass data indirectly using a parser and deparser
   that serializes data into a packet and back.
 
+[#sec-target-instantiation]
 === Example architecture program
 
 To construct a program for the architecture, the P4 program must
@@ -7804,6 +7950,7 @@ The user can also explicitly specify values for the type variables
 Switch<bit<32>>(P(), Pipe1()) main;
 ----
 
+[#sec-pkt-filter]
 === A Packet Filter Model
 
 .A packet filter target model. The parser computes a Boolean value, which is used to decide whether the packet is dropped.
@@ -7836,6 +7983,7 @@ control Filter<H>(inout H headers, out bool accept);
 package Program<H>(Parser<H> p, Filter<H> f);
 ----
 
+[#sec-p4-abstract-mach]
 == P4 abstract machine: Evaluation
 
 The evaluation of a P4 program is done in two stages:
@@ -7846,6 +7994,7 @@ The evaluation of a P4 program is done in two stages:
   executed to completion, in isolation, when it receives control from the
   architecture
 
+[#sec-ct-constants]
 === Compile-time known values
 
 The following are compile-time known values:
@@ -7865,7 +8014,7 @@ The following are compile-time known values:
   known values.
 - Expressions evaluating to a list type, where all elements are
   compile-time known values.
-- Instances constructed by instance declarations (<<_instantiations>>) and constructor invocations.
+- Instances constructed by instance declarations (<<sec-instantiations>>) and constructor invocations.
 - A legal cast applied to a compile-time known value
 - The following expressions (`+`, `-`, `*`, `/ `, `%`, `!`, `&`, `|`, `&&`, `||`, `<< `, `>> `, `~` `, `\ `>`, `<`, `==`, `!=`, `<=`, `>=`, `++`, `[:]`, `?:`)
   when their operands are all compile-time known values.
@@ -7873,6 +8022,7 @@ The following are compile-time known values:
 - Expressions of the form `e.minSizeInBits()`, `e.minSizeInBytes()`,
   `e.maxSizeInBits()` and `e.maxSizeInBytes()`
 
+[#sec-ct-eval]
 === Compile-time Evaluation
 
 Evaluation of a program proceeds in order of declarations, starting in
@@ -7962,6 +8112,7 @@ require distinct checksum units to be used in distinct blocks.
 [#fig-compileeval]
 image::compileeval.png[width=250,align="center"]
 
+[#sec-cp-names]
 === Control plane names
 
 Every controllable entity exposed in a P4 program must be assigned a
@@ -7995,6 +8146,7 @@ the global scope, have the same local and fully-qualified names.  The
 local names of controllable entities and enclosing constructs are
 derived from the syntax of a P4 program as follows.
 
+[#sec-cp-value-set]
 ===== Value sets
 
 For each `value_set` construct, its syntactic name becomes the local
@@ -8070,7 +8222,7 @@ table t {
 ----
 
 If a compiler cannot generate a name for a key it **requires** the key
-expression to be annotated with a `@name` annotation (<<_control_plane_api_annotations>>), as in the following example:
+expression to be annotated with a `@name` annotation (<<sec-control-plane-api-annotations>>), as in the following example:
 
 [source,P4]
 ----
@@ -8100,6 +8252,7 @@ control c(/* parameters omitted */)() {
 
 This action's local name is `a`.
 
+[#sec-cp-instances]
 ===== Instances
 
 The local names of `extern`, `parser`, and `control`
@@ -8195,9 +8348,10 @@ corresponding formal parameter.
 [#fig-evalmultiple]
 image::evalmultiple.png[width=250,align="center"]
 
+[#sec-name-annotations]
 ==== Annotations controlling naming
 
-Control plane-related annotations (<<_control_plane_api_annotations>>) can alter the names exposed to
+Control plane-related annotations (<<sec-control-plane-api-annotations>>) can alter the names exposed to
 the control plane in the following ways.
 
 - The `@hidden` annotation hides a controllable entity from the
@@ -8232,22 +8386,24 @@ when inserting rules into table `c_inst.t`, because it is clear
 from the definition of the table which action `a` refers to.
 
 Not all unambiguous postfix shortcuts are recommended. For instance, consider the
-first example in <<_control_plane_names>>.  One might be tempted to
+first example in <<sec-cp-names>>.  One might be tempted to
 refer to `s.c1` simply as `c1`, as no other instance named `c1`
 appears in the program.  However, this leads to a brittle
 program since future modifications can never introduce an instance named `c1`,
 or include libraries of P4 code that contain instances with that name.
 
+[#sec-dynamic-eval]
 === Dynamic evaluation
 
 The dynamic evaluation of a P4 program is orchestrated by the architecture
 model. Each architecture model needs to specify the order and the conditions
 under which the various P4 component programs are dynamically
-executed. For example, in the Simple Switch example from <<_very_simple_switch_architecture>> the execution flow goes `Parser->Pipe->Deparser`.
+executed. For example, in the Simple Switch example from <<sec-vss-arch>> the execution flow goes `Parser->Pipe->Deparser`.
 
 Once a P4 execution block is invoked its execution proceeds until
 termination according to the semantics defined in this document.
 
+[#sec-concurrency]
 ==== Concurrency model
 
 A typical packet processing system needs to execute multiple
@@ -8321,6 +8477,7 @@ blocks if it cannot implement the atomic execution of the instruction
 sequence. In such cases, the compiler should provide reasonable
 diagnostics.
 
+[#sec-static-assert]
 == Static assertions
 
 The P4 core library contains two overloaded declarations for a
@@ -8354,6 +8511,7 @@ As the comment indicates, if `static_assert` returns `false`, it
 causes the program compilation to be terminated immediately with an
 error.
 
+[#sec-annotations]
 == Annotations
 
 Annotations are a simple mechanism for extending the P4 language to
@@ -8445,7 +8603,7 @@ metadata, consisting of expression lists or key-value lists but not both. An
 `expressionList` may be empty or contain a comma-separated list of member
 ``expression``s. A `kvList` consists of one or more ``kvPair``s, each consisting of
 a key and a value `expression`. Note the syntax for `expression` is rich, see
-<<_appendix_p4_grammar>> for details.
+<<sec-grammar>> for details.
 
 All ``expression``s within a `structuredAnnotationBody` must be compile-time known
 values, either literals or expressions requiring compile-time evaluation, with a
@@ -8585,12 +8743,13 @@ table t {
 
 Annotation names that start with lowercase letters are reserved for
 the standard library and architecture.  This document pre-defines a
-set of "standard" annotations in <<_appendix_p4_reserved_annotations>>.
+set of "standard" annotations in <<sec-p4-reserved-annotations>>.
 We expect that this list will grow.
 We encourage custom architectures to define annotations starting with
 a manufacturer prefix: e.g., an organization named X would use
 annotations named like `@X_annotation`
 
+[#sec-optional-parameter-annotations]
 ==== Optional parameter annotations
 
 A parameter to a package, parser type, control type, extern method, extern function or extern
@@ -8599,6 +8758,7 @@ the user does not need to provide a corresponding argument for that
 parameter.  The meaning of a parameter with no supplied value is
 target-dependent.
 
+[#sec-table-action-anno]
 ==== Annotations on the table action list
 
 The following two annotations can be used to give additional
@@ -8622,6 +8782,7 @@ table t {
 }
 ----
 
+[#sec-control-plane-api-annotations]
 ==== Control-plane API annotations
 
 The `@name` annotation directs the compiler to use a different
@@ -8641,7 +8802,7 @@ c() c_inst;
 
 The `@hidden` annotation hides a controllable entity, e.g. a table,
 key, action, or extern, from the control plane.  This effectively
-removes its fully-qualified name (<<_control_plane_names>>).  This annotation
+removes its fully-qualified name (<<sec-cp-names>>).  This annotation
 does not have a body.
 
 ===== Restrictions
@@ -8674,22 +8835,24 @@ to two controllable entities, which is illegal.
 
 ==== Concurrency control annotations
 
-The `@atomic` annotation, described in <<_concurrency_model>>
+The `@atomic` annotation, described in <<sec-concurrency>>
 can be used to enforce the atomic execution of a code block.
 
+[#sec-value-set-annotations]
 ==== Value set annotations
 
-The `@match` annotation, described in <<_select_expressions>>, is used
+The `@match` annotation, described in <<sec-select>>, is used
 to specify a `match_kind` value other than the default `match_kind` of
 `exact` for a field of a `value_set`.
 
+[#sec-extern-annotations]
 ==== Extern function/method annotations
 
 Various annotations may appear on extern function and method
 declarations to describe limitations on the behavior and interactions
 of those functions.  By default extern functions might have any effect
 on the environment of the P4 program and might interact in non-trivial
-ways (subject to a few limitations -- see <<_calling_convention_call_by_copy_incopy_out>>).  Since externs are
+ways (subject to a few limitations -- see <<sec-calling-convention>>).  Since externs are
 architecture-specific and their behavior is known to the architecture
 definition, these annotations are not strictly necessary (an
 implementation can have knowledge of how externs interact based on
@@ -8724,6 +8887,7 @@ absence), allowing architecture-independent analysis of P4 programs.
   `inout` parameters), but not with other function calls that may have
   side effects that affect the function.
 
+[#sec-deprecated-anno]
 ==== Deprecated annotation
 
 The `deprecated` annotation has a required string argument that is a
@@ -8739,6 +8903,7 @@ extern Checker {
 }
 ----
 
+[#sec-nowarn-anno]
 ==== No warnings annotation
 
 The `noWarn` annotation has a required string argument that indicates
@@ -8762,111 +8927,112 @@ The P4 compiler should provide:
 - Warnings for unknown annotations.
 
 [appendix]
+[#sec-revision-history]
 == Appendix: Revision History
 
 === Summary of changes made in version 1.2.4
 
-* Added header stack expressions (<<_header_stack_expressions>>).
-* Allow casts from a type to itself (<<_casts>>).
-* Added an invalid header or header union expression `+{#}+` (<<_operations_on_headers>> and <<_operations_on_header_unions>>).
-* Added a concept of numeric values (<<_numeric_types>>).
-* Added a section on operations on extern objects (<<_operations_on_extern_objects>>).
+* Added header stack expressions (<<sec-hs-init>>).
+* Allow casts from a type to itself (<<sec-casts>>).
+* Added an invalid header or header union expression `+{#}+` (<<sec-ops-on-hdrs>> and <<sec-expr-hu>>).
+* Added a concept of numeric values (<<sec-numeric-values>>).
+* Added a section on operations on extern objects (<<sec-extern-operations>>).
 * Added note in sections operations on types for types that support compile-time size determination.
 * Clarified that header stacks are arrays of headers or header unions.
 * Added distinctness of fields for types that have fields including error, match kind, struct, header, and header union.
-* Clarified types `bit<W>`, `int<W>`, and `varbit<W>` encompass the case where the width is a compile-time known expression evaluating to an appropriate integer (<<_unsigned_integers_bit_strings>>, <<_signed_integers>>, <<_dynamically_sized_bit_strings>>).
-* Clarified restrictions for parameters with default values (<<_calling_convention_call_by_copy_incopy_out>>).
-* Added optional trailing commas (<<_optional_trailing_commas>>).
-* Clarified the scope of parser namespaces (<<_parser_declarations>>).
+* Clarified types `bit<W>`, `int<W>`, and `varbit<W>` encompass the case where the width is a compile-time known expression evaluating to an appropriate integer (<<sec-unsigned-integers>>, <<sec-signed-integers>>, <<sec-dynamically-sized-integers>>).
+* Clarified restrictions for parameters with default values (<<sec-calling-convention>>).
+* Added optional trailing commas (<<sec-trailing-commas>>).
+* Clarified the scope of parser namespaces (<<sec-parser-decl>>).
 * Specified that algorithm for generating control-plane names for keys is optional (<<sec-cp-keys>>).
-* Clarified types of expressions that may appear in `select` (<<_select_expressions>>).
+* Clarified types of expressions that may appear in `select` (<<sec-select>>).
 * Added description of semantics of the core.p4 match kinds (<<sec-table-keys>>).
-* Explicitly disallow overloading of parsers, controls, and packages (<<_extern_objects>>).
-* Clarified implicit casts present in select expressions (<<_select_expressions>>).
-* Clarified that slices can be applied to arbitrary-precision integers (<<_operations_on_arbitrary_precision_integers>>).
-* Clarified that direct invocation is not possible for objects that have constructor arguments (<<_direct_type_invocation>>).
-* Added comparison for tuples as a legal operation (<<_operations_on_tuple_expressions>>).
-* Clarified the behavior of `lookahead` on header-typed values (<<_lookahead>>).
-* Added `static_assert` function (<<_static_assertions>>).
-* Clarified semantics of ranges where the start is bigger than the end (<<_ranges>>).
-* Allow ranges to be specified by serializable enums (<<_ranges>>).
-* Specified type produced by the `*sizeInB*` methods (<<_compile_time_size_determination>>).
-* Added section with operations on `match_kind` values (<<_operations_on_match_kind_types>>).
-* Renamed infinite-precision integers to arbitrary-precision integers (<<_arbitrary_precision_integers>>).
+* Explicitly disallow overloading of parsers, controls, and packages (<<sec-extern-objects>>).
+* Clarified implicit casts present in select expressions (<<sec-select>>).
+* Clarified that slices can be applied to arbitrary-precision integers (<<sec-varint-ops>>).
+* Clarified that direct invocation is not possible for objects that have constructor arguments (<<sec-direct-invocation>>).
+* Added comparison for tuples as a legal operation (<<sec-tuple-exprs>>).
+* Clarified the behavior of `lookahead` on header-typed values (<<sec-packet-lookahead>>).
+* Added `static_assert` function (<<sec-static-assert>>).
+* Clarified semantics of ranges where the start is bigger than the end (<<sec-ranges>>).
+* Allow ranges to be specified by serializable enums (<<sec-ranges>>).
+* Specified type produced by the `*sizeInB*` methods (<<sec-minsizeinbits>>).
+* Added section with operations on `match_kind` values (<<sec-match-kind-exprs>>).
+* Renamed infinite-precision integers to arbitrary-precision integers (<<sec-arbitrary-precision-integers>>).
 * compiler-inserted `default_action` is not `const` (<<sec-tables>>).
-* Clarified the restrictions on run time for tables with `const entries` (<<_entries>>).
+* Clarified the restrictions on run time for tables with `const entries` (<<sec-entries>>).
 * renamed list expressions to tuple expressions
-* Added `list` type (<<_list_types>>).
+* Added `list` type (<<sec-list-types>>).
 * Defined `entries` table property without `const`, for entries
   installed when the P4 program is loaded, but the control plane can
-  later change them or add to them (<<_entries>>).
+  later change them or add to them (<<sec-entries>>).
 * Clarified behavior of table with no `key` property, or if its list
   of keys is empty (<<sec-table-keys>>).
 
 === Summary of changes made in version 1.2.3, released July 11, 2022.
 
-* Extended `minSizeInBits` and `minSizeInBytes` to apply to more expressions (<<_compile_time_size_determination>>).
-* Added support for `maxSizeInBits` and `maxSizeInBytes` (<<_compile_time_size_determination>>).
-* Added support for empty lists of const entries in tables (<<_entries>>).
+* Extended `minSizeInBits` and `minSizeInBytes` to apply to more expressions (<<sec-minsizeinbits>>).
+* Added support for `maxSizeInBits` and `maxSizeInBytes` (<<sec-minsizeinbits>>).
+* Added support for empty lists of const entries in tables (<<sec-entries>>).
 * Added support for `switch` statements in actions (<<sec-actions>>).
-* Added support for direct invocation of controls and parsers (<<_parameterization>>).
-* Added parser `value_set` to list of control-plane visible names (<<_control_plane_names>>).
-* Added `match_kind` as a base type (<<_the_match_kind_type>>).
-* Removed structure initializers as they are subsumed by structure-valued expressions (<<_operations_on_structure_valued_expressions>>).
-* Specified operations on values typed as type variables (<<_operations_on_types_that_are_type_variables>>).
-* Clarified semantics of compile-time known values (<<_compile_time_known_values>>).
-* Clarified semantics of directionless parameters (<<_calling_convention_call_by_copy_incopy_out>>).
-* Clarified semantics of arbitrary precision integers (<<_arbitrary_precision_integers>>).
-* Clarified semantics of bit slices, shifts, and concatenation (<<_operations_on_fixed_width_bit_types_unsigned_integers>>).
-* Clarified semantics of optional parameters (<<_optional_parameters>>).
-* Clarified restrictions on extern method and function invocation (<<_appendix_restrictions_on_compile_time_and_run_time_calls>>).
-* Clarified semantics of implicit casts (<<_implicit_casts>>).
+* Added support for direct invocation of controls and parsers (<<sec-parameterization>>).
+* Added parser `value_set` to list of control-plane visible names (<<sec-cp-names>>).
+* Added `match_kind` as a base type (<<sec-match-kind-type>>).
+* Removed structure initializers as they are subsumed by structure-valued expressions (<<sec-structure-expressions>>).
+* Specified operations on values typed as type variables (<<sec-type-variable-operations>>).
+* Clarified semantics of compile-time known values (<<sec-ct-constants>>).
+* Clarified semantics of directionless parameters (<<sec-calling-convention>>).
+* Clarified semantics of arbitrary precision integers (<<sec-arbitrary-precision-integers>>).
+* Clarified semantics of bit slices, shifts, and concatenation (<<sec-bit-ops>>).
+* Clarified semantics of optional parameters (<<sec-optional-parameters>>).
+* Clarified restrictions on extern method and function invocation (<<sec-calling-restrictions>>).
+* Clarified semantics of implicit casts (<<sec-implicit-casts>>).
 
 === Summary of changes made in version 1.2.2, released May 17, 2021
 
-* Added support for accessing tuple fields (<<_operations_on_tuple_expressions>>).
-* Added support for generic structures (<<_type_specialization>>).
-* Added support for integers, ``enum``s, and ``error``s in `switch` statements (<<_switch_statement>>).
-* Added support for additional enumeration types (<<_enumeration_types>>).
-* Added support for abstract methods (<<_abstract_methods>>).
+* Added support for accessing tuple fields (<<sec-tuple-exprs>>).
+* Added support for generic structures (<<sec-type-spec>>).
+* Added support for integers, ``enum``s, and ``error``s in `switch` statements (<<sec-switch-stmt>>).
+* Added support for additional enumeration types (<<sec-enum-types>>).
+* Added support for abstract methods (<<sec-abstract-methods>>).
 * Added support for conditional statements and empty statements in parsers (<<sec-parser-state-stmt>>).
-* Added support for casts from `int` to `bool` (<<_casts>>).
-* Added support for 0-width bitstrings and varbits (<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>).
+* Added support for casts from `int` to `bool` (<<sec-casts>>).
+* Added support for 0-width bitstrings and varbits (<<sec-uninitialized-values-and-writing-invalid-headers>>).
 * Clarified that `default_action` is `NoAction` if otherwise unspecified (<<sec-tables>>).
-* Clarified the types of expressions that may be used as indexes for header stacks (<<_operations_on_header_stacks>>).
-* Clarified representation of Booleans in headers (<<_header_types>>).
-* Clarified representation of empty types (<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>).
+* Clarified the types of expressions that may be used as indexes for header stacks (<<sec-expr-hs>>).
+* Clarified representation of Booleans in headers (<<sec-header-types>>).
+* Clarified representation of empty types (<<sec-uninitialized-values-and-writing-invalid-headers>>).
 * Clarified that action data can be specified by the control plane, `default_action` table property, or `const entries` table property (<<sec-actions>>).
-* Fixed several typos and inconsistencies in grammar (<<_appendix_p4_grammar>>).
-* Eliminated annotations on `const` entries in grammar (<<_appendix_p4_grammar>>).
+* Fixed several typos and inconsistencies in grammar (<<sec-grammar>>).
+* Eliminated annotations on `const` entries in grammar (<<sec-grammar>>).
 
 === Summary of changes made in version 1.2.1, released June 11, 2020
 
-* Added structure-value expressions (<<_operations_on_structure_valued_expressions>>).
-* Added support for default values (<<_default_values>>).
-* Added support for concatenating signed strings (<<_concatenation>>).
-* Added key-value and list-structured annotations (<<_annotations>>).
-* Added `@pure` and `@noSideEffects` annotations (<<_extern_functionmethod_annotations>>).
-* Added `@noWarn` annotation (<<_no_warnings_annotation>>).
-* Generalized typing for masks to allow serializable ``enum``s (<<_masks>>).
+* Added structure-value expressions (<<sec-structure-expressions>>).
+* Added support for default values (<<sec-default-values>>).
+* Added support for concatenating signed strings (<<sec-concatenation>>).
+* Added key-value and list-structured annotations (<<sec-annotations>>).
+* Added `@pure` and `@noSideEffects` annotations (<<sec-extern-annotations>>).
+* Added `@noWarn` annotation (<<sec-nowarn-anno>>).
+* Generalized typing for masks to allow serializable ``enum``s (<<sec-cubes>>).
 * Restricted the right operands of bit shifts involving
-  arbitrary-precision integers to be constant and positive (<<_operations_on_arbitrary_precision_integers>>).
-* Clarified copy-out behavior for `return` (<<_return_statement>>) and `exit` (<<_exit_statement>>)
+  arbitrary-precision integers to be constant and positive (<<sec-varint-ops>>).
+* Clarified copy-out behavior for `return` (<<sec-return-stmt>>) and `exit` (<<sec-exit-stmt>>)
   statements.
-* Clarified semantics of invalid header stacks (<<_reading_uninitialized_values_and_writing_fields_of_invalid_headers>>).
-* Clarified initialization semantics (<<_l_values>> and
-  <<_calling_convention_call_by_copy_incopy_out>>), especially for headers and local
+* Clarified semantics of invalid header stacks (<<sec-uninitialized-values-and-writing-invalid-headers>>).
+* Clarified initialization semantics (<<sec-lvalues>> and
+  <<sec-calling-convention>>), especially for headers and local
   variables.
-* Clarified evaluation order for table keys (<<_match_action_unit_execution_semantics>>).
+* Clarified evaluation order for table keys (<<sec-mau-semantics>>).
 * Fixed grammar to clarify parsing of right shift operator (`>>`),
   allow empty statements in parser (<<sec-parser-state-stmt>>),
-  and eliminate annotations on const entries (<<_entries>>).
+  and eliminate annotations on const entries (<<sec-entries>>).
 
 === Summary of changes made in version 1.2.0, released October 14, 2019
 
-* Added `table.apply().miss` (<<_match_action_unit_invocation>>).
-* Added `string` type (<<_strings>>).
-* Added implicit casts from enum values (<<_operations_on_enum_types>>).
+* Added `table.apply().miss` (<<sec-invoke-mau>>).
+* Added `string` type (<<sec-string-type>>).
+* Added implicit casts from enum values (<<sec-enum-exprs>>).
 * Allow 1-bit signed values
 * Define the type of bit slices from signed and unsigned values to be unsigned.
 * Constrain `default` label position for `switch` statements.
@@ -8874,43 +9040,44 @@ The P4 compiler should provide:
 * Added `@deprecated` annotation.
 * Relaxed the structure of annotation bodies.
 * Removed the `@pkginfo` annotation, which is now defined by the P4Runtime specification.
-* Added `int` type (<<_arbitrary_precision_integers>>).
-* Added error `ParserInvalidArgument` (<_variable_width_extraction>>, <<_skipping_bits>>).
-* Clarified the significance of order of entries in `const entries` (<<_entries>>).
-* Added methods to calculate header size (<<_operations_on_headers>>).
+* Added `int` type (<<sec-arbitrary-precision-integers>>).
+* Added error `ParserInvalidArgument` (<_variable_width_extraction>>, <<sec-skip-bits>>).
+* Clarified the significance of order of entries in `const entries` (<<sec-entries>>).
+* Added methods to calculate header size (<<sec-ops-on-hdrs>>).
 
 === Summary of changes made in version 1.1.0, released November 26, 2017.
 
-* Top-level functions (<<_function_declarations>>)
+* Top-level functions (<<sec-functions>>)
     - Functions may be declared at the top-level of a P4 program.
-* Optional and named parameters (<<_calling_convention_call_by_copy_incopy_out>>)
+* Optional and named parameters (<<sec-calling-convention>>)
     - Parameters may be specified by name, with a default value, or designated as optional.
-* `enum` representations (<<_operations_on_enum_types>>)
+* `enum` representations (<<sec-enum-exprs>>)
     - `enum` values to be specified with a concrete representation.
-* Parser values sets (<<_parser_value_sets>>)
+* Parser values sets (<<sec-value-set>>)
     - `value_set` objects for control-plane programmable `select` labels.
-* Type definitions (<<_introducing_new_types>>)
+* Type definitions (<<sec-newtype>>)
     - New types may be introduced in programs.
-* Saturating arithmetic (<<_operations_on_fixed_width_bit_types_unsigned_integers>>)
+* Saturating arithmetic (<<sec-bit-ops>>)
     - Saturating arithmetic is supported on some targets.
-* Structured annotations (<<_annotations>>)
+* Structured annotations (<<sec-annotations>>)
     - Annotations may be specified as lists of key-value pairs
-* Globalname (<<_annotations_controlling_naming>>)
+* Globalname (<<sec-name-annotations>>)
     - The reserved `globalname` annotation has been removed.
-* Table `size` property (<<_size>>)
+* Table `size` property (<<sec-size-table-property>>)
     - Meaning of optional `size` property for tables has been defined.
-* Invalid headers (<<_operations_on_headers>>)
+* Invalid headers (<<sec-ops-on-hdrs>>)
     - Clarified semantics of operations on invalid headers.
-* Calling restrictions (<<_appendix_restrictions_on_compile_time_and_run_time_calls>>)
+* Calling restrictions (<<sec-calling-restrictions>>)
     - Added restrictions on kinds of values that may be passed as arguments to calls.
-* Bitwise operator precedence (<<_appendix_p4_grammar>>)
+* Bitwise operator precedence (<<sec-grammar>>)
     - Modified precedence conventions so that bitwise operators `&` `|` and `^` have higher precedence than relation operators `<` `>` `<=` `>=`.
-* Computed bitwidths (<<_base_types>>)
+* Computed bitwidths (<<sec-base-types>>)
     - Added support for specifying widths using expressions in `bit` and `varbit` types.
 
 === Initial version 1.0.0, released May 17, 2017
 
 [appendix]
+[#sec-p4-keywords]
 == Appendix: P4 reserved keywords
 
 The following table shows all P4 reserved keywords. Some identifiers
@@ -8944,6 +9111,7 @@ are treated as keywords only in specific contexts (e.g., the keyword `actions`).
 |===
 
 [appendix]
+[#sec-p4-reserved-annotations]
 == Appendix: P4 reserved annotations
 
 The following table shows all P4 reserved annotations.
@@ -8952,32 +9120,33 @@ The following table shows all P4 reserved annotations.
 |===
 | Annotation | Purpose | See Section
 
-| `atomic`      | specify atomic execution                           | <<_concurrency_model>>
+| `atomic`      | specify atomic execution                           | <<sec-concurrency>>
 
-| `defaultonly` | action can only appear in the default action       | <<_annotations_on_the_table_action_list>>
+| `defaultonly` | action can only appear in the default action       | <<sec-annotations>>
 
-| `hidden`      | hides a controllable entity from the control plane | <<_annotations_controlling_naming>>
+| `hidden`      | hides a controllable entity from the control plane | <<sec-name-annotations>>
 
-| `match`       | specify `match_kind` of a field in a `value_set`   | <<_parser_value_sets>>
+| `match`       | specify `match_kind` of a field in a `value_set`   | <<sec-value-set>>
 
-| `name`        | assign local control-plane name                    | <<_annotations_controlling_naming>>
+| `name`        | assign local control-plane name                    | <<sec-name-annotations>>
 
-| `optional`    | parameter is optional                              | <<_optional_parameter_annotations>>
+| `optional`    | parameter is optional                              | <<sec-optional-parameters>>
 
-| `tableonly`   | action cannot be a default_action                  | <<_annotations_on_the_table_action_list>>
+| `tableonly`   | action cannot be a default_action                  | <<sec-annotations>>
 
-| `deprecated`  | Construct has been deprecated                      | <<_deprecated_annotation>>
+| `deprecated`  | Construct has been deprecated                      | <<sec-deprecated-anno>>
 
-| `pure`        | pure function                                      | <<_extern_functionmethod_annotations>>
+| `pure`        | pure function                                      | <<sec-extern-annotations>>
 
-| `noSideEffects` | function with no side effects                    | <<_extern_functionmethod_annotations>>
+| `noSideEffects` | function with no side effects                    | <<sec-extern-annotations>>
 
-| `noWarn`      | Has a string argument; inhibits compiler warnings  | <<_no_warnings_annotation>>
+| `noWarn`      | Has a string argument; inhibits compiler warnings  | <<sec-nowarn-anno>>
 
 |===
 
 
 [appendix]
+[#sec-p4-core-lib]
 == Appendix: P4 core library
 
 The P4 core library contains declarations that are useful to most
@@ -9056,6 +9225,7 @@ extern bool static_assert(bool check);
 ----
 
 [appendix]
+[#sec-checksums]
 == Appendix: Checksums
 
 There are no built-in constructs in P4~16~ for manipulating packet
@@ -9064,7 +9234,7 @@ library objects that are provided in target-specific libraries. The
 standard architecture library should provide such checksum units.
 
 For example, one could provide an incremental checksum unit `Checksum16`
-(also described in the VSS example in <<_available_extern_blocks>>) for
+(also described in the VSS example in <<sec-vss-extern>>) for
 computing 16-bit one's complement using an `extern` object with a
 signature such as:
 
@@ -9116,6 +9286,7 @@ h.ipv4.hdrChecksum = ck16.get();
 
 
 [appendix]
+[#sec-calling-restrictions]
 == Appendix: Restrictions on compile time and run time calls
 
 This appendix summarizes restrictions on compile time and run time
@@ -9175,7 +9346,7 @@ TODO: Learn how to insert proper AsciiDoc table here.
 //|-------------|---------|--------|---------|--------|
 
 The next table lists restrictions on where one may perform
-instantiations (see <<_instantiations>>) of different types.
+instantiations (see <<sec-instantiations>>) of different types.
 The answer for `package` is always "no" because there is no
 "inside a package" where instantiations can be written in P4~16~.  One
 can definitely make constructor calls and use instances of stateful
@@ -9187,7 +9358,7 @@ implementation.  Thus there is no place to instantiate objects within
 an extern.
 
 You may declare variables and constants of any of the value types
-within a parser, control, or function (see <<_variables>> for more
+within a parser, control, or function (see <<sec-variables>> for more
 details).  Declaring a variable or constant is not the same as
 instantiation, hence the answer "N/A" (for not applicable) in those
 table entries.  Variables may not be declared at the top level of your
@@ -9271,7 +9442,7 @@ There may not be any recursion in calls, neither by a thing calling
 itself directly, nor mutual recursion.
 
 An extern can never cause any other type of P4 program object to be
-called.  See <<_calling_convention_call_by_copy_incopy_out>>.
+called.  See <<sec-calling-convention>>.
 
 Actions may be called directly from a control `apply` block.
 
@@ -9288,6 +9459,7 @@ instantiated in a particular role in an architecture.
 
 
 [appendix]
+[#sec-grammar]
 == Appendix: P4 grammar
 
 This is the grammar of P4~16~ written using the YACC/bison
@@ -9326,7 +9498,7 @@ This grammar has been heavily influenced by limitations of the Bison
 parser generator tool.
 
 The `STRING_LITERAL` token corresponds to a string literal
-enclosed within double quotes, as described in <<_string_literals>>.
+enclosed within double quotes, as described in <<sec-string-literals>>.
 
 All other terminals are uppercase spellings of the corresponding
 keywords. For example, `RETURN` is the terminal returned by the
