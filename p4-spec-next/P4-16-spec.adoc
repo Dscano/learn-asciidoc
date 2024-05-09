@@ -7988,9 +7988,9 @@ package Program<H>(Parser<H> p, Filter<H> f);
 
 The evaluation of a P4 program is done in two stages:
 
-- **static evaluation**: at compile time the P4 program is
+- *static evaluation*: at compile time the P4 program is
   analyzed and all stateful blocks are instantiated.
-- **dynamic evaluation**: at runtime each P4 functional block is
+- *dynamic evaluation*: at runtime each P4 functional block is
   executed to completion, in isolation, when it receives control from the
   architecture
 
@@ -8221,7 +8221,7 @@ table t {
 }
 ----
 
-If a compiler cannot generate a name for a key it **requires** the key
+If a compiler cannot generate a name for a key it *requires* the key
 expression to be annotated with a `@name` annotation (<<sec-control-plane-api-annotations>>), as in the following example:
 
 [source,P4]
@@ -8629,7 +8629,7 @@ include::grammar.adoc[tag=kvPair]
 
 ==== Structured Annotation Examples
 
-**Empty Expression List**
+*Empty Expression List*
 
 The following example produces an empty annotation:
 
@@ -8642,7 +8642,7 @@ table t {
 ----
 
 
-**Mixed Expression List**
+*Mixed Expression List*
 
 The following example will produce an effective expression list as follows:
 ```
@@ -8659,7 +8659,7 @@ table t {
 }
 ----
 
-**kvList of Strings**
+*kvList of Strings*
 
 [source,P4]
 ----
@@ -8669,7 +8669,7 @@ table t {
 }
 ----
 
-**kvList of Mixed Expressions**
+*kvList of Mixed Expressions*
 
 The following example will produce an effective kvList as follows.
 
@@ -8685,7 +8685,7 @@ table t {
 }
 ----
 
-**Illegal Mixing of `kvPair` and `expressionList`**
+*Illegal Mixing of `kvPair` and `expressionList`*
 
 The following example is invalid because the body contains both a `kvPair` and
 an `expression`:
@@ -8698,7 +8698,7 @@ table t {
 }
 ----
 
-**Illegal Duplicate Key**
+*Illegal Duplicate Key*
 
 The following example is invalid because the same key occurs more than once:
 
@@ -8711,7 +8711,7 @@ table t {
 ----
 
 
-**Illegal Duplicate Structured Annotation**
+*Illegal Duplicate Structured Annotation*
 
 The following example is invalid because the annotation `name` occurs more
 than once on the same element, e.g. `table t`:
@@ -8725,7 +8725,7 @@ table t {
 }
 ----
 
-**Illegal Simultaneous Use of Both Structured and Unstructured Annotation**
+*Illegal Simultaneous Use of Both Structured and Unstructured Annotation*
 
 The following example is invalid because the annotation `name` is used by both
 an unstructured and structured annotation on the same element `table t`:
