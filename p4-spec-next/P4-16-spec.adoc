@@ -9153,7 +9153,7 @@ The P4 core library contains declarations that are useful to most
 programs.
 
 For example, the core library includes the declarations of the
-predefined `packet_in`\ and `packet_out` extern objects, used
+predefined `packet_in` and `packet_out` extern objects, used
 in parsers and deparsers to access packet data.
 
 [source,P4]
