@@ -251,6 +251,19 @@ TODO: See if AsciiDoctor has a feature to avoid "widow lines",
 i.e. only one or two lines of a block appearing on a page, when the
 code block is split across multiple pages in PDF.
 
+Partial answer: The discussion on the page linked below suggests that
+`asciidoctor-pdf` is unlikely to provide any solution for widow /
+orphan lines other than inserting manual page breaks in the AsciiDoc
+source, which is fragile to changes:
+
++ https://discuss.asciidoctor.org/widows-and-orphans-poor-typography-in-asciidoctor-pdf-td7531.html
+
+A possible improvement on this situation mentioned on that page is
+that `asciidoctor-web-pdf` might provide solutions to this problem,
+and several others.  I have not tried it yet:
+
++ https://github.com/ggrossetie/asciidoctor-web-pdf
+
 
 # Including text from part of a file, marked by tags
 
