@@ -1111,8 +1111,8 @@ The lexer recognizes the following kinds of terminals:
 ==== Identifiers
 
 P4 identifiers may contain only letters, numbers, and the underscore
-character `_`, and must start with a letter or
-underscore. The special identifier consisting of a single underscore `_`
+character `+_+`, and must start with a letter or
+underscore. The special identifier consisting of a single underscore `+_+`
 is reserved to indicate a "don't care" value; its
 type may vary depending on the context. Certain keywords (e.g., `apply`)
 can be used as identifiers if the context makes it unambiguous.
@@ -1133,15 +1133,15 @@ name
 P4 supports several kinds of comments:
 
 * Single-line comments, introduced by `//` and spanning to the end of line,
-* Multi-line comments, enclosed between `/*` and `*/`
+* Multi-line comments, enclosed between `+/*+` and `+*/+`
 * Nested multi-line comments are not supported.
-* Javadoc-style comments, starting with `/**` and ending with `*/`
+* Javadoc-style comments, starting with `+/**+` and ending with `+*/+`
 
 Use of Javadoc-style comments is strongly encouraged for the tables and actions
 that are used to synthesize the interface with the control-plane.
 
 P4 treats comments as token separators and no comments are allowed within a
-token---e.g. `bi/**/t` is parsed as two tokens, `bi` and `t`, and
+token---e.g. `+bi/**/t+` is parsed as two tokens, `bi` and `t`, and
 not as a single token `bit`.
 
 [#sec-literals]
@@ -1330,7 +1330,7 @@ Most P4 constructs are stateless: given some inputs they produce a
 result that solely depends on these inputs. There are only two stateful constructs
 that may retain information across packets:
 
-* `table`s: Tables are read-only for the data plane, but their
+* ``table``s: Tables are read-only for the data plane, but their
   entries can be modified by the control-plane,
 
 * `extern` objects: many objects have state that can be read and
@@ -1602,7 +1602,7 @@ directions:
   at compile-time, and must evaluate to compile-time known values.
   See <<sec-parameterization>> for further details.
 * For actions all directionless parameters must be at the end of the
-  parameter list.  When an action appears in a `table`'s `actions`
+  parameter list.  When an action appears in a ``table``'s `actions`
   list, only the parameters with a direction must be bound.
   See <<sec-actions>> for further details.
 * Actions can also be explicitly invoked using function call syntax,
@@ -3131,7 +3131,7 @@ This grammar does not indicate the precedence of the various
 operators.  The precedence mostly follows the C precedence
 rules, with one change and some additions.  The precedence of
 the bitwise operators `&` `|` and `^` is higher than the precedence
-of relation operators `<`, `<=`, `>`, `>=`.  This is more natural given
+of relation operators `<`, `+<=+`, `>`, `>=`.  This is more natural given
 the addition of a true boolean type in the type system, as bitwise
 operators cannot be applied to boolean types.
 Concatenation (`++`) has the same precedence as infix
@@ -3398,6 +3398,7 @@ const bool same = exact == fuzzy;  // always 'false'
 === Expressions on Booleans
 
 The following operations are provided on Boolean expressions:
+
 * "And", denoted by `&&`
 * "Or", denoted by `||`
 * Negation, denoted by `!`
@@ -3459,8 +3460,8 @@ operations are limited to a fixed range between a minimum and maximum value.
 Saturating arithmetic has advantages, in particular when used as counters.
 The result of a saturating counter max-ing out is much closer to the real
 result than a counter that overflows and wraps around. According to Wikipedia
-[Saturating Arithmetic](https://en.wikipedia.org/wiki/Saturation_arithmetic)
-saturating arithmetic is as numerically close to the true answer as possible;
+https://en.wikipedia.org/wiki/Saturation_arithmetic[Saturating Arithmetic]
+is as numerically close to the true answer as possible;
 for 8-bit binary signed arithmetic, when the correct answer is 130,
 it is considerably less surprising to get an answer of 127 from saturating
 arithmetic than to get an answer of −126 from modular arithmetic.
@@ -3484,7 +3485,7 @@ expressions:
   designated by `==`. The result is a Boolean value.
 * Test for inequality between bit-strings of the same width,
   designated by `!=`. The result is a Boolean value.
-* Unsigned comparisons `<,>,<=,>=`. Both operands must have the
+* Unsigned comparisons `+<,>,<=,>=+`. Both operands must have the
   same width and the result is a Boolean value.
 
 Each of the following operations produces a bit-string result when applied
@@ -3528,12 +3529,12 @@ Bit-strings also support the following operations:
   The result is a bit-string of width `H - L + 1`, including the bits numbered
   from `L` (which becomes the least significant bit of the result) to `H` (the
   most significant bit of the result) from the source operand. The conditions
-  `0 <= L <= H < W` are checked statically (where `W` is
+  `+0 <= L <= H < W+` are checked statically (where `W` is
   the length of the source bit-string). Note that both endpoints of
   the extraction are inclusive. The bounds are required to be
   known-at-compile-time values so that the result width can be computed
   at compile time. Slices are also l-values, which means that P4 supports
-  assigning to a slice: ` e[H:L] = x `.
+  assigning to a slice: `e[H:L] = x`.
   The effect of this statement is to set bits `H` through `L` (inclusive of
   both) of `e` to the bit-pattern represented by `x`, and leaves all other bits
   of `e` unchanged.  A slice of an unsigned integer is an unsigned integer.
@@ -3587,7 +3588,7 @@ type. The result always has the same width as the left operand.
 * Subtraction, denoted by `-`.
 * Comparison for equality and inequality, denoted `==` and `!=` respectively. These operations produce a
   Boolean result.
-* Numeric comparisons, denoted by `<,<=,>,` and `>=`. These operations produce a Boolean result.
+* Numeric comparisons, denoted by `+<,<=,>,+` and `>=`. These operations produce a Boolean result.
 * Multiplication, denoted by `*`. Result has the same width as the
   operands. P4 architectures may impose additional restrictions---e.g., they may
   only allow multiplication by a power of two.
@@ -3620,12 +3621,12 @@ The `int<W>` datatype also support the following operations:
   The result is an unsigned bit-string of width `H - L + 1`, including the bits
   numbered from `L` (which becomes the least significant bit of the result)
   to `H` (the most significant bit of the result) from the source operand.
-  The conditions `0 <= L <= H < W` are checked statically (where `W` is
+  The conditions `+0 <= L <= H < W+` are checked statically (where `W` is
   the length of the source bit-string). Note that both endpoints of
   the extraction are inclusive. The bounds are required to be values
   that are known at compile time so that the width of the result can be
   computed at compile time. Slices are also l-values, which means that P4
-  supports assigning to a slice: ` e[H:L] = x `.
+  supports assigning to a slice: `e[H:L] = x`.
   The effect of this statement is to set bits `H` through `L` of `e` to the
   bit-pattern represented by `x`, and leaves all other bits of `e` unchanged.
   A slice of a signed integer is treated as an unsigned integer.
@@ -3650,7 +3651,7 @@ expressions of type `int` must be compile-time known values.  The type
 * Subtraction, denoted by `-`.
 * Comparison for equality and inequality, denoted by `==` and `!=` respectively. These operations produce a
   Boolean result.
-* Numeric comparisons `<,<=,>`, and `>=`. These operations produce a Boolean result.
+* Numeric comparisons `+<,<=,>+`, and `>=`. These operations produce a Boolean result.
 * Multiplication, denoted by `*`.
 * Truncating integer division between positive values, denoted by `/`.
 * Modulo between positive values, denoted by `%`.
@@ -3677,7 +3678,7 @@ expressions of type `int` must be compile-time known values.  The type
 The result is an unsigned bit-string of width `H - L + 1`, including the bits
 numbered from `L` (which becomes the least significant bit of the result)
 to `H` (the most significant bit of the result) from the source operand.
-The conditions `0 <= L <= H` are checked statically. If necessary, the source
+The conditions `+0 <= L <= H+` are checked statically. If necessary, the source
 integer value that is sliced is automatically extended to have a width with `H`
 bits. Note that both endpoints of
 the extraction are inclusive. The bounds are required to be values
@@ -3699,7 +3700,7 @@ and `int<w>` values. Casting an `int` value to a fixed-width
 type will preserve the least-significant bits. If truncation causes
 significant bits to be lost, the compiler should emit a warning.
 
-Note: bitwise-operations (`|`,`&`,`^`,`~`) are not
+Note: bitwise-operations (`|`, `&`, `^`, `~`) are not
 defined on expressions of type `int`. In addition, it is illegal
 to apply division and modulo to negative values.
 
@@ -3784,7 +3785,7 @@ finding this information in a section dedicated to type `varbit`.
 
 * Parser extraction into a header containing a variable-sized
   bit-string using the two-argument `extract` method of a `packet_in`
-  extern object (see <_variable_width_extraction>>). This
+  extern object (see <<sec-packet-extract-two>>). This
   operation sets the dynamic width of the field.
 * The `emit` method of a `packet_out` extern object can be performed
   on a header and a few other types (see <<sec-deparse>>) that
@@ -3819,7 +3820,7 @@ The following casts are legal in P4:
 * `int<W>` &#8594; `bit<W>`: preserves all bits unchanged and reinterprets negative
   values as positive values
 * `bit<W>` &#8594; `int<W>`: preserves all bits unchanged and reinterprets values whose most-significant bit is `1` as negative values
-* `bit<W>` &#8594; `bit<X>`: truncates the value if `W > X`, and otherwise (i.e., if  `W <= X`) pads the value with zero bits.
+* `bit<W>` &#8594; `bit<X>`: truncates the value if `W > X`, and otherwise (i.e., if  `+W <= X+`) pads the value with zero bits.
 * `int<W>` &#8594; `int<X>`: truncates the value if `W > X`, and otherwise (i.e., if `W < X`) extends it with the sign bit.
 * `bit<W>` &#8594; `int`: preserves the value unchanged but converts it to an unlimited-precision integer; the result is always non-negative
 * `int<W>` &#8594; `int`: preserves the value unchanged but converts it to an unlimited-precision integer; the result may be negative
@@ -3878,7 +3879,7 @@ the compiler will add implicit casts as follows:
 * `x << 256` remains unchanged; `256` not implicitly cast to `8w0` in a shift; overflow warning
 * `16w11 << E.a` becomes `16w11 << (bit<8>)E.a`
 * `x[E.a:0]` becomes `x[(bit<8>)E.a:0]`
-* `E.a ++ 8w0` becomes `(bit<8>)E.a ++ 8w0`
+* `E.a pass:[++] 8w0` becomes `(bit<8>)E.a pass:[++] 8w0`
 
 The compiler also adds implicit casts when types of different
 expressions need to "match"; for example, as described in
@@ -4090,12 +4091,12 @@ assignments, in comparisons, in field selection expressions, and as
 arguments to functions, method or actions.  Structure-valued
 expressions are not left values.
 
-Structure-valued expressions that do not have `...` as their last
+Structure-valued expressions that do not have `+...+` as their last
 element must provide a value for every member of the struct or header
 type to which it evaluates, by mentioning each field name exactly
 once.
 
-Structure-valued expressions that have `...` as their last element are
+Structure-valued expressions that have `+...+` as their last element are
 allowed to give values to only a subset of the fields of the struct or
 header type to which it evaluates.  Any field names not given a value
 explicitly will be given their default value (see <<sec-initializing-with-default-values>>).
@@ -4294,7 +4295,7 @@ with a structure-valued expression, as described in
 fields of the structure. The size of a struct can be determined at
 compile-time (<<sec-minsizeinbits>>).
 
-Two structs can be compared for equality (==) or inequality (!=) only
+Two structs can be compared for equality (`==`) or inequality (`!=`) only
 if they have the same type and all of their fields can be recursively
 compared for equality.  Two structures are equal if and only if all
 their corresponding fields are equal.
@@ -5028,12 +5029,12 @@ whether it is defined state in header fields or anywhere else.
 
 If any of these kinds of writes are performed:
 
-+ a write to a field in a currently invalid header, either a regular
+* a write to a field in a currently invalid header, either a regular
   header or an element of a header stack with an index that is in
   range, and that header is not part of a `header_union`
-+ a write to a field in an element of a header stack, where the index
+* a write to a field in an element of a header stack, where the index
   is out of range
-+ a method call of `setValid()` or `setInvalid()` on an element of a
+* a method call of `setValid()` or `setInvalid()` on an element of a
   header stack, where the index is out of range
 
 then that write must not change any state that is currently defined in
@@ -5064,13 +5065,13 @@ struct Empty {
 
 We call the following "empty" types:
 
-+ bitstrings with 0 width
-+ varbits with 0 width
-+ empty tuples (`tuple<>`)
-+ stacks with 0 size
-+ structs with no fields
-+ a tuple having all fields of an empty type
-+ a struct having all fields of an empty type
+* bitstrings with 0 width
+* varbits with 0 width
+* empty tuples (`tuple<>`)
+* stacks with 0 size
+* structs with no fields
+* a tuple having all fields of an empty type
+* a struct having all fields of an empty type
 
 Values with empty types carry no useful information.  In particular,
 they do not have to be explicitly initialized to have a legal value.
@@ -5081,13 +5082,13 @@ they do not have to be explicitly initialized to have a legal value.
 === Initializing with default values
 
 A left-value can be initialized automatically with a default value of the
-suitable type using the syntax `...` (see <<sec-default-values>>).  A value
+suitable type using the syntax `+...+` (see <<sec-default-values>>).  A value
 of type `struct`, `header`, or `tuple` can also be initialized using a mix of
-explicit values and default values by using the notation `...` in a tuple
+explicit values and default values by using the notation `+...+` in a tuple
 expression initializer; in this case all fields not explicitly
 initialized are initialized with default values.  When initializing a `struct`,
 `header`, and `tuple` with a value containing partially default values
-using the `...` notation the three dots must appear last in the initializer.
+using the `+...+` notation the three dots must appear last in the initializer.
 
 [source,P4]
 ----
@@ -5640,7 +5641,7 @@ ambiguity with a block statement.
 
 [source,P4]
 ----
-// Assume the expression hdr.ethernet.etherType has type bit<16>
+// Assume the expression hdr.ethernet.etherType has type bit<16>.
 switch (hdr.ethernet.etherType) {
    0x86dd: { /* body omitted */ }
    0x0800:          // fall-through to the next body
@@ -5682,10 +5683,8 @@ If no labels are equal to the `switch` expression, then:
   expression).
 
 See "Implementing generalized P4_16 switch statements"
-[GeneralizedSwitchStatements] for possible techniques that one might
-use to implement generalized switch statements.
-
-[GeneralizedSwitchStatements]: <https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md>
+for possible techniques that one might
+use to implement generalized switch statements.footnote:GeneralizedSwitchStatements[<https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md>]
 
 [#sec-packet-parsing]
 == Packet parsing
@@ -6499,7 +6498,7 @@ The semantics of the `size` argument is similar to the `size` property of a
 table. If a value set has a `size` argument with value `N`, it is recommended
 that a compiler should choose a data plane implementation that is capable of
 storing `N` value set entries. See "Size property of P4 tables and parser value
-sets" [P4SizeProperty] for further discussion on the implementation of parser
+sets" footnote:P4SizeProperty[<https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/p4-table-and-parser-value-set-sizes.md>] for further discussion on the implementation of parser
 value set size.
 
 The value set is populated by the control plane by methods specified
@@ -7298,10 +7297,8 @@ a table, only that there is _some_ set of `N` entries that can be
 inserted.  For example, attempts to add some combinations of `N`
 entries may fail because the compiler selected a hash table with
 `O(1)` guaranteed search time.  See "Size property of P4 tables and
-parser value sets" [P4SizeProperty] for further discussion on some P4
+parser value sets" footnote:P4SizeProperty[] for further discussion on some P4
 table implementations and what they are able to guarantee.
-
-[P4SizeProperty]: <https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/p4-table-and-parser-value-set-sizes.md>
 
 If a P4 implementation must dimension table resources at compile time,
 they may treat it as an error if they encounter a table with no `size`
@@ -8018,7 +8015,7 @@ The following are compile-time known values:
   compile-time known values.
 - Instances constructed by instance declarations (<<sec-instantiations>>) and constructor invocations.
 - A legal cast applied to a compile-time known value
-- The following expressions (`+`, `-`, `*`, `/ `, `%`, `!`, `&`, `|`, `&&`, `||`, `<< `, `>> `, `~` `, `\ `>`, `<`, `==`, `!=`, `<=`, `>=`, `++`, `[:]`, `?:`)
+- The following expressions (`pass:[+]`, `-`, `*`, `/`, `%`, `!`, `&`, `|`, `&&`, `||`, `<<`, `>>`, `~`, `>`, `<`, `==`, `!=`, `+<=+`, `>=`, `pass:[++]`, `[:]`, `?:`)
   when their operands are all compile-time known values.
 - Identifiers declared as constants using the `const` keyword.
 - Expressions of the form `e.minSizeInBits()`, `e.minSizeInBytes()`,
@@ -8930,7 +8927,7 @@ The P4 compiler should provide:
 
 [appendix]
 [#sec-revision-history]
-== Appendix: Revision History
+== Revision History
 
 === Summary of changes made in version 1.2.4
 
@@ -8958,7 +8955,7 @@ The P4 compiler should provide:
 * Added `static_assert` function (<<sec-static-assert>>).
 * Clarified semantics of ranges where the start is bigger than the end (<<sec-ranges>>).
 * Allow ranges to be specified by serializable enums (<<sec-ranges>>).
-* Specified type produced by the `*sizeInB*` methods (<<sec-minsizeinbits>>).
+* Specified type produced by the `+*sizeInB*+` methods (<<sec-minsizeinbits>>).
 * Added section with operations on `match_kind` values (<<sec-match-kind-exprs>>).
 * Renamed infinite-precision integers to arbitrary-precision integers (<<sec-arbitrary-precision-integers>>).
 * compiler-inserted `default_action` is not `const` (<<sec-tables>>).
@@ -9043,7 +9040,7 @@ The P4 compiler should provide:
 * Relaxed the structure of annotation bodies.
 * Removed the `@pkginfo` annotation, which is now defined by the P4Runtime specification.
 * Added `int` type (<<sec-arbitrary-precision-integers>>).
-* Added error `ParserInvalidArgument` (<_variable_width_extraction>>, <<sec-skip-bits>>).
+* Added error `ParserInvalidArgument` (<<sec-packet-extract-two>>, <<sec-skip-bits>>).
 * Clarified the significance of order of entries in `const entries` (<<sec-entries>>).
 * Added methods to calculate header size (<<sec-ops-on-hdrs>>).
 
@@ -9072,7 +9069,7 @@ The P4 compiler should provide:
 * Calling restrictions (<<sec-calling-restrictions>>)
     - Added restrictions on kinds of values that may be passed as arguments to calls.
 * Bitwise operator precedence (<<sec-grammar>>)
-    - Modified precedence conventions so that bitwise operators `&` `|` and `^` have higher precedence than relation operators `<` `>` `<=` `>=`.
+    - Modified precedence conventions so that bitwise operators `&` `|` and `^` have higher precedence than relation operators `<` `>` `+<=+` `>=`.
 * Computed bitwidths (<<sec-base-types>>)
     - Added support for specifying widths using expressions in `bit` and `varbit` types.
 
@@ -9080,7 +9077,7 @@ The P4 compiler should provide:
 
 [appendix]
 [#sec-p4-keywords]
-== Appendix: P4 reserved keywords
+== P4 reserved keywords
 
 The following table shows all P4 reserved keywords. Some identifiers
 are treated as keywords only in specific contexts (e.g., the keyword `actions`).
@@ -9114,7 +9111,7 @@ are treated as keywords only in specific contexts (e.g., the keyword `actions`).
 
 [appendix]
 [#sec-p4-reserved-annotations]
-== Appendix: P4 reserved annotations
+== P4 reserved annotations
 
 The following table shows all P4 reserved annotations.
 
@@ -9149,7 +9146,7 @@ The following table shows all P4 reserved annotations.
 
 [appendix]
 [#sec-p4-core-lib]
-== Appendix: P4 core library
+== P4 core library
 
 The P4 core library contains declarations that are useful to most
 programs.
@@ -9228,7 +9225,7 @@ extern bool static_assert(bool check);
 
 [appendix]
 [#sec-checksums]
-== Appendix: Checksums
+== Checksums
 
 There are no built-in constructs in P4~16~ for manipulating packet
 checksums. We expect that checksum operations can be expressed as `extern`
@@ -9289,7 +9286,7 @@ h.ipv4.hdrChecksum = ck16.get();
 
 [appendix]
 [#sec-calling-restrictions]
-== Appendix: Restrictions on compile time and run time calls
+== Restrictions on compile time and run time calls
 
 This appendix summarizes restrictions on compile time and run time
 calls that can be made.  Many of them are described earlier in this
@@ -9490,7 +9487,7 @@ instantiated in a particular role in an architecture.
 
 [appendix]
 [#sec-grammar]
-== Appendix: P4 grammar
+== P4 grammar
 
 This is the grammar of P4~16~ written using the YACC/bison
 language. Absent from this grammar is the precedence of various

@@ -297,9 +297,9 @@ AsciiDoc documentation on footnotes:
 TODO: Replace occurrences of `---` for Madoko em dash with whatever
 markup is for AsciiDoc em dash.
 
-TODO: In section "Operations on arbitrary-precision integers", an
-occurrence of `<=` comes out as a different symbol, not the two
-fixed-width symbols `<` followed by `=`, as desired.
+If you use `<=` in AsciiDoc source, it comes out as a different
+combined symbol, not the two monospace symbols `<` followed by `=`.
+To get that, use `+<=+` in AsciiDoc source.
 
 TODO: In section "Operations on arbitrary-precision integers", there
 are occurrences of LaTeX in-line math formulas like these that are not
@@ -313,12 +313,11 @@ rendering as desired.  Learn how to update them:
 
 # Special characters
 
-+ arrow pointing left and right with a single horizontal line between
++ TODO: arrow pointing left and right with a single horizontal line between
   them, called `&harr;` in Madoko source.
   + Some old discussion here: https://discuss.asciidoctor.org/Double-Arrow-chars-td3918.html
   + Tried `&#8660;`.  Came out as an empty rectangle in PDF output.
   + Tried `&#x12d4;`.  Also came out as an empty rectangle in PDF output.
-
 
 + `&rarr;` in Madoko source, arrow pointing right only
   + See here: https://asciidoctor.org/docs/asciidoc-writers-guide/#replacements
