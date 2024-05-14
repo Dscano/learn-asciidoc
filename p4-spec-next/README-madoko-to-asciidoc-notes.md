@@ -292,7 +292,32 @@ AsciiDoc documentation on footnotes:
 + https://docs.asciidoctor.org/asciidoc/latest/macros/footnote/
 
 
-# Miscellaneous
+# LaTeX mathematics
+
+At least for in-line LaTeX formulas, which is all that the P4 language
+spec used LaTeX for, you specify them in Madoko like so:
+
+```
+  The expression `a << b` is equal to $a \times 2^b$ while `a >> b`
+  is equal to $\lfloor{a / 2^b}\rfloor$.
+```
+
+There are apparently mutiple ways to make this work with AsciiDoc, but
+one way I have been successful with is to use a package called
+`asciidoctor-mathematical`:
+
++ https://docs.asciidoctor.org/asciidoctor/latest/stem/mathematical/
+
+The AsciiDoc version of P4-16-spec.adoc replaces the above two lines
+with the following:
+
+```
+  The expression `a << b` is equal to latexmath:[a \times 2^b] while `a >> b`
+  is equal to latexmath:[\lfloor{a / 2^b}\rfloor].
+```
+
+
+# Special characters
 
 TODO: Replace occurrences of `---` for Madoko em dash with whatever
 markup is for AsciiDoc em dash.
@@ -300,18 +325,6 @@ markup is for AsciiDoc em dash.
 If you use `<=` in AsciiDoc source, it comes out as a different
 combined symbol, not the two monospace symbols `<` followed by `=`.
 To get that, use `+<=+` in AsciiDoc source.
-
-TODO: In section "Operations on arbitrary-precision integers", there
-are occurrences of LaTeX in-line math formulas like these that are not
-rendering as desired.  Learn how to update them:
-
-```
-  The expression `a << b` is equal to $a \times 2^b$ while `a >> b`
-  is equal to $\lfloor{a / 2^b}\rfloor$.
-```
-
-
-# Special characters
 
 + TODO: arrow pointing left and right with a single horizontal line between
   them, called `&harr;` in Madoko source.
