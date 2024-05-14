@@ -1,7 +1,12 @@
-all: trybibtex.html trybibtex.pdf
+FNAME=trybibtex
 
-trybibtex.html: trybibtex.adoc
-	asciidoctor -r asciidoctor-bibtex $<
+all: $(FNAME).pdf $(FNAME).html
 
-trybibtex.pdf: trybibtex.adoc
-	asciidoctor-pdf -r asciidoctor-bibtex $<
+$(FNAME).pdf: $(FNAME).adoc
+	asciidoctor-pdf -v -r asciidoctor-bibtex $<
+
+$(FNAME).html: $(FNAME).adoc
+	asciidoctor -v -r asciidoctor-bibtex $<
+
+clean:
+	/bin/rm -f $(FNAME),pdf $(FNAME).html

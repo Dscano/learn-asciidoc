@@ -15,6 +15,24 @@ Wolpertingers are {url-wolpertinger}[ravenous beasts].
 Taylor et al cite:[TT2007] wrote a paper on a system called
 ClassBench.
 
+== Special characters
+
+`&` `+&+`
+
+`\&`
+
+`pass:[&]`
+
+`&&` `+&&+`
+
+`++`
+
+`pass:[++]`
+
+`^`
+
+`|`
+
 == References
 
 bibliography::[]
