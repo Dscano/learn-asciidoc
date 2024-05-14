@@ -3657,8 +3657,8 @@ expressions of type `int` must be compile-time known values.  The type
 * Modulo between positive values, denoted by `%`.
 * Arithmetic shift left and right denoted by `<<` and `>>`. These operations produce an `int` result.
   The right operand must be either an unsigned constant of type `bit<S>` or a non-negative integer compile-time known value.
-  The expression `a << b` is equal to stem:[a \times 2^b] while `a >> b`
-  is equal to stem:[\lfloor{a / 2^b}\rfloor].
+  The expression `a << b` is equal to latexmath:[a \times 2^b] while `a >> b`
+  is equal to latexmath:[\lfloor{a / 2^b}\rfloor].
 * Bit slices, denoted by `[H:L]`, where `H` and `L` must be expressions that evaluate to
   non-negative compile-time known values, and `H >= L` must be true.
   The types of `H` and `L` (which do not need to be identical)
