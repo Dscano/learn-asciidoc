@@ -147,7 +147,7 @@ gem install asciidoctor-pdf
 gem install asciidoctor-bibtex
 # Additional installations in hopes of enabling
 # asciidoctor-mathematical to work.
-sudo apt-get install cmake flex libglib2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf-2.0-dev libxml2-dev libwebp-dev libzstd-dev
+sudo apt-get --yes install cmake flex libglib2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf-2.0-dev libxml2-dev libwebp-dev libzstd-dev
 gem install asciidoctor-mathematical
 
 which ruby
