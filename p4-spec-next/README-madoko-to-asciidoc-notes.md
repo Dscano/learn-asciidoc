@@ -235,7 +235,7 @@ The above required special definition in the header for a `P4Example`
 block.
 
 ```
-[source,P4]
+[source,p4]
 ----
 code block goes here
 ----

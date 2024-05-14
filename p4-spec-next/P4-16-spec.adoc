@@ -359,7 +359,7 @@ architecture includes a type declaration that specifies the interfaces
 between the block and the other components in the architecture.
 For example, the architecture might contain a declaration such as the following:
 
-[source,P4]
+[source,p4]
 ----
 control MatchActionPipe<H>(in bit<4> inputPort,
                            inout H parsedHeaders,
@@ -397,7 +397,7 @@ to an abstract class in an object-oriented language). For example,
 the following construct could be used to describe the operations offered by an
 incremental checksum unit:
 
-[source,P4]
+[source,p4]
 ----
 extern Checksum16 {
     Checksum16();              // constructor
@@ -461,7 +461,7 @@ three programmable blocks; the code uses syntax highlighting. The
 programmable blocks are described by their types; the implementation
 of these blocks has to be provided by the switch programmer.
 
-[source,P4]
+[source,p4]
 ----
 // File "very_simple_switch_model.p4"
 // Very Simple Switch P4 declaration
@@ -548,7 +548,7 @@ Let us describe some of these elements:
 * Next follows the declaration of a parser:
 +
 --
-[source,P4]
+[source,p4]
 ----
 parser Parser<H>(packet_in b, out H parsedHeaders);
 ----
@@ -566,7 +566,7 @@ also be provided by the programmer.
 * The declaration
 +
 --
-[source,P4]
+[source,p4]
 ----
 control Pipe<H>(inout H headers,
                 in error parseError,
@@ -587,7 +587,7 @@ it must update in place the headers to be consumed by the deparser.
   VSS, the user will have to instantiate a package of this type (shown
   in the next section). The top-level package declaration also depends
   on a type variable H:
-[source,P4]
+[source,p4]
 ----
 package VSS<H>
 ----
@@ -749,7 +749,7 @@ shown in <<fig-vssmau>>; it comprises four match-action units
 The deparser constructs the outgoing packet by reassembling the Ethernet and
 IPv4 headers as computed by the pipeline.
 
-[source,P4]
+[source,p4]
 ----
 // Include P4 core library
 # include <core.p4>
@@ -1006,7 +1006,7 @@ Pseudo-code (mostly used for describing the semantics of
 various P4 constructs) are shown with fixed-size fonts as in the
 following example:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 ParserModel.verify(bool condition, error err) {
     if (condition == false) {
@@ -1049,7 +1049,7 @@ Additional C preprocessor capabilities may be supported, but
 are not guaranteed---e.g., macros with arguments.  Similar to C, `+#include+`
 can specify a file name either within double quotes or within `<>`.
 
-[source,P4]
+[source,p4]
 ----
 # include <system_file>
 # include "user_file"
@@ -1078,7 +1078,7 @@ description of the core library is provided in
 <<sec-p4-core-lib>>. All P4 programs must include the core
 library. Including the core library is done with
 
-[source,P4]
+[source,p4]
 ----
 # include <core.p4>
 ----
@@ -1180,7 +1180,7 @@ used in the width specification or as the first character of an
 integer literal. No comments or whitespaces are allowed within a
 literal. Here are some examples of numeric literals:
 
-[source,P4]
+[source,p4]
 ----
 32w255         // a 32-bit unsigned number with value 255
 32w0d255       // same value as above
@@ -1213,7 +1213,7 @@ escape sequences (e.g., how to specify Unicode characters, or handle
 unprintable ASCII characters).
 
 Here are 3 examples of string literals:
-[source,P4]
+[source,p4]
 ----
 "simple string"
 "string \" with \" embedded \" quotes"
@@ -1235,7 +1235,7 @@ include::grammar.adoc[tag=optTrailingComma]
 For example, the following declarations are both legal, and
 have the same meaning:
 
-[source,P4]
+[source,p4]
 ----
 enum E {
      a, b, c
@@ -1249,7 +1249,7 @@ enum E {
 This is particularly useful in combination with preprocessor
 directives:
 
-[source,P4]
+[source,p4]
 ----
 enum E {
 #if SUPPORT_A
@@ -1311,7 +1311,7 @@ Some P4 constructs act as namespaces that create local scopes for names includin
   the scope of the type variable `H` extends to the end of the
   declaration:
 
-[source,P4]
+[source,p4]
 ----
 extern E<H>(/* parameters omitted */) { /* body omitted */ } // scope of H ends here.
 ----
@@ -1451,7 +1451,7 @@ is not `out`.
 
 For example, if a direction `out` parameter has type `s2_t` named `p`:
 
-[source,P4]
+[source,p4]
 ----
 header h1_t {
     bit<8> f1;
@@ -1479,7 +1479,7 @@ function itself. The order of evaluation is important when the
 expression supplied for an argument can have side-effects. Consider
 the following example:
 
-[source,P4]
+[source,p4]
 ----
 extern void f(inout bit x, in bit y);
 extern bit g(inout bit z);
@@ -1515,7 +1515,7 @@ the same result):
 According to this algorithm, the previous function call is equivalent
 to the following sequence of statements:
 
-[source,P4]
+[source,p4]
 ----
 bit tmp1 = a;     // evaluate a; save result
 bit tmp2 = g(a);  // evaluate g(a); save result; modifies a
@@ -1526,7 +1526,7 @@ a = tmp1;         // copy inout result back into a
 To see why Step 3 in the above algorithm is important, consider the following
 example:
 
-[source,P4]
+[source,p4]
 ----
 header H { bit z; }
 H[2] s;
@@ -1536,7 +1536,7 @@ f(s[a].z, g(a));
 The evaluation of this call is equivalent to the following sequence of
 statements:
 
-[source,P4]
+[source,p4]
 ----
 bit tmp1 = a;          // save the value of a
 bit tmp2 = s[tmp1].z;  // evaluate first argument
@@ -1618,7 +1618,7 @@ directions:
   the default values must use named arguments, as in the following
   example:
 
-[source,P4]
+[source,p4]
 ----
 extern void f(in bit a, in bit<3> b = 2, in bit<5> c);
 
@@ -1650,7 +1650,7 @@ by the target architecture.  For example, we can imagine a two-stage
 switch architecture where the second stage is optional. This could be
 declared as a package with an optional parameter:
 
-[source,P4]
+[source,p4]
 ----
 package pipeline(/* parameters omitted */);
 package switch(pipeline first, @optional pipeline second);
@@ -1664,7 +1664,7 @@ Here the target architecture could implement the elided optional argument using 
 The following example shows optional parameters and parameters with
 default values.
 
-[source,P4]
+[source,p4]
 ----
 extern void h(in bit<32> a, in bool b = true);  // default value
 
@@ -1697,7 +1697,7 @@ top-level declarations.
 Identifiers prefixed with a dot are always resolved in the top-level
 namespace.
 
-[source,P4]
+[source,p4]
 ----
 const bit<32> x = 2;
 control c() {
@@ -1714,7 +1714,7 @@ with the current scope and proceeding to all lexically enclosing
 scopes. The compiler may provide a warning if multiple resolutions are
 possible for the same name (name shadowing).
 
-[source,P4]
+[source,p4]
 ----
 const bit<4> x = 1;
 control p() {
@@ -1797,7 +1797,7 @@ described in <<sec-error-exprs>>.
 For example, the following declaration creates two constants of `error`
 type (these errors are declared in the P4 core library):
 
-[source,P4]
+[source,p4]
 ----
 error { ParseError, PacketTooShort }
 ----
@@ -1822,7 +1822,7 @@ include::grammar.adoc[tag=matchKindDeclaration]
 
 The P4 core library contains the following match_kind declaration:
 
-[source,P4]
+[source,p4]
 ----
 match_kind {
    exact,
@@ -1857,7 +1857,7 @@ compile-time constant string values.  These may be useful, for
 example, a specific target architecture may support an extern function
 for logging with the following signature:
 
-[source,P4]
+[source,p4]
 ----
 extern void log(string message);
 ----
@@ -1867,7 +1867,7 @@ literals, described in <<sec-string-literals>>.  For example,
 the following annotation indicates that a specific name should be used
 for a table when generating the control-plane API:
 
-[source,P4]
+[source,p4]
 ----
 @name("acl") table t1 { /* body omitted */ }
 ----
@@ -1937,7 +1937,7 @@ allowed; they have no actual bits, and can only have the value 0.  See
 Note that `bit<W>` type refers to both cases of `bit<W>`
 and `bit<(expression)>` where the width is compile-time known.
 
-[source,P4]
+[source,p4]
 ----
 const bit<32> x = 10;   // 32-bit constant with value 10.
 const bit<(x + 2)> y = 15;  // 12-bit constant with value 15.
@@ -2028,7 +2028,7 @@ are described in <<sec-varint-ops>>.  The following example
 shows three constant definitions whose values are arbitrary-precision
 integers.
 
-[source,P4]
+[source,p4]
 ----
 const int a = 5;
 const int b = 2 * a;
@@ -2136,7 +2136,7 @@ include::grammar.adoc[tag=specifiedIdentifier]
 
 For example, the declaration
 
-[source,P4]
+[source,p4]
 ----
 enum Suits { Clubs, Diamonds, Hearths, Spades }
 ----
@@ -2161,7 +2161,7 @@ The symbol `typeRef` in the grammar above must be one of the following types:
 one of the types listed above, or another `typedef` name that meets these conditions.
 For example, the declaration
 
-[source,P4]
+[source,p4]
 ----
 enum bit<16> EtherType {
   VLAN      = 0x8100,
@@ -2188,7 +2188,7 @@ for an enumeration entry falls outside the representation range of the underlyin
 
 For example, the declaration
 
-[source,P4]
+[source,p4]
 ----
 enum bit<8> FailingExample {
   first           = 1,
@@ -2253,7 +2253,7 @@ they are nested?
 
 Header types may be empty:
 
-[source,P4]
+[source,p4]
 ----
 header Empty_h { }
 ----
@@ -2264,7 +2264,7 @@ When a struct is inside of a header, the order of the fields for the purposes
 of `extract` and `emit` calls is the order of the fields as defined in the source code.
 An example of a header including a struct is included below.
 
-[source,P4]
+[source,p4]
 ----
 struct ipv6_addr {
     bit<32> Addr0;
@@ -2297,7 +2297,7 @@ number of bytes.
 For example, the following declaration describes a typical Ethernet
 header:
 
-[source,P4]
+[source,p4]
 ----
 header Ethernet_h {
    bit<48> dstAddr;
@@ -2308,7 +2308,7 @@ header Ethernet_h {
 
 The following variable declaration uses the newly introduced type `Ethernet_h`:
 
-[source,P4]
+[source,p4]
 ----
 Ethernet_h ethernetHeader;
 ----
@@ -2321,7 +2321,7 @@ header to `true`.
 
 Here is an example of an IPv4 header with variable-sized options:
 
-[source,P4]
+[source,p4]
 ----
 header IPv4_h {
    bit<4>       version;
@@ -2369,7 +2369,7 @@ on header stacks are discussed in <<sec-expr-hs>>.
 
 For example, the following declarations,
 
-[source,P4]
+[source,p4]
 ----
 header Mpls_h {
     bit<20> label;
@@ -2408,7 +2408,7 @@ Field names have to be distinct.
 As an example, the type `Ip_h` below represents the union of an IPv4
 and IPv6 headers:
 
-[source,P4]
+[source,p4]
 ----
 header_union IP_h {
   IPv4_h v4;
@@ -2434,7 +2434,7 @@ This declaration introduces a new type with the specified name in the
 current scope. Field names have to be distinct. An empty struct (with no fields) is legal. For example, the structure `Parsed_headers`
 below contains the headers recognized by a simple parser:
 
-[source,P4]
+[source,p4]
 ----
 header Tcp_h { /* fields omitted */ }
 header Udp_h { /* fields omitted */ }
@@ -2452,7 +2452,7 @@ struct Parsed_headers {
 A tuple is similar to a `struct`, in that it holds multiple values.
 The type of tuples with n component types `T1`,...,`Tn` is written as
 
-[source,P4]
+[source,p4]
 ----
 tuple<T1,/* more fields omitted */,Tn>
 ----
@@ -2474,7 +2474,7 @@ A list holds zero or more values, where every element must have the
 same type.  The type of a list where all elements have type `T` is
 written as
 
-[source,P4]
+[source,p4]
 ----
 list<T>
 ----
@@ -2621,7 +2621,7 @@ signature. Libraries can contain functions and extern function declarations.
 
 For example, consider the following declarations:
 
-[source,P4]
+[source,p4]
 ----
 extern void random(in bit<5> logRange, out bit<32> value);
 
@@ -2701,7 +2701,7 @@ and `packet_out` used for manipulating packets
 is an example showing how the methods of these objects can be invoked
 on a packet:
 
-[source,P4]
+[source,p4]
 ----
 extern packet_out {
     void emit<T>(in T hdr);
@@ -2723,7 +2723,7 @@ is not used in disambiguating calls.
 
 Notice that overloading of parsers, controls, or packages is not allowed:
 
-[source,P4]
+[source,p4]
 ----
 parser p(packet_in p, out bit<32> value) {
   ...
@@ -2746,7 +2746,7 @@ implemented by the P4 programmers.  Such methods are described with
 the `abstract` keyword prior to the method definition.  Here is an
 example:
 
-[source,P4]
+[source,p4]
 ----
 extern Balancer {
     Balancer();
@@ -2778,7 +2778,7 @@ For example, the following extern declaration describes a generic
 block of registers, where the type of the elements stored in each
 register is an arbitrary `T`.
 
-[source,P4]
+[source,p4]
 ----
 extern Register<T> {
     Register(bit<32> size);
@@ -2790,7 +2790,7 @@ extern Register<T> {
 The type `T` has to be specified when instantiating a set of
 registers, by specializing the Register type:
 
-[source,P4]
+[source,p4]
 ----
 Register<bit<32>>(128) registerBank;
 ----
@@ -2802,7 +2802,7 @@ type specialized with the `bit<32>` bound to the `T` type argument.
 generic as well.  In order to use such a generic type it must be
 specialized with appropriate type arguments.  For example
 
-[source,P4]
+[source,p4]
 ----
 // generic structure type
 struct S<T> {
@@ -2872,7 +2872,7 @@ receives as input a `packet_in` value `b` and produces two values:
 * A value with a user-defined type `H`
 * A value with a predefined type `Counters`
 
-[source,P4]
+[source,p4]
 ----
 struct Counters { /* Fields omitted */ }
 parser P<H>(packet_in b,
@@ -2980,7 +2980,7 @@ typedefDeclaration
     ;
 ----
 
-[source,P4]
+[source,p4]
 ----
 typedef bit<32> u32;
 typedef struct Point { int<32> x; int<32> y; } Pt;
@@ -2994,7 +2994,7 @@ created type.
 If `typedef` is used with a generic type the type must be specialized
 with the suitable number of type arguments:
 
-[source,P4]
+[source,p4]
 ----
 struct S<T> {
    T field;
@@ -3015,7 +3015,7 @@ new type.
     | optAnnotations TYPE typeRef name
 ----
 
-[source,P4]
+[source,p4]
 ----
 type bit<32> U32;
 U32 x = (U32)0;
@@ -3036,7 +3036,7 @@ to be exchanged with the control plane through communication channels
 to the control plane).  For example, a P4 architecture may define a
 type for the switch ports:
 
-[source,P4]
+[source,p4]
 ----
 type bit<9> PortId_t;
 ----
@@ -3166,7 +3166,7 @@ The result of such a comparison is a Boolean value.
 
 For example, the following operation tests for the occurrence of an
 error:
-[source,P4]
+[source,p4]
 ----
 error errorFromParser;
 
@@ -3178,7 +3178,7 @@ if (errorFromParser != error.NoError) { /* code omitted */ }
 
 Symbolic names declared by an enum belong to the namespace introduced by the enum declaration rather than the top-level namespace.
 
-[source,P4]
+[source,p4]
 ----
 enum X { v1, v2, v3 }
 X.v1  // reference to v1
@@ -3191,7 +3191,7 @@ cannot be cast to or from any other type.
 
 An `enum` may also specify an underlying type, such as the following:
 
-[source,P4]
+[source,p4]
 ----
 enum bit<8> E {
   e1 = 0,
@@ -3203,7 +3203,7 @@ enum bit<8> E {
 More than one symbolic value in an `enum` may map to the same fixed-width
 integer value.
 
-[source,P4]
+[source,p4]
 ----
 enum bit<8> NonUnique {
   b1 = 0,
@@ -3216,7 +3216,7 @@ enum bit<8> NonUnique {
 An `enum` with an underlying type also supports explicit casts to and from the
 underlying type.  For instance, the following code:
 
-[source,P4]
+[source,p4]
 ----
 bit<8> x;
 E a = E.e2;
@@ -3233,7 +3233,7 @@ to the symbolic value `E.e2`, which corresponds to the fixed-width unsigned inte
 Because it is always safe to cast from an `enum` to its underlying fixed-width integer type,
 implicit casting from an `enum` to its fixed-width (signed or unsigned) integer type is also supported (see <<sec-implicit-casts>>):
 
-[source,P4]
+[source,p4]
 ----
 bit<8> x = E.e2; // sets x to 1 (E.e2 is automatically casted to bit<8>)
 
@@ -3243,7 +3243,7 @@ bit<8> y = a << 3; // sets y to 8 (a is automatically casted to bit<8> and then 
 
 Implicit casting from an underlying fixed-width type to an enum is *not* supported.
 
-[source,P4]
+[source,p4]
 ----
 enum bit<8> E1 {
    e1 = 0, e2 = 1, e3 = 2
@@ -3275,7 +3275,7 @@ a = (E1)(E2.e1 + E2.e2); //  Final explicit casting makes the assignment legal
 
 A reasonable compiler might generate a warning in cases that involve multiple automatic casts.
 
-[source,P4]
+[source,p4]
 ----
 E1     a = E1.e1;
 E2     b = E2.e2;
@@ -3292,7 +3292,7 @@ Note that while it is always safe to cast from an `enum` to its fixed-width unsi
 and vice versa, there may be cases where casting a fixed-width unsigned integer value to
 its related `enum` type produces an unnamed value.
 
-[source,P4]
+[source,p4]
 ----
 bit<8> x = 5;
 E e = (E) x; // sets e to an unnamed value
@@ -3305,7 +3305,7 @@ For example, in the following code, the `else` clause of the `if/else if/else`
 block can be reached even though the matches on `x` are complete with respect
 to the symbols defined in `MyPartialEnum_t`:
 
-[source,P4]
+[source,p4]
 ----
 enum bit<2> MyPartialEnum_t {
     VALUE_A = 2w0,
@@ -3332,7 +3332,7 @@ Additionally, if an enumeration is used as a field of a header, we would expect
 the `transition select` to match `default` when the parsed integer value does
 not match one of the symbolic values of `EtherType` in the following example:
 
-[source,P4]
+[source,p4]
 ----
 enum bit<16> EtherType {
   VLAN      = 0x8100,
@@ -3388,7 +3388,7 @@ underlying type cannot be determined at compile-time (<<sec-minsizeinbits>>).
 Values of type `match_kind` are similar to `enum` values.  They
 support only assignment and comparisons for equality and inequality.
 
-[source,P4]
+[source,p4]
 ----
 match_kind { fuzzy }
 const bool same = exact == fuzzy;  // always 'false'
@@ -3413,14 +3413,14 @@ compile-time (<<sec-minsizeinbits>>).
 P4 does not implicitly cast from bit-strings to Booleans or
 vice versa. As a consequence, a program that is valid in a language like C such as,
 
-[source,P4]
+[source,p4]
 ----
 if (x) /* body omitted */
 ----
 
 (where x has an integer type) must instead be written in P4 as:
 
-[source,P4]
+[source,p4]
 ----
 if (x != 0) /* body omitted */
 ----
@@ -3740,7 +3740,7 @@ for the following reasons:
 
 Consider the following examples:
 
-[source,P4]
+[source,p4]
 ----
 bit<8> x;
 bit<16> y;
@@ -3858,7 +3858,7 @@ header stack indexes as well as other unary and binary operations.
 
 For example, given the following declarations,
 
-[source,P4]
+[source,p4]
 ----
 enum bit<8> E {
    a = 5
@@ -3895,7 +3895,7 @@ add implicit casts for `int` fields.
 Many arithmetic expressions that would be allowed in other languages
 are illegal in P4. To illustrate, consider the following declarations:
 
-[source,P4]
+[source,p4]
 ----
 bit<8>  x;
 bit<16> y;
@@ -3957,7 +3957,7 @@ Tuples can be assigned to other tuples with the same type, passed as
 arguments and returned from functions, and can be initialized with
 tuple expressions.
 
-[source,P4]
+[source,p4]
 ----
 tuple<bit<32>, bool> x = { 10, false };
 ----
@@ -3994,7 +3994,7 @@ expressions are not l-values.
 For example, the following program fragment uses a tuple expression to
 pass several header fields simultaneously to a learning provider:
 
-[source,P4]
+[source,p4]
 ----
 extern LearningProvider<T> {
     LearningProvider();
@@ -4011,7 +4011,7 @@ number of elements as fields in the structure. The effect of such an
 initializer is to assign the n^th^ element of the tuple to the n^th^
 field in the structure:
 
-[source,P4]
+[source,p4]
 ----
 struct S {
     bit<32> a;
@@ -4024,7 +4024,7 @@ A tuple expression can have an explicit structure or header type
 specified, and then it is converted automatically to a
 structure-valued expression (see <<sec-structure-expressions>>):
 
-[source,P4]
+[source,p4]
 ----
 struct S {
     bit<32> a;
@@ -4039,7 +4039,7 @@ f((S){ 10, 20 }); // automatically converted to f((S){a = 10, b = 20});
 Tuple expressions can also be used to initialize variables whose type
 is a `tuple` type.
 
-[source,P4]
+[source,p4]
 ----
 tuple<bit<32>, bool> x = { 10, false };
 ----
@@ -4073,7 +4073,7 @@ type are always valid.
 The following example shows a structure-valued expression used in an
 equality comparison expression:
 
-[source,P4]
+[source,p4]
 ----
 struct S {
     bit<32> a;
@@ -4115,7 +4115,7 @@ separated by a comma.  The left curly brace is preceded by a
 `(list<T>)` where `T` is the list element type.  Such a value can be
 passed as an argument, e.g. to extern constructor functions.
 
-[source,P4]
+[source,p4]
 ----
 struct pair_t {
     bit<16> a;
@@ -4147,7 +4147,7 @@ appear only in a few contexts---parsers and table
 entries. For example, the `select` expression
 (<<sec-select>>) has the following structure:
 
-[source,P4]
+[source,p4]
 ----
 select (expression) {
    set1: state1;
@@ -4182,7 +4182,7 @@ precedence; the just above the `?:` operator.
 In a set context, expressions denote singleton sets. For example, in
 the following program fragment,
 
-[source,P4]
+[source,p4]
 ----
 select (hdr.ipv4.version) {
    4: continue;
@@ -4197,7 +4197,7 @@ The label `4` denotes the singleton set containing the `int` value `4`.
 In a set context, the expressions `default` or `_` denote the
 universal set, which contains all possible values of a given type:
 
-[source,P4]
+[source,p4]
 ----
 select (hdr.ipv4.version) {
    4: continue;
@@ -4215,14 +4215,14 @@ The right value is used as a
 bit. More formally, the set denoted by `a &&& b` is defined as
 follows:
 
-[source,P4]
+[source,p4]
 ----
 a &&& b = { c where a & b = c & b }
 ----
 
 For example:
 
-[source,P4]
+[source,p4]
 ----
 8w0x0A &&& 8w0x0F
 ----
@@ -4250,7 +4250,7 @@ and creates a value of
 the type `set<T>`. The set contains all values numerically between the
 first and the second, inclusively. For example:
 
-[source,P4]
+[source,p4]
 ----
 4s5 .. 4s8
 ----
@@ -4269,7 +4269,7 @@ represents an empty set.
 
 Multiple sets can be combined using Cartesian product:
 
-[source,P4]
+[source,p4]
 ----
 select(hdr.ipv4.ihl, hdr.ipv4.protocol) {
      (4w0x5, 8w0x1): parse_icmp;
@@ -4303,7 +4303,7 @@ their corresponding fields are equal.
 The following example shows a structure initialized in several
 different ways:
 
-[source,P4]
+[source,p4]
 ----
 struct S {
     bit<32> a;
@@ -4339,7 +4339,7 @@ header fields in the order they appear --- or with a structure-valued
 expression (see <<sec-ops-on-structs>>).  When initialized the header
 automatically becomes valid:
 
-[source,P4]
+[source,p4]
 ----
 header H { bit<32> x; bit<32> y; }
 H h;
@@ -4369,7 +4369,7 @@ expression
 
 For example:
 
-[source,P4]
+[source,p4]
 ----
 header H { bit<32> x; bit<32> y; }
 H h;
@@ -4398,7 +4398,7 @@ provides a set of computations for manipulating header stacks. A
 header stack `hs` of type `h[n]` can be understood in terms of
 the following pseudocode:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 // type declaration
 struct hs_t {
@@ -4484,7 +4484,7 @@ manipulate the elements at the front and back of the stack:
 
 The following pseudocode defines the behavior of `push_front` and `pop_front`:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 void push_front(int count) {
     for (int i = this.size-1; i >= 0; i -= 1) {
@@ -4545,7 +4545,7 @@ to a header of the same type as the other stack elements.
 
 Here is an example:
 
-[source,P4]
+[source,p4]
 ----
 header H<T> {
     bit<32> b;
@@ -4565,7 +4565,7 @@ The values of `s`, `s1`, and `s2` in the above example are identical.
 
 A variable declared with a union type is initially invalid. For example:
 
-[source,P4]
+[source,p4]
 ----
 header H1 {
   bit<8> f;
@@ -4586,7 +4586,7 @@ in a header union are also initially invalid. Unlike headers, a union
 cannot be initialized. However, the validity of a header union can be
 updated by assigning a valid header to one of its elements:
 
-[source,P4]
+[source,p4]
 ----
 U u;
 H1 my_h1 = { 8w0 }; // my_h1 is valid
@@ -4595,7 +4595,7 @@ u.h1 = my_h1;       // u and u.h1 are both valid
 
 We can also assign a tuple to an element of a header union,
 
-[source,P4]
+[source,p4]
 ----
 U u;
 u.h2 = { 16w1 };     // u and u.h2 are both valid
@@ -4603,7 +4603,7 @@ u.h2 = { 16w1 };     // u and u.h2 are both valid
 
 or set their validity bits directly.
 
-[source,P4]
+[source,p4]
 ----
 U u;
 u.h1.setValid();     // u and u.h1 are both valid
@@ -4630,7 +4630,7 @@ The following operations:
 
 The assignment to a union field:
 
-[source,P4]
+[source,p4]
 ----
 u.hi = e;
 ----
@@ -4639,7 +4639,7 @@ has the following meaning:
 
 * if `e` is valid, then it is equivalent to:
 
-[source,P4]
+[source,p4]
 ----
   u.hi.setValid();
   u.hi = e;
@@ -4647,7 +4647,7 @@ has the following meaning:
 
 * if `e` is invalid, then it is equivalent to:
 
-[source,P4]
+[source,p4]
 ----
   u.hi.setInvalid();
 ----
@@ -4669,7 +4669,7 @@ single header that is valid, if any.
 The following example shows how we can use header unions to represent
 IPv4 and IPv6 headers uniformly:
 
-[source,P4]
+[source,p4]
 ----
 header_union IP {
     IPv4 ipv4;
@@ -4702,7 +4702,7 @@ parser top(packet_in b, out Parsed_packet p) {
 
 As another example, we can also use unions to parse (selected) TCP
 options:
-[source,P4]
+[source,p4]
 ----
 header Tcp_option_end_h {
     bit<8> kind;
@@ -4783,7 +4783,7 @@ but it can be any header or header union type.  A P4 compiler may require an
 explicit cast on this expression in cases where it cannot determine
 the particular header or header union type from the context.
 
-[source,P4]
+[source,p4]
 ----
 header_union HU { ... }
 HU h = (HU){#};  // invalid header union; same as an uninitialized header union.
@@ -4825,7 +4825,7 @@ only for some arguments: either all or no arguments must specify
 the parameter name.  Function arguments are evaluated in the order
 they appear, left to right, before the function invocation takes place.
 
-[source,P4]
+[source,p4]
 ----
 extern void f(in bit<32> x, out bit<16> y);
 bit<32> xa = 0;
@@ -4882,7 +4882,7 @@ invocations are treated similar to methods or functions.
 The following example shows a constructor invocation for setting the
 target-dependent implementation property of a table:
 
-[source,P4]
+[source,p4]
 ----
 extern ActionProfile {
     ActionProfile(bit<32> size);  // constructor
@@ -4921,7 +4921,7 @@ Values with a type introduced by the `type` keyword provide only a few operation
 * comparisons for equality and inequality if the original type supported such comparisons
 * casts to and from the original type
 
-[source,P4]
+[source,p4]
 ----
 type bit<32> U32;
 U32 x = (U32)0;  // cast needed
@@ -4939,7 +4939,7 @@ Because functions, methods, control, and parsers can be generic,
 they offer the possibility of declaring values with types that
 are type variables:
 
-[source,P4]
+[source,p4]
 ----
 control C<T>() {
     apply {
@@ -5056,7 +5056,7 @@ values will be.
 Since P4 allows empty tuples and structs, one can construct types
 whose values carry no "useful" information, e.g.:
 
-[source,P4]
+[source,p4]
 ----
 struct Empty {
    tuple<> t;
@@ -5090,7 +5090,7 @@ initialized are initialized with default values.  When initializing a `struct`,
 `header`, and `tuple` with a value containing partially default values
 using the `+...+` notation the three dots must appear last in the initializer.
 
-[source,P4]
+[source,p4]
 ----
 struct S {
      bit<32> b32;
@@ -5219,7 +5219,7 @@ include::grammar.adoc[tag=functionPrototype]
 
 Here is an example of a function that returns the maximum of two 32-bit values:
 
-[source,P4]
+[source,p4]
 ----
 bit<32> max(in bit<32> left, in bit<32> right) {
    return (left > right) ? left : right;
@@ -5249,7 +5249,7 @@ include::grammar.adoc[tag=initializer]
 Such a declaration introduces a constant whose value has the specified type. The
 following are all legal constant declarations:
 
-[source,P4]
+[source,p4]
 ----
 const bit<32> COUNTER = 32w0x0;
 struct Version {
@@ -5326,7 +5326,7 @@ Note that instantiation arguments can be specified by name.
 For example, a hypothetical bank of counter
 objects can be instantiated as follows:
 
-[source,P4]
+[source,p4]
 ----
 // from target library
 enum CounterType {
@@ -5378,7 +5378,7 @@ values that are in the top-level scope.  When calling another method
 of the same instance the `this` keyword is used to indicate the
 current object instance:
 
-[source,P4]
+[source,p4]
 ----
 // Instantiate a balancer
 Balancer() b = {  // provide an implementation for the abstract methods
@@ -5403,7 +5403,7 @@ This restriction is designed to ensure that most state resides in
 the architecture itself, or is local to a `parser` or `control`.
 For example, the following program is not valid:
 
-[source,P4]
+[source,p4]
 ----
 // Program
 control c(/* parameters omitted */) { /* body omitted */ }
@@ -5608,7 +5608,7 @@ form `t.apply().action_run`, where `t` is the name of a table (see
 <<sec-invoke-mau>>).  All switch labels must be names of
 actions of the table `t`, or `default`.
 
-[source,P4]
+[source,p4]
 ----
 switch (t.apply().action_run) {
    action1:          // fall-through to action2:
@@ -5639,7 +5639,7 @@ and must have a type that can be implicitly cast to the type of the
 labels must not begin with a left brace character `{`, to avoid
 ambiguity with a block statement.
 
-[source,P4]
+[source,p4]
 ----
 // Assume the expression hdr.ethernet.etherType has type bit<16>.
 switch (hdr.ethernet.etherType) {
@@ -5730,7 +5730,7 @@ building parameterized parsers, see <<sec-parameterization>>.
 Unlike parser type declarations, parser declarations may not be
 generic---e.g., the following declaration is illegal:
 
-[source,P4]
+[source,p4]
 ----
 parser P<H>(inout H data) { /* body omitted */ }
 ----
@@ -5759,7 +5759,7 @@ include::grammar.adoc[tag=parserLocalElement]
 The states and local elements are all in the same namespace, thus the
 following example will produce an error:
 
-[source,P4]
+[source,p4]
 ----
 // erroneous example
 parser p() {
@@ -5787,7 +5787,7 @@ this abstract machine in pseudo-code.
 A parser starts execution in the `start` state and ends execution
 when one of the `reject` or `accept` states has been reached.
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 ParserModel {
     error       parseError;
@@ -5867,14 +5867,14 @@ to be evaluated, and transfers control to the resulting state.
 In terms of the `ParserModel`, the semantics of a `transition`
 statement can be formalized as follows:
 
-[source,P4]
+[source,p4]
 ----
 goto eval(stateExpression)
 ----
 
 For example, this statement:
 
-[source,P4]
+[source,p4]
 ----
 transition accept;
 ----
@@ -5885,7 +5885,7 @@ the `accept` state.
 If the body of a state block does not end with a `transition`
 statement, the implied statement is
 
-[source,P4]
+[source,p4]
 ----
 transition reject;
 ----
@@ -5917,7 +5917,7 @@ endpoints of the range and mask expression are implicitly cast to type
 
 In terms of the `ParserModel`, the meaning of a select expression:
 
-[source,P4]
+[source,p4]
 ----
 select(e) {
     ks[0]: s[0];
@@ -5930,7 +5930,7 @@ select(e) {
 
 is defined in pseudo-code as:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 key = eval(e);
 for (int i=0; i < n; i++) {
@@ -5957,7 +5957,7 @@ The typical way to use a `select` expression is to compare
 the value of a recently-extracted header field against a set of
 constant values, as in the following example:
 
-[source,P4]
+[source,p4]
 ----
 header IPv4_h { bit<8> protocol; /* more fields omitted */ }
 struct P { IPv4_h ipv4; /* more fields omitted */ }
@@ -5971,7 +5971,7 @@ select (headers.ipv4.protocol) {
 
 For example, to detect TCP reserved ports (< 1024) one could write:
 
-[source,P4]
+[source,p4]
 ----
 select (p.tcp.port) {
     16w0 &&& 16w0xFC00: well_known_port;
@@ -5992,7 +5992,7 @@ bit<>, int<>, tuple, struct, or serializable `enum`.
 For example, to allow the control plane API to specify TCP reserved ports at
 runtime, one could write:
 
-[source,P4]
+[source,p4]
 ----
 struct vsk_t {
     @match(ternary)
@@ -6021,7 +6021,7 @@ The `verify` statement provides a simple form of error
 handling. `verify` can only be invoked within a parser; it is used
 syntactically as if it were a function with the following signature:
 
-[source,P4]
+[source,p4]
 ----
 extern void verify(in bool condition, in error err);
 ----
@@ -6035,7 +6035,7 @@ associated with the parser is set to the value of the second argument.
 In terms of the `ParserModel` the semantics of a `verify`
 statement is given by:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 ParserModel.verify(bool condition, error err) {
     if (condition == false) {
@@ -6055,7 +6055,7 @@ instantiated by the user explicitly. Instead, the architecture
 supplies a separate instance for each `packet_in` argument to
 a `parser` instantiation.
 
-[source,P4]
+[source,p4]
 ----
 extern packet_in {
     void extract<T>(out T headerLvalue);
@@ -6088,7 +6088,7 @@ target that does not support this method).
 In terms of the `ParserModel`, the semantics of `packet_in`
 can be captured using the following abstract model of packets:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 packet_in {
     unsigned nextBitIndex;
@@ -6109,7 +6109,7 @@ packet_in {
 The single-argument `extract` method handles fixed-width headers,
 and is declared in P4 as follows:
 
-[source,P4]
+[source,p4]
 ----
 void extract<T>(out T headerLeftValue);
 ----
@@ -6123,7 +6123,7 @@ enough bits left in the packet to fill the specified header.
 
 For example, the following program fragment extracts an Ethernet header:
 
-[source,P4]
+[source,p4]
 ----
 struct Result { Ethernet_h ethernet;  /* more fields omitted */ }
 parser P(packet_in b, out Result r) {
@@ -6141,7 +6141,7 @@ hidden valid bit of a header, `isNext$` to indicate that the
 l-value was obtained using `next`, and `nextIndex$` to
 indicate the corresponding header or header union stack properties.
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 void packet_in.extract<T>(out T headerLValue) {
    bitsToExtract = sizeofInBits(headerLValue);
@@ -6162,7 +6162,7 @@ void packet_in.extract<T>(out T headerLValue) {
 
 The two-argument `extract` handles variable-width headers, and is declared in P4 as follows:
 
-[source,P4]
+[source,p4]
 ----
 void extract<T>(out T headerLvalue, in bit<32> variableFieldSize);
 ----
@@ -6176,7 +6176,7 @@ bits to be extracted into the unique `varbit` field of the header
 In terms of the `ParserModel`, the semantics of the two-argument `extract`
 is captured by the following pseudo-code:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 void packet_in.extract<T>(out T headerLvalue,
                           in bit<32> variableFieldSize) {
@@ -6200,7 +6200,7 @@ void packet_in.extract<T>(out T headerLvalue,
 The following example shows one way to parse IPv4 options---by
 splitting the IPv4 header into two separate headers:
 
-[source,P4]
+[source,p4]
 ----
 // IPv4 header without options
 header IPv4_no_options_h {
@@ -6264,7 +6264,7 @@ transitioned to the `reject` state).
 
 The `lookahead` method can be invoked as follows:
 
-[source,P4]
+[source,p4]
 ----
 b.lookahead<T>()
 ----
@@ -6275,7 +6275,7 @@ result of the evaluation of `lookahead` returns a value of type `T`.
 In terms of the `ParserModel`, the semantics of `lookahead` is
 given by the following pseudocode:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 T packet_in.lookahead<T>() {
    bitsToExtract = sizeof(T);
@@ -6288,7 +6288,7 @@ T packet_in.lookahead<T>() {
 
 The TCP options example from <<sec-expr-hu>> also illustrates how `lookahead` can be used:
 
-[source,P4]
+[source,p4]
 ----
 state start {
     transition select(b.lookahead<bit<8>>()) {
@@ -6318,7 +6318,7 @@ assigning them to a header:
 One way is to `extract` to the underscore identifier, explicitly
 specifying the type of the data:
 
-[source,P4]
+[source,p4]
 ----
 b.extract<T>(_)
 ----
@@ -6329,7 +6329,7 @@ number of bits to skip is known.
 In terms of the `ParserModel`, the meaning of `advance` is
 given in pseudocode as follows:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 void packet_in.advance(bit<32> bits) {
    // targets are allowed to include the following line, but need not
@@ -6348,7 +6348,7 @@ can be used in parsing. Consider the following declaration, which
 defines a stack for representing the headers of a packet with at most
 ten MPLS headers:
 
-[source,P4]
+[source,p4]
 ----
 header Mpls_h {
     bit<20> label;
@@ -6374,7 +6374,7 @@ sets the error to `error.StackOutOfBounds`.
 
 The following example shows a simplified parser for MPLS processing:
 
-[source,P4]
+[source,p4]
 ----
 struct Pkthdr {
    Ethernet_h ethernet;
@@ -6411,7 +6411,7 @@ calling it using its `apply` method.
 
 The following example shows a sub-parser invocation:
 
-[source,P4]
+[source,p4]
 ----
 parser callee(packet_in packet, out IPv4 ipv4) { /* body omitted */ }
 parser caller(packet_in packet, out Headers h) {
@@ -6487,7 +6487,7 @@ Parser Value Sets support a `size` argument to provide hints to the compiler to
 reserve hardware resources to implement the value set. For example, this parser
 value set:
 
-[source,P4]
+[source,p4]
 ----
 value_set<bit<16>>(4) pvs;
 ----
@@ -6543,7 +6543,7 @@ can be used to build parameterized control blocks, see <<sec-parameterization>>.
 Unlike control type declarations, control declarations may not be
 generic---e.g., the following declaration is illegal:
 
-[source,P4]
+[source,p4]
 ----
 control C<H>(inout H data) { /* Body omitted */ }
 ----
@@ -6584,7 +6584,7 @@ value. Actions may be declared within a control block; in this case
 they can only be used within instances of that control block.
 
 The following example shows an action declaration:
-[source,P4]
+[source,p4]
 ----
 action Forward_a(out bit<9> outputPort, bit<9> port) {
     outputPort = port;
@@ -6748,7 +6748,7 @@ serve three purposes:
 
 The P4 core library contains three predefined `match_kind` identifiers:
 
-[source,P4]
+[source,p4]
 ----
 match_kind {
    exact,
@@ -6827,7 +6827,7 @@ include::grammar.adoc[tag=actionRef]
 To illustrate, recall the example Very Simple Switch program in
 <<sec-vss-all>>:
 
-[source,P4]
+[source,p4]
 ----
 action Drop_action() {
   outCtrl.outputPort = DROP_PORT;
@@ -6852,7 +6852,7 @@ table smac {
 Each action in the list of actions for a table must have a distinct
 name---e.g., the following program fragment is illegal:
 
-[source,P4]
+[source,p4]
 ----
 action a() {}
 control c() {
@@ -6870,7 +6870,7 @@ action is invoked. Applying tables, whether directly via an expression
 like `table1.apply().hit`, or indirectly, are forbidden in the
 expressions supplied as action arguments.
 
-[source,P4]
+[source,p4]
 ----
 action a(in bit<32> x) { /* body omitted */ }
 bit<32> z;
@@ -6905,7 +6905,7 @@ one of the elements of the `actions` list.
 For example, in the above `table` we could set the default action
 as follows (marking it also as constant):
 
-[source,P4]
+[source,p4]
 ----
 const default_action = Rewrite_smac(48w0xAA_BB_CC_DD_EE_FF);
 ----
@@ -6921,7 +6921,7 @@ evaluated at compile time.
 Continuing the example from the previous section, the following are several legal
 and illegal specifications of default actions for the `table t`:
 
-[source,P4]
+[source,p4]
 ----
   default_action = a(5); // OK - no control-plane parameters
   // default_action = a(z); -- illegal, a's x parameter is already bound to 5
@@ -7014,7 +7014,7 @@ a warning or an error, depending on target capabilities.
 
 To illustrate, consider the following example:
 
-[source,P4]
+[source,p4]
 ----
 header hdr {
     bit<8>  e;
@@ -7145,7 +7145,7 @@ that is the value that will be used.
 If the developer does not specify priority values for any entry, then
 the compiler calculates priority values for every entry as follows:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 // For this pseudocode, table entries in the `entries` list are
 // numbered 0 through n-1, 0 being the first to appear in order in the
@@ -7171,7 +7171,7 @@ entries without one in the source code, the first entry _must_ have a
 priority value explicitly provided.  The priorities of entries that do
 not have one in the source code (if any) are determined as follows:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 // Same conventions here as in the previous block of pseudocode above.
 // If entry j has a priority value specified in the source code,
@@ -7244,7 +7244,7 @@ that does not match their relative priority order.
 The following example is the same as the first example in <<sec-entries>>, except for the definition of table `t_exact_ternary`
 shown below.
 
-[source,P4]
+[source,p4]
 ----
 table t_exact_ternary {
     key = {
@@ -7337,7 +7337,7 @@ functionality of the P4~14~ table `action_profile` constructs
 could be implemented on architectures that support this feature using
 a construct such as the following:
 
-[source,P4]
+[source,p4]
 ----
 extern ActionProfile {
    ActionProfile(bit<32> size); // number of distinct actions expected
@@ -7366,7 +7366,7 @@ synthesized by the compiler automatically. For each `table T`, the
 compiler synthesizes an `enum` and a `struct`, shown in
 pseudo-P4:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 enum action_list(T) {
    // one field for each action in the actions list of table T
@@ -7384,7 +7384,7 @@ if a match is not found `hit` is set to `false` and `miss` to `true`.
 These bits can be used to drive the execution of the control-flow in the
 control block that invoked the table:
 
-[source,P4]
+[source,p4]
 ----
 if (ipv4_match.apply().hit) {
     // there was a hit
@@ -7401,7 +7401,7 @@ The `action_run` field indicates which kind of action was executed
 (irrespective of whether it was a hit or a miss). It can be used in a
 switch statement:
 
-[source,P4]
+[source,p4]
 ----
 switch (dmac.apply().action_run) {
     Drop_action: { return; }
@@ -7413,14 +7413,14 @@ switch (dmac.apply().action_run) {
 
 The semantics of a table invocation statement:
 
-[source,P4]
+[source,p4]
 ----
 m.apply();
 ----
 
 is given by the following pseudocode (see also <<fig-maudataflow>>:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 apply_result(m) m.apply() {
     apply_result(m) result;
@@ -7450,7 +7450,7 @@ evaluating each key expression is assigned to a fresh temporary
 variable, before starting the evaluation of the following key
 expression.  For example, this P4 table definition and apply call:
 
-[source,P4]
+[source,p4]
 ----
 bit<8> f1 (in bit<8> a, inout bit<8> b) {
     b = a + 5;
@@ -7475,7 +7475,7 @@ apply {
 is equivalent in behavior to the following table definition and apply
 call:
 
-[source,P4]
+[source,p4]
 ----
 // same definition of f1, x, and y as before, so they are not repeated here
 bit<8> tmp_1;
@@ -7539,7 +7539,7 @@ it using its `apply` method.
 
 The following example shows a control invocation:
 
-[source,P4]
+[source,p4]
 ----
 control Callee(inout IPv4 ipv4) { /* body omitted */ }
 control Caller(inout Headers h) {
@@ -7604,7 +7604,7 @@ supplied for these parameters at compilation time.
 
 Consider the following example:
 
-[source,P4]
+[source,p4]
 ----
 parser GenericParser(packet_in b, out Packet_header p)
                     (bool udpSupport) {   // constructor parameters
@@ -7636,7 +7636,7 @@ parser GenericParser(packet_in b, out Packet_header p)
 When instantiating the `GenericParser` it is necessary to supply a value for
 the `udpSupport` parameter, as in the following example:
 
-[source,P4]
+[source,p4]
 ----
 // topParser is a GenericParser where udpSupport = false
 GenericParser(false) topParser;
@@ -7650,7 +7650,7 @@ syntactic sugar, control and parser declarations with no constructor
 parameters may be applied directly, as if they were an instance.  This
 has the effect of creating and applying a local instance of that type.
 
-[source,P4]
+[source,p4]
 ----
 control Callee(/* parameters omitted */) { /* body omitted */ }
 
@@ -7663,7 +7663,7 @@ control Caller(/* parameters omitted */)(/* parameters omitted */) {
 
 The definition of `Caller` is equivalent to the following.
 
-[source,P4]
+[source,p4]
 ----
 control Caller(/* parameters omitted */)(/* parameters omitted */) {
     @name("Callee") Callee() Callee_inst; // local instance of Callee
@@ -7684,7 +7684,7 @@ instantiated exactly once.
 The second production in the grammar allows direct calls for generic
 controls or parsers:
 
-[source,P4]
+[source,p4]
 ----
 control Callee<T>(/* parameters omitted */) { /* body omitted */ }
 
@@ -7725,7 +7725,7 @@ done in a `control` block that has at least one parameter of type `packet_out`.
 For example, the following code sequence writes first an Ethernet
 header and then an IPv4 header into a `packet_out`:
 
-[source,P4]
+[source,p4]
 ----
 control TopDeparser(inout Parsed_packet p, packet_out b) {
     apply {
@@ -7746,7 +7746,7 @@ The `packet_out` datatype is defined in the P4 core library, and
 reproduced below. It provides a method for appending data to an
 output packet called `emit`:
 
-[source,P4]
+[source,p4]
 ----
 extern packet_out {
     void emit<T>(in T data);
@@ -7770,7 +7770,7 @@ It is illegal to invoke `emit` on an expression whose type is a base type,
 We can define the meaning of the `emit` method in pseudocode as
 follows:
 
-[source,P4Pseudo]
+[source,p4Pseudo]
 ----
 packet_out {
     byte[] data;
@@ -7837,7 +7837,7 @@ image::switcharch.png[width=500,align="center"]
 The following example describes a switch by using two packages, each
 containing a parser, a match-action pipeline, and a deparser:
 
-[source,P4]
+[source,p4]
 ----
 parser Parser<IH>(packet_in b, out IH parsedHeaders);
 // ingress match-action pipeline
@@ -7907,7 +7907,7 @@ algorithm like Hindley-Milner.
 
 For example, given the following type declarations:
 
-[source,P4]
+[source,p4]
 ----
 parser Prs<T>(packet_in b, out T result);
 control Pipe<T>(in T data);
@@ -7916,7 +7916,7 @@ package Switch<T>(Prs<T> p, Pipe<T> map);
 
 and the following declarations:
 
-[source,P4]
+[source,p4]
 ----
 parser P(packet_in b, out bit<32> index) { /* body omitted */ }
 control Pipe1(in bit<32> data) { /* body omitted */ }
@@ -7925,14 +7925,14 @@ control Pipe2(in bit<8> data) { /* body omitted */ }
 
 The following is a legal declaration for the top-level target:
 
-[source,P4]
+[source,p4]
 ----
 Switch(P(), Pipe1()) main;
 ----
 
 And the following is illegal:
 
-[source,P4]
+[source,p4]
 ----
 Switch(P(), Pipe2()) main;
 ----
@@ -7944,7 +7944,7 @@ to be `bit<8>`.
 The user can also explicitly specify values for the type variables
 (otherwise the compiler has to infer values for these type variables):
 
-[source,P4]
+[source,p4]
 ----
 Switch<bit<32>>(P(), Pipe1()) main;
 ----
@@ -7974,7 +7974,7 @@ In this case the target is the Linux kernel, and the architecture
 model is a packet filter.
 
 The declaration for this architecture is as follows:
-[source,P4]
+[source,p4]
 ----
 parser Parser<H>(packet_in packet, out H headers);
 control Filter<H>(inout H headers, out bool accept);
@@ -8048,7 +8048,7 @@ Note that all stateful values are instantiated at compilation time.
 
 As an example, consider the following program fragment:
 
-[source,P4]
+[source,p4]
 ----
 // architecture declaration
 parser P(/* parameters omitted */);
@@ -8151,7 +8151,7 @@ derived from the syntax of a P4 program as follows.
 For each `value_set` construct, its syntactic name becomes the local
 name of the value set.  For example:
 
-[source,P4]
+[source,p4]
 ----
 struct vsk_t {
     @match(ternary)
@@ -8168,7 +8168,7 @@ This value_set's local name is `pvs`.
 For each `table` construct, its syntactic name becomes the local
 name of the table.  For example:
 
-[source,P4]
+[source,p4]
 ----
 control c(/* parameters omitted */)() {
     table t { /* body omitted */ }
@@ -8209,7 +8209,7 @@ generating names for some kinds of key expressions:
 In the following example, the previous algorithm would derive for
 table `t` two keys with names `data.f1` and `hdrs[3].f2`.
 
-[source,P4]
+[source,p4]
 ----
 table t {
     keys = {
@@ -8223,7 +8223,7 @@ table t {
 If a compiler cannot generate a name for a key it *requires* the key
 expression to be annotated with a `@name` annotation (<<sec-control-plane-api-annotations>>), as in the following example:
 
-[source,P4]
+[source,p4]
 ----
 table t {
     keys = {
@@ -8242,7 +8242,7 @@ to this key.
 For each `action` construct, its syntactic name is the local name
 of the action.  For example:
 
-[source,P4]
+[source,p4]
 ----
 control c(/* parameters omitted */)() {
     action a(...) { /* body omitted */ }
@@ -8259,14 +8259,14 @@ instances are derived based on how the instance is used.  If the
 instance is bound to a name, that name becomes its local control plane
 name.  For example, if `control` `C` is declared as,
 
-[source,P4]
+[source,p4]
 ----
 control C(/* parameters omitted */)() { /* body omitted */ }
 ----
 
 and instantiated as,
 
-[source,P4]
+[source,p4]
 ----
 C() c_inst;
 ----
@@ -8277,7 +8277,7 @@ Alternatively, if the instance is created as an actual argument, then its
 local name is the name of the formal parameter to which it will be
 bound. For example, if `extern` `E` and `control` `C` are declared as,
 
-[source,P4]
+[source,p4]
 ----
 extern E { /* body omitted */ }
 control C( /* parameters omitted */ )(E e_in) { /* body omitted */ }
@@ -8285,7 +8285,7 @@ control C( /* parameters omitted */ )(E e_in) { /* body omitted */ }
 
 and instantiated as,
 
-[source,P4]
+[source,p4]
 ----
 C(E()) c_inst;
 ----
@@ -8298,7 +8298,7 @@ definition when possible.  In the following example, the local name of
 the instance of `MyC` is `c`, and the local name of the `extern`
 is `e2`, not `e1`.
 
-[source,P4]
+[source,p4]
 ----
 extern E { /* body omitted */ }
 control ArchC(E e1);
@@ -8315,7 +8315,7 @@ package.  The fully-qualified name of that instance is `main.c.e2`.
 Next, consider a larger example that demonstrates name generation when
 there are multiple instances.
 
-[source,P4]
+[source,p4]
 ----
 control Callee() {
     table t { /* body omitted */ }
@@ -8369,7 +8369,7 @@ The control plane may refer to a controllable entity by a postfix of
 its fully qualified name when it is unambiguous in the context in
 which it is used.  Consider the following example.
 
-[source,P4]
+[source,p4]
 ----
 control c( /* parameters omitted */ )() {
     action a ( /* parameters omitted */ ) { /* body omitted */ }
@@ -8443,7 +8443,7 @@ statements, parser states, control blocks, or whole parsers.
 
 Consider the following example:
 
-[source,P4]
+[source,p4]
 ----
 extern Register { /* body omitted */ }
 control Ingress() {
@@ -8482,7 +8482,7 @@ diagnostics.
 The P4 core library contains two overloaded declarations for a
 `static_assert` function, as follows:
 
-[source,P4]
+[source,p4]
 ----
 /// Static assert evaluates a boolean expression
 /// at compilation time.  If the expression evaluates to
@@ -8500,7 +8500,7 @@ Since P4 does not allow statements at the program top-level (outside
 of apply blocks), these functions can be used at the top-level by
 assigning their result to a dummy constant, e.g.:
 
-[source,P4]
+[source,p4]
 ----
 const bool _check = static_assert(V1MODEL_VERSION > 20180000,
                                   "Expected a v1 model version >= 20180000");
@@ -8537,7 +8537,7 @@ does not affect the annotation on another because they have different scope.
 
 This is legal:
 
-[source,P4]
+[source,p4]
 ----
 @my_anno(1) table T { /* body omitted */ }
 @my_anno[2] table U { /* body omitted */ } // OK - different scope than previous
@@ -8546,7 +8546,7 @@ This is legal:
 
 This is illegal:
 
-[source,P4]
+[source,p4]
 ----
 @my_anno(1)
 @my_anno[2] table U { /* body omitted */ } // Error - changed type of anno
@@ -8560,7 +8560,7 @@ element; multiple uses of the same `name` will produce an error.
 
 This is legal:
 
-[source,P4]
+[source,p4]
 ----
 @my_anno(1)
 @my_anno(2) table U { /* body omitted */ }  // OK - unstructured annos accumulate
@@ -8568,7 +8568,7 @@ This is legal:
 
 This is illegal:
 
-[source,P4]
+[source,p4]
 ----
 @my_anno[1]
 @my_anno[2] table U { /* body omitted */ } // Error - reused the same structured
@@ -8632,7 +8632,7 @@ include::grammar.adoc[tag=kvPair]
 
 The following example produces an empty annotation:
 
-[source,P4]
+[source,p4]
 ----
 @Empty[]
 table t {
@@ -8648,7 +8648,7 @@ The following example will produce an effective expression list as follows:
 [1,"hello",true, false, 11]
 ```
 
-[source,P4]
+[source,p4]
 ----
 #define TEXT_CONST "hello"
 #define NUM_CONST 6
@@ -8660,7 +8660,7 @@ table t {
 
 *kvList of Strings*
 
-[source,P4]
+[source,p4]
 ----
 @Labels[short="Short Label", hover="My Longer Table Label to appear in hover-help"]
 table t {
@@ -8676,7 +8676,7 @@ The following example will produce an effective kvList as follows.
 [label="text", my_bool=true, int_val=6]
 ```
 
-[source,P4]
+[source,p4]
 ----
 @MixedKV[label="text", my_bool=true, int_val=2*3]
 table t {
@@ -8689,7 +8689,7 @@ table t {
 The following example is invalid because the body contains both a `kvPair` and
 an `expression`:
 
-[source,P4]
+[source,p4]
 ----
 @IllegalMixing[key=4, 5] // illegal mixing
 table t {
@@ -8701,7 +8701,7 @@ table t {
 
 The following example is invalid because the same key occurs more than once:
 
-[source,P4]
+[source,p4]
 ----
 @DupKey[k1=4,k1=5] // illegal duplicate key
 table t {
@@ -8715,7 +8715,7 @@ table t {
 The following example is invalid because the annotation `name` occurs more
 than once on the same element, e.g. `table t`:
 
-[source,P4]
+[source,p4]
 ----
 @DupAnno[k1=4]
 @DupAnno[k2=5] // illegal duplicate name
@@ -8729,7 +8729,7 @@ table t {
 The following example is invalid because the annotation `name` is used by both
 an unstructured and structured annotation on the same element `table t`:
 
-[source,P4]
+[source,p4]
 ----
 @MixAnno("Anything")
 @MixAnno[k2=5] // illegal use in both annotation types
@@ -8769,7 +8769,7 @@ table. These annotations have no bodies.
 - `@defaultonly`: actions with this annotation can only appear in
   the default action, and never in the table.
 
-[source,P4]
+[source,p4]
 ----
 table t {
     actions = {
@@ -8790,7 +8790,7 @@ language element from the control plane. This annotation takes a string literal
 body.  In the
 following example, the fully-qualified name of the table is `c_inst.t1`.
 
-[source,P4]
+[source,p4]
 ----
 control c( /* parameters omitted */ )() {
     @name("t1") table t { /* body omitted */ }
@@ -8814,7 +8814,7 @@ annotation with an absolute pathname (i.e., one starting with a dot)
 is instantiated more than once, it will result in the same
 name referring to two controllable entities.
 
-[source,P4]
+[source,p4]
 ----
 control noargs();
 package top(noargs c1, noargs c2);
@@ -8894,7 +8894,7 @@ message that will be printed by a compiler when a program is using the
 deprecated construct.  This is mostly useful for annotating library
 constructs, such as externs.
 
-[source,P4]
+[source,p4]
 ----
 @deprecated("Please use the 'check' function instead")
 extern Checker {
@@ -9155,7 +9155,7 @@ For example, the core library includes the declarations of the
 predefined `packet_in` and `packet_out` extern objects, used
 in parsers and deparsers to access packet data.
 
-[source,P4]
+[source,p4]
 ----
 /// Standard error codes.  New error codes can be declared by users.
 error {
@@ -9237,7 +9237,7 @@ For example, one could provide an incremental checksum unit `Checksum16`
 computing 16-bit one's complement using an `extern` object with a
 signature such as:
 
-[source,P4]
+[source,p4]
 ----
 extern Checksum16 {
     Checksum16();              // constructor
@@ -9250,7 +9250,7 @@ extern Checksum16 {
 
 IP checksum verification could be done in a parser as:
 
-[source,P4]
+[source,p4]
 ----
 ck16.clear();           // prepare checksum unit
 ck16.update(h.ipv4);    // write header
@@ -9260,7 +9260,7 @@ verify(ck16.get() == 16w0, error.IPv4ChecksumError); // check for 0 checksum
 
 IP checksum generation could be done as:
 
-[source,P4]
+[source,p4]
 ----
 h.ipv4.hdrChecksum = 16w0;
 ck16.clear();
@@ -9273,7 +9273,7 @@ verification, but only update checksums incrementally to reflect
 packet modifications. This could be achieved as well, as the following
 P4 program fragments illustrates:
 
-[source,P4]
+[source,p4]
 ----
 ck16.clear();
 ck16.update(h.ipv4.hdrChecksum);  // original checksum
@@ -9504,7 +9504,7 @@ The parser has to use a symbol table to indicate to the lexer how to
 parse subsequent appearances of identifiers. For example, given the
 following program fragment:
 
-[source,P4]
+[source,p4]
 ----
 typedef bit<4> t;
 struct s { /* body omitted */}
@@ -9512,7 +9512,7 @@ t x;
 parser p(bit<8> b) { /* body omitted */ }
 ----
 The lexer has to return the following terminal kinds:
-[source,P4]
+[source,p4]
 ----
 t - TYPE_IDENTIFIER
 s - TYPE_IDENTIFIER
