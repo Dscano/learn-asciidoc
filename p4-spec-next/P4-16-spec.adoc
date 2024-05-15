@@ -588,10 +588,13 @@ it must update in place the headers to be consumed by the deparser.
   VSS, the user will have to instantiate a package of this type (shown
   in the next section). The top-level package declaration also depends
   on a type variable H:
++
+--
 [source,p4]
 ----
 package VSS<H>
 ----
+--
 
 A type variable indicates a type yet unknown that must be provided by
 the user at a later time. In this case `H` is the type of the set
@@ -1214,6 +1217,7 @@ escape sequences (e.g., how to specify Unicode characters, or handle
 unprintable ASCII characters).
 
 Here are 3 examples of string literals:
+
 [source,p4]
 ----
 "simple string"
@@ -3167,6 +3171,7 @@ The result of such a comparison is a Boolean value.
 
 For example, the following operation tests for the occurrence of an
 error:
+
 [source,p4]
 ----
 error errorFromParser;
@@ -4703,6 +4708,7 @@ parser top(packet_in b, out Parsed_packet p) {
 
 As another example, we can also use unions to parse (selected) TCP
 options:
+
 [source,p4]
 ----
 header Tcp_option_end_h {
@@ -5811,6 +5817,7 @@ the `reject` state, along with the error recorded.
 === Parser states
 
 A parser state is declared with the following syntax:
+
 [source,bison]
 ----
 include::grammar.adoc[tag=parserState]
@@ -6585,6 +6592,7 @@ value. Actions may be declared within a control block; in this case
 they can only be used within instances of that control block.
 
 The following example shows an action declaration:
+
 [source,p4]
 ----
 action Forward_a(out bit<9> outputPort, bit<9> port) {
@@ -7975,6 +7983,7 @@ In this case the target is the Linux kernel, and the architecture
 model is a packet filter.
 
 The declaration for this architecture is as follows:
+
 [source,p4]
 ----
 parser Parser<H>(packet_in packet, out H headers);
@@ -9512,7 +9521,9 @@ struct s { /* body omitted */}
 t x;
 parser p(bit<8> b) { /* body omitted */ }
 ----
+
 The lexer has to return the following terminal kinds:
+
 [source,p4]
 ----
 t - TYPE_IDENTIFIER

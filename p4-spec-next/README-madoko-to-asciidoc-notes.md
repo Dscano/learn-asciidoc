@@ -241,17 +241,18 @@ code block goes here
 ----
 ```
 
-TODO: Read AsciiDoc docs on how to enable syntax highlighting for P4:
+Ryan Goodfellow has published instructions in this issue for enabling
+P4 syntax highlighting, and I have followed them successfully in this
+repo:
 
-+ https://docs.asciidoctor.org/asciidoctor/latest/syntax-highlighting/
-
-+ https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/
++ https://github.com/p4lang/p4-spec/issues/1115
 
 Locations of a variety of P4 code snippets in the current spec:
 
 + Section 4.2
 + Section 4.3
 + Section 5.1
+
 
 ## Results of trying Ryan Goodfellow's P4 syntax highlighting using `rouge`
 
