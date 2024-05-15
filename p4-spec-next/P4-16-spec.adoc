@@ -8,6 +8,7 @@ The P4 Language Consortium
 :sectnumlevels: 5
 :xrefstyle: short
 :stem: latexmath
+:source-highlighter: rouge
 
 P4 is a language for programming the data plane of network
 devices. This document provides a precise definition of the P4~16~
@@ -1006,7 +1007,7 @@ Pseudo-code (mostly used for describing the semantics of
 various P4 constructs) are shown with fixed-size fonts as in the
 following example:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 ParserModel.verify(bool condition, error err) {
     if (condition == false) {
@@ -4398,7 +4399,7 @@ provides a set of computations for manipulating header stacks. A
 header stack `hs` of type `h[n]` can be understood in terms of
 the following pseudocode:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 // type declaration
 struct hs_t {
@@ -4484,7 +4485,7 @@ manipulate the elements at the front and back of the stack:
 
 The following pseudocode defines the behavior of `push_front` and `pop_front`:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 void push_front(int count) {
     for (int i = this.size-1; i >= 0; i -= 1) {
@@ -5787,7 +5788,7 @@ this abstract machine in pseudo-code.
 A parser starts execution in the `start` state and ends execution
 when one of the `reject` or `accept` states has been reached.
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 ParserModel {
     error       parseError;
@@ -5930,7 +5931,7 @@ select(e) {
 
 is defined in pseudo-code as:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 key = eval(e);
 for (int i=0; i < n; i++) {
@@ -6035,7 +6036,7 @@ associated with the parser is set to the value of the second argument.
 In terms of the `ParserModel` the semantics of a `verify`
 statement is given by:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 ParserModel.verify(bool condition, error err) {
     if (condition == false) {
@@ -6088,7 +6089,7 @@ target that does not support this method).
 In terms of the `ParserModel`, the semantics of `packet_in`
 can be captured using the following abstract model of packets:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 packet_in {
     unsigned nextBitIndex;
@@ -6141,7 +6142,7 @@ hidden valid bit of a header, `isNext$` to indicate that the
 l-value was obtained using `next`, and `nextIndex$` to
 indicate the corresponding header or header union stack properties.
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 void packet_in.extract<T>(out T headerLValue) {
    bitsToExtract = sizeofInBits(headerLValue);
@@ -6176,7 +6177,7 @@ bits to be extracted into the unique `varbit` field of the header
 In terms of the `ParserModel`, the semantics of the two-argument `extract`
 is captured by the following pseudo-code:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 void packet_in.extract<T>(out T headerLvalue,
                           in bit<32> variableFieldSize) {
@@ -6275,7 +6276,7 @@ result of the evaluation of `lookahead` returns a value of type `T`.
 In terms of the `ParserModel`, the semantics of `lookahead` is
 given by the following pseudocode:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 T packet_in.lookahead<T>() {
    bitsToExtract = sizeof(T);
@@ -6329,7 +6330,7 @@ number of bits to skip is known.
 In terms of the `ParserModel`, the meaning of `advance` is
 given in pseudocode as follows:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 void packet_in.advance(bit<32> bits) {
    // targets are allowed to include the following line, but need not
@@ -7145,7 +7146,7 @@ that is the value that will be used.
 If the developer does not specify priority values for any entry, then
 the compiler calculates priority values for every entry as follows:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 // For this pseudocode, table entries in the `entries` list are
 // numbered 0 through n-1, 0 being the first to appear in order in the
@@ -7171,7 +7172,7 @@ entries without one in the source code, the first entry _must_ have a
 priority value explicitly provided.  The priorities of entries that do
 not have one in the source code (if any) are determined as follows:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 // Same conventions here as in the previous block of pseudocode above.
 // If entry j has a priority value specified in the source code,
@@ -7366,7 +7367,7 @@ synthesized by the compiler automatically. For each `table T`, the
 compiler synthesizes an `enum` and a `struct`, shown in
 pseudo-P4:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 enum action_list(T) {
    // one field for each action in the actions list of table T
@@ -7420,7 +7421,7 @@ m.apply();
 
 is given by the following pseudocode (see also <<fig-maudataflow>>:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 apply_result(m) m.apply() {
     apply_result(m) result;
@@ -7770,7 +7771,7 @@ It is illegal to invoke `emit` on an expression whose type is a base type,
 We can define the meaning of the `emit` method in pseudocode as
 follows:
 
-[source,p4Pseudo]
+[source,p4pseudo]
 ----
 packet_out {
     byte[] data;

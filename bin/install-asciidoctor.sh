@@ -150,6 +150,12 @@ gem install asciidoctor-bibtex
 sudo apt-get --yes install cmake flex libglib2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf-2.0-dev libxml2-dev libwebp-dev libzstd-dev
 gem install asciidoctor-mathematical
 
+# Install fork of rouge package that has support for P4 language.
+git clone https://github.com/rcgoodfellow/rouge
+cd rouge
+gem build rouge.gemspec
+gem install rouge-4.2.1.gem
+
 which ruby
 ruby --version
 which gem

@@ -247,6 +247,52 @@ TODO: Read AsciiDoc docs on how to enable syntax highlighting for P4:
 
 + https://docs.asciidoctor.org/asciidoc/latest/verbatim/source-blocks/
 
+Locations of a variety of P4 code snippets in the current spec:
+
++ Section 4.2
++ Section 4.3
++ Section 5.1
+
+## Results of trying Ryan Goodfellow's P4 syntax highlighting using `rouge`
+
+Differences with current Madoko P4 syntax highlighting that I have
+observed on 2024-May-14.
+
+(M) bolds built-in type names like the following, but (A) does not.
+
++ `bit`
++ `int`
++ `varbit`
++ `bool`
++ `error`
++ `match_kind`
++ `void`
++ `packet_out` (but (A) _does_ colorize `packet_in`)
++ `package` ((A) sometimes colorizes it, but not in the code snippet
+  near the end of Section 5.1.)
+
+(A) colorizes type names, but (M) does not.  Seems like a plus for
+AsciiDoc.
+
+(A) colorizes preprocessor directive words like the `include` in
+`#include` differently, but (M) does not.  Seems like a plus for
+AsciiDoc to me.
+
+(A) colorizes numeric values for bit widths like the 16 in `bit<16>`,
+but (M) does not.  I don't have any strong opinion about this
+difference.
+
+(A) colorizes some method names, e.g. `extract`, `verify`, but (M) does
+not.  Neither colorizes `isValid`.  Seems like an improvement in
+AsciiDoc colorization to me.
+
+(A) colorizes some table property names, e.g. `key`, `action`,
+`default_action`, but not `size`.  Why not `size`?  This seems like an
+improvement in AsciiDoc syntax highlighting vs. Madoko to me.
+
+
+# Widow/orphan line control
+
 TODO: See if AsciiDoctor has a feature to avoid "widow lines",
 i.e. only one or two lines of a block appearing on a page, when the
 code block is split across multiple pages in PDF.
@@ -335,3 +381,22 @@ To get that, use `+<=+` in AsciiDoc source.
 + `&rarr;` in Madoko source, arrow pointing right only
   + See here: https://asciidoctor.org/docs/asciidoc-writers-guide/#replacements
   + Tried `&#8594;`.  Produced desired output in PDF output from AsciiDoctor.
+
+
+## Other
+
+TODO: Is there a way to set the background color for source code
+snippets in AsciiDoc?
+
+I tried the `[.blue-background]` syntax shown below, but it did not
+affect the background color in the PDF nor the HTML output:
+
+```
+[.blue-background]
+[source,p4]
+----
+control MatchActionPipe<H>(in bit<4> inputPort,
+                           inout H parsedHeaders,
+                           out bit<4> outputPort);
+----
+```
