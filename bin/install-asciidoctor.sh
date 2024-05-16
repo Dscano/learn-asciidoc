@@ -48,12 +48,15 @@ then
     case "${VERSION_ID}" in
 	20.04)
 	    supported_distribution=1
+	    OS_SPECIFIC_PACKAGES="libgdk-pixbuf2.0-dev"
 	    ;;
 	22.04)
 	    supported_distribution=1
+	    OS_SPECIFIC_PACKAGES="libgdk-pixbuf-2.0-dev"
 	    ;;
 	24.04)
 	    supported_distribution=1
+	    OS_SPECIFIC_PACKAGES="libgdk-pixbuf-2.0-dev"
 	    ;;
     esac
 elif [ "${ID}" = "fedora" ]
@@ -145,14 +148,15 @@ rvm use 3.3
 gem install asciidoctor
 gem install asciidoctor-pdf
 gem install asciidoctor-bibtex
-# Additional installations in hopes of enabling
-# asciidoctor-mathematical to work.
-sudo apt-get --yes install cmake flex libglib2.0-dev libcairo2-dev libpango1.0-dev libgdk-pixbuf-2.0-dev libxml2-dev libwebp-dev libzstd-dev
+# Additional installations to enable installing
+# asciidoctor-mathematical
+sudo apt-get --yes install cmake flex libglib2.0-dev libcairo2-dev libpango1.0-dev libxml2-dev libwebp-dev libzstd-dev ${OS_SPECIFIC_PACKAGES}
 gem install asciidoctor-mathematical
 
 # Install fork of rouge package that has support for P4 language.
 git clone https://github.com/rcgoodfellow/rouge
 cd rouge
+git log -n 1
 gem build rouge.gemspec
 gem install rouge-4.2.1.gem
 
