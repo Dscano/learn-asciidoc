@@ -156,7 +156,7 @@ gem install asciidoctor-mathematical
 # Install fork of rouge package that has support for P4 language.
 git clone https://github.com/rcgoodfellow/rouge
 cd rouge
-git log -n 1
+git log -n 1 | cat
 gem build rouge.gemspec
 gem install rouge-4.2.1.gem
 
