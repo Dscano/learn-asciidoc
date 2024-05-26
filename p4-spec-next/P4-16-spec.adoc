@@ -1,6 +1,7 @@
 = P4~16~ Language Specification
 The P4 Language Consortium
 :revnumber: v1.2.4
+:doctype: book
 :toc: macro
 :toclevels: 5
 :imagesdir: figs
