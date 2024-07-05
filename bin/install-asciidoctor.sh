@@ -144,7 +144,7 @@ gpg2 --keyserver keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB
 curl -sSL https://get.rvm.io | bash
 source $HOME/.rvm/scripts/rvm
 rvm install ruby-3.3.1
-rvm use 3.3
+rvm use 3.3.1
 gem install asciidoctor
 gem install asciidoctor-pdf
 gem install asciidoctor-bibtex
