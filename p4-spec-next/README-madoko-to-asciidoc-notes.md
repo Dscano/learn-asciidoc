@@ -257,52 +257,58 @@ Locations of a variety of P4 code snippets in the current spec:
 them, are listed below.  Note that I believe we could create a new
 theme that tries to match the colorization that we have been using in
 P4 specifications for years, if that is what we want.  I do not think
-any of the below are very close to that.
+any of the below are identical to that.
 
 When you specify a rouge style name, if it is not a supported style,
 rouge seems to default to a particular one.  I am not sure which one
-that is yet.  I also do not know what string I should be using to make
-it use the rouge style name, if it is not the file name in the rouge
-repo.
+that is yet.
 
-+ base16 - too many similar colors for my taste.  Different shades of
+To find the strings that one can use as names, use these commands:
+
+```bash
+git clone https://github.com/rouge-ruby/rouge
+cd rouge
+grep name lib/rouge/themes/*.rb
+```
+
++ `base16` - too many similar colors for my taste.  Different shades of
   brown/tan/yellow.  I would prefer more variety in the color choices.
 
-+ bw - no colors, black & white only.  I prefer multiple colors.
++ `bw` - no colors, black & white only.  I prefer multiple colors.
 
-+ colorful - black background.  Uses multiple colors, and also makes
++ `colorful` - black background.  Uses multiple colors, and also makes
   background of code snippets black, instead of white as the rest of
   the page is.  Good for knowing how to change the background color,
   but probably don't want to use black as a background color for P4
   specs.
 
-+ github - I think this might be the default theme, as it appears
++ `github` - I think this might be the default theme, as it appears
   similar to what I see when I do not explicitly specify a rouge
   style.  I would prefer a bigger contrast for comments
   vs. non-comment code.
 
-+ gruvbox - black background
++ `gruvbox` - black background
 
-+ igorpro - This is fairly close to what we have in P4 spec PDF now.
++ `igorpro` - This is fairly close to what we have in P4 spec PDF now.
   The biggest difference I noticed are that with igorpro comments are
   a bright red, whereas they are a muted green with current P4 PDF.
 
-+ magritte - Keywords are either not colorized, or do not have very
++ `magritte` - Keywords are either not colorized, or do not have very
   much difference from non-keyword color.
 
-+ molokai - black background
++ `molokai` - black background
 
-+ monokai - black background
++ `monokai` - black background
 
-+ monokai.sublime - black background.
++ `monokai.sublime` - black background.
 
-+ pastie - Some differences between this and github, e.g. github uses
++ `pastie` - Some differences between this and github, e.g. github uses
   red for keywords, pastie uses green for keywords.  I prefer pastie
   over github, but both seem reasonable to me.
 
-+ thankful_eyes - black background
++ `thankful_eyes` - black background
 
-+ tulip - black background
++ `tulip` - black background
 
 
 
@@ -440,6 +446,10 @@ To get that, use `+<=+` in AsciiDoc source.
 
 TODO: Is there a way to set the background color for source code
 snippets in AsciiDoc?
+
+To try: I believe this should be possible by customizing the `rouge`
+library theme in use, because some of those themes use a black
+background.
 
 I tried the `[.blue-background]` syntax shown below, but it did not
 affect the background color in the PDF nor the HTML output:
