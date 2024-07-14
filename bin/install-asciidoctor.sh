@@ -159,7 +159,7 @@ git clone https://github.com/rouge-ruby/rouge
 cd rouge
 git log -n 1 | cat
 gem build rouge.gemspec
-gem install rouge-4.2.1.gem
+gem install rouge-4.3.0.gem
 
 which ruby
 ruby --version
