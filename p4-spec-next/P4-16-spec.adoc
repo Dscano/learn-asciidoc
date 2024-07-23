@@ -8,7 +8,7 @@
 :toc: macro
 :toc-title: Contents
 :toclevels: 5
-:numbered:
+:!chapter-signifier:
 :xrefstyle: short
 :stem: latexmath
 :source-highlighter: rouge
