@@ -85,6 +85,7 @@ toc:
   font-family: OpenSans
   font-color: #01226e
   font-size:  10
+  indent: 20
   title:
     font-family: OpenSans
     font-color: #080808

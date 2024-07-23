@@ -3,11 +3,12 @@
 :revnumber: v1.2.4
 :imagesdir: resources/figs
 :font-size: 10
-:sectnums: 3
-:sectnumlevels: 3
+:sectnums: 5
+:sectnumlevels: 5
 :toc: macro
 :toc-title: Contents
-:toclevels: 3
+:toclevels: 5
+:numbered:
 :xrefstyle: short
 :stem: latexmath
 :source-highlighter: rouge
