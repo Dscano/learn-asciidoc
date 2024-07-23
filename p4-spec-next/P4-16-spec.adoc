@@ -1,17 +1,22 @@
-= P4~16~ Language Specification
-The P4 Language Consortium
+= P4~16~ Language Specification : The P4 Language Consortium
 :doctype: book
 :revnumber: v1.2.4
 :doctype: book
+:imagesdir: resources/figs
+:font-size: 10
+:line-height: 1
 :toc: macro
+:toc-title: Contents
 :toclevels: 5
-:imagesdir: figs
 :sectnums:
 :sectnumlevels: 5
 :xrefstyle: short
 :stem: latexmath
 :source-highlighter: rouge
 
+
+[abstract]
+.Abstract
 P4 is a language for programming the data plane of network
 devices. This document provides a precise definition of the P4~16~
 language, which is the 2016 revision of the P4 language
@@ -21,7 +26,9 @@ debuggers for P4 programs. This document may also be of interest to P4
 programmers who are interested in understanding the syntax and
 semantics of the language at a deeper level.
 
+
 toc::[]
+
 
 [#sec-scope]
 == Scope
