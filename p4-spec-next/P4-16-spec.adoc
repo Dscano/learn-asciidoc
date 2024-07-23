@@ -1,15 +1,13 @@
 = P4~16~ Language Specification : The P4 Language Consortium
 :doctype: book
 :revnumber: v1.2.4
-:doctype: book
 :imagesdir: resources/figs
 :font-size: 10
-:line-height: 1
+:sectnums: 3
+:sectnumlevels: 3
 :toc: macro
 :toc-title: Contents
-:toclevels: 5
-:sectnums:
-:sectnumlevels: 5
+:toclevels: 3
 :xrefstyle: short
 :stem: latexmath
 :source-highlighter: rouge
@@ -86,7 +84,6 @@ All terms defined explicitly in this document should not be understood
 to refer implicitly to similar terms defined elsewhere. Conversely, any terms not
 defined explicitly in this document should be interpreted according to
 generally recognizable sources---e.g., IETF RFCs.
-
 
 
 == Overview

@@ -1,8 +1,21 @@
 extends: ~
+footer:
+  height: 1in
+  font-size: 10
+  font-family: UtopiaStd-Regular
+  columns: =100%
+  recto:
+    center:
+      content: '{page-number}'
+  verso:
+    center:
+      content: '{page-number}'
 page:
   layout: portrait
   margin: [0.75in, 1in, 0.75in, 1in]
   size: Letter
+  numbering:
+    start-at: toc
 
 font:
   catalog:
@@ -24,6 +37,7 @@ font:
     
 base:
   font-family: UtopiaStd-Regular
+  line-height: 1
 code:
   font-family: LuxiMono
 codespan:
@@ -38,7 +52,7 @@ heading:
 link:
   font-color: #002FA7
 list:
-  indent: $base-font-size * 1.5
+  indent: $base-font-size * 1.2
 
 title-page:
   font-family: OpenSans
@@ -69,10 +83,15 @@ abstract:
 
 toc:
   font-family: OpenSans
-  font-color: #0743f5
-  font-size:  9
+  font-color: #01226e
+  font-size:  10
   title:
     font-family: OpenSans
     font-color: #080808
     font-size:  15
     font-style: bold
+  dot-leader:
+    content: ". "
+    levels: 2 3 4 5
+
+ 
