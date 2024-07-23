@@ -3,18 +3,33 @@ page:
   layout: portrait
   margin: [0.75in, 1in, 0.75in, 1in]
   size: Letter
+
+font:
+  catalog:
+    UtopiaStd-Regular:
+      normal: Utopia/utopia-regular.ttf
+      bold: Utopia/utopia-bold.ttf
+      italic: Utopia/utopia-italic.ttf
+      bold_italic: Utopia/utopia-bolditalic.ttf
+    LuxiMono:
+      normal: LuxiMono/luximr.ttf
+      bold:  LuxiMono/luximb.ttf
+      italic: LuxiMono/luximri.ttf
+      bold_italic: LuxiMono/luximbi.ttf
+    OpenSans:
+      normal: OpenSans/OpenSans-Regular.ttf
+      bold: OpenSans/OpenSans-Bold.ttf
+      italic: OpenSans/OpenSans-Italic.ttf
+      bold_italic: OpenSans/OpenSans-BoldItalic.ttf
+    
 base:
-  font-color: #333333
-  font-family: Times-Roman
-  font-size: 12
-  line-height-length: 17
-  line-height: $base-line-height-length / $base-font-size
-role:
-  removed:
-    font-style: italic
-    text-decoration: line-through
-    text-decoration-color: #FF0000
+  font-family: UtopiaStd-Regular
+code:
+  font-family: LuxiMono
+codespan:
+  font-family: $code-font-family
 heading:
+  font-family: LuxiMono
   font-color: #262626
   font-size: 17
   font-style: bold
@@ -24,3 +39,40 @@ link:
   font-color: #002FA7
 list:
   indent: $base-font-size * 1.5
+
+title-page:
+  font-family: OpenSans
+  font-color: #080808
+  font-size:  25
+  font-style: bold
+  text-align: center
+  logo:
+    image: image:logo.png[pdfwidth=3.0in,align=center]
+  subtitle:
+    font-family: OpenSans
+    font-color: #080808
+    font-size:  15
+    text-align: center
+  revision:
+    font-family: OpenSans
+    font-color: #080808
+    font-size:  10
+    text-align: center
+
+abstract:
+  title:
+    font-family: UtopiaStd-Regular
+    font-color: #080808
+    font-size:  15
+    font-style: italic
+    text-align: center
+
+toc:
+  font-family: OpenSans
+  font-color: #0743f5
+  font-size:  9
+  title:
+    font-family: OpenSans
+    font-color: #080808
+    font-size:  15
+    font-style: bold
