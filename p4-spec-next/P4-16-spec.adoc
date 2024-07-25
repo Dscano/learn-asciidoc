@@ -8,9 +8,12 @@
 :toc: macro
 :toc-title: Contents
 :toclevels: 5
+:line
 :!chapter-signifier:
 :xrefstyle: short
 :stem: latexmath
+:pdf-themesdir: resources/theme/
+:pdf-theme: p4-theme.yml
 :source-highlighter: rouge
 
 
@@ -92,6 +95,7 @@ generally recognizable sources---e.g., IETF RFCs.
 .Traditional switches vs. programmable switches.
 [#fig-prgswitch]
 image::prgswitch.png[]
+
 
 P4 is a language for expressing how packets are processed by the data
 plane of a programmable forwarding element such as a hardware or
