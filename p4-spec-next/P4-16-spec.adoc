@@ -8,7 +8,6 @@
 :toc: macro
 :toc-title: Contents
 :toclevels: 5
-:line
 :!chapter-signifier:
 :xrefstyle: short
 :stem: latexmath

@@ -17,7 +17,6 @@ font:
       italic: OpenSans/OpenSans-Italic.ttf
       bold_italic: OpenSans/OpenSans-BoldItalic.ttf
 page:
-  background_color: FFFFFF
   layout: portrait
   initial_zoom: FitH
   margin: [0.5in, 0.67in, 0.67in, 0.67in]
@@ -67,9 +66,6 @@ link:
 codespan:
   font_color: B12146
   font_family: OpenSans
-button:
-  content: "[\u2009%s\u2009]"
-  font_style: bold
 kbd:
   background_color: F5F5F5
   border_color: CCCCCC
@@ -85,7 +81,7 @@ menu:
   caret_content: "\u00a0<font size=\"1.15em\" color=\"#B12146\">\u203a</font> "
   font_style: bold
 heading:
-  font-family: LuxiMono
+  font-family: OpenSans
   font-color: #262626
   font-size: 17
   font-style: bold
@@ -165,8 +161,8 @@ verse:
     font_color: $quote_cite_font_color
 # code is used for literal, listing, and source blocks and literal table cells
 code:
-  font_color: $base_font_color
-  font_family: $codespan_font_family
+  font_color: #fcf3d9
+  font_family: LuxiMono
   font_size: ceil($base_font_size)
   padding: $code_font_size
   line_height: 1.25
@@ -186,10 +182,14 @@ example:
   border_color: $base_border_color
   border_radius: $base_border_radius
   border_width: 0.75
-  background_color: $page_background_color
   padding: [$vertical_rhythm, $horizontal_rhythm, $vertical_rhythm, $horizontal_rhythm]
 image:
-  align: left
+  caption:
+    font-family: UtopiaStd-Regular
+    font-color: #080808
+    font-size:  10
+    font-style: italic
+    text-align: center
 prose:
   margin_bottom: $block_margin_bottom
 sidebar:
@@ -220,7 +220,6 @@ description_list:
 callout_list:
   margin_top_after_code: -$block_margin_bottom / 2
 table:
-  background_color: $page_background_color
   border_color: DDDDDD
   border_width: $base_border_width
   grid_width: $base_border_width
