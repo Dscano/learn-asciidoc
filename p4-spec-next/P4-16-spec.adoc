@@ -13,6 +13,8 @@
 :stem: latexmath
 :pdf-themesdir: resources/theme/
 :pdf-theme: p4-theme.yml
+:stylesdir: resources/theme/
+:stylesheet: p4-stylesheet.css
 :source-highlighter: rouge
 
 
