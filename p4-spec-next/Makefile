@@ -1,7 +1,7 @@
 
 SPEC=P4-16-spec
 
-ROUGE_STYLE=igorpro
+ROUGE_STYLE=github
 
 all: ${SPEC}.pdf ${SPEC}.html
 
