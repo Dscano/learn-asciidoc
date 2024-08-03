@@ -270,7 +270,7 @@ blockquote, blockquote p { line-height: 1.4; color: #030303; }
 table { background: white; margin-bottom: 1.33333em; border: solid 1px #dddddd; }
 table thead, table tfoot { background: whitesmoke; font-weight: bold; }
 table thead tr th, table thead tr td, table tfoot tr th, table tfoot tr td { padding: 0.53333em 0.66667em 0.66667em; font-size: 0.93333em; color: #222222; text-align: left; }
-table tr th, table tr td { padding: 0.6em 0.66667em; font-size: 0.8em; color: #030303; }
+table tr th, table tr td { padding: 0.6em 0.66667em; font-size: 0.8em; color: black; }
 table tr.even, table tr.alt, table tr:nth-of-type(even) { background: #f9f9f9; }
 table thead tr th, table tfoot tr th, table tbody tr td, table tr td, table tfoot tr td { display: table-cell; line-height: 1.4; }
 
@@ -281,11 +281,11 @@ a:hover, a:focus { text-decoration: underline; }
 
 *:not(pre) > code { font-size: 0.86667em; padding: 1px 5px 1px 5px; white-space: nowrap; background-color: transparent; border: 1px solid #dddddd; -webkit-border-radius: 3px; border-radius: 3px; text-shadow: none; }
 
-pre, pre > code { line-height: 1.6; color: white; font-family: Consolas, "Liberation Mono", Courier, monospace; font-weight: normal; }
+pre, pre > code { line-height: 1.6; color: black; font-family: Consolas, "Liberation Mono", Courier, monospace; font-weight: normal; }
 
-kbd.keyseq { color: #030303; }
+kbd.keyseq { color: black; }
 
-kbd:not(.keyseq) { display: inline-block; color: #030303; font-size: 0.8em; line-height: 1.4; background-color: #F7F7F7; border: 1px solid #ccc; -webkit-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; margin: -0.15em 0.15em 0 0.15em; padding: 0.2em 0.6em 0.2em 0.5em; vertical-align: middle; white-space: nowrap; }
+kbd:not(.keyseq) { display: inline-block; color: black; font-size: 0.8em; line-height: 1.4; background-color: #F7F7F7; border: 1px solid #ccc; -webkit-border-radius: 3px; border-radius: 3px; -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2), 0 0 0 2px white inset; margin: -0.15em 0.15em 0 0.15em; padding: 0.2em 0.6em 0.2em 0.5em; vertical-align: middle; white-space: nowrap; }
 
 kbd kbd:first-child { margin-left: 0; }
 
