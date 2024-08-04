@@ -1,17 +1,25 @@
-= P4~16~ Language Specification
-The P4 Language Consortium
+= P4~16~ Language Specification : The P4 Language Consortium
 :doctype: book
 :revnumber: v1.2.4
-:doctype: book
-:toc: macro
-:toclevels: 5
-:imagesdir: figs
-:sectnums:
+:imagesdir: resources/figs
+:font-size: 10
+:sectnums: 5
 :sectnumlevels: 5
+:toc: macro
+:toc-title: Contents
+:toclevels: 5
+:!chapter-signifier:
 :xrefstyle: short
 :stem: latexmath
+:pdf-themesdir: resources/theme/
+:pdf-theme: p4-theme.yml
+:stylesdir: resources/theme/
+:stylesheet: p4-stylesheet.css
 :source-highlighter: rouge
 
+
+[abstract]
+.Abstract
 P4 is a language for programming the data plane of network
 devices. This document provides a precise definition of the P4~16~
 language, which is the 2016 revision of the P4 language
@@ -21,7 +29,9 @@ debuggers for P4 programs. This document may also be of interest to P4
 programmers who are interested in understanding the syntax and
 semantics of the language at a deeper level.
 
+
 toc::[]
+
 
 [#sec-scope]
 == Scope
@@ -81,12 +91,12 @@ defined explicitly in this document should be interpreted according to
 generally recognizable sources---e.g., IETF RFCs.
 
 
-
 == Overview
 
 .Traditional switches vs. programmable switches.
 [#fig-prgswitch]
 image::prgswitch.png[]
+
 
 P4 is a language for expressing how packets are processed by the data
 plane of a programmable forwarding element such as a hardware or
