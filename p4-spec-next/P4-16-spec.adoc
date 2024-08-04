@@ -1013,6 +1013,7 @@ excerpts from the grammar:
 
 * `UPPERCASE` symbols denote terminals in the grammar.
 * Excerpts from the grammar are given in BNF notation as follows:
+
 [source,bison]
 ----
 include::grammar.adoc[tag=p4program]
