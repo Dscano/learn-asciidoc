@@ -213,6 +213,7 @@ ul.circle { list-style-type: circle; }
 ul.disc { list-style-type: disc; }
 ul.no-bullet { list-style: none; }
 
+
 /* Ordered Lists */
 ol li ul, ol li ol { margin-left: 1.33333em; margin-bottom: 0; }
 
@@ -346,7 +347,7 @@ kbd kbd:last-child { margin-right: 0; }
 
 .imageblock, .literalblock, .listingblock, .verseblock, .videoblock { margin-bottom: 1.33333em; }
 
-.admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-align: center;; font-weight: bold; }
+.admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-align: center; font-weight: bold; }
 
 .tableblock > caption { text-align: left; font-weight: bold; white-space: nowrap; overflow: visible; max-width: 0; }
 
@@ -630,8 +631,8 @@ h2 { color: #030303; border-bottom: 1px solid #dddddd; }
 
 #header, #content, #footnotes { max-width: 660px; padding-left: 0; padding-right: 0; }
 
-#content ul { list-style-type: none; }
-#content ul li { background: url('../images/github/li-chevron.png?1372292342') 0 0.4em no-repeat; padding-left: .7em; }
+
+#content ul li { padding-left: .7em; }
 
 .olist.procedure > ol { counter-reset: li; list-style: none; position: relative; }
 .olist.procedure > ol > li { position: relative; padding: 5px 0 5px 55px; margin-bottom: 5px; }
