@@ -198,7 +198,7 @@ strong, b { font-weight: bold; line-height: inherit; }
 
 small { font-size: 60%; line-height: inherit; }
 
-code { font-family: Monaco, "DejaVu Sans Mono", "Courier New", monospace; font-weight: normal; color: #666666; }
+code { font-family: Monaco, "DejaVu Sans Mono", "Courier New", monospace; font-weight: normal; color: #B12146; }
 
 /* Lists */
 ul, ol, dl { font-size: 1em; line-height: 1.4; margin-bottom: 1em; list-style-position: outside; font-family: helvetica, arial, freesans, clean, sans-serif; }
