@@ -297,10 +297,10 @@ kbd kbd:last-child { margin-right: 0; }
 #header:before, #header:after, #content:before, #content:after, #footnotes:before, #footnotes:after, #footer:before, #footer:after { content: " "; display: table; }
 #header:after, #content:after, #footnotes:after, #footer:after { clear: both; }
 
-#header { margin-bottom: 2.66667em; }
-#header > h1 { color: #030303; font-weight: 300; border-bottom: 1px solid #dddddd; margin-bottom: -28px; padding-bottom: 32px; }
-#header span { color: #030303; }
-#header #revnumber { text-transform: capitalize; }
+#header { margin-bottom: 2.66667em;}
+#header > h1 { color: #030303; font-weight: 300;  border-bottom: 1px solid #dddddd; margin-bottom: -28px; padding-bottom: 32px; text-align: center; }
+#header span { color: #030303;}
+#header #revnumber { text-align: center; text-transform: capitalize;}
 #header br { display: none; }
 #header br + span { padding-left: 3px; }
 #header br + span:before { content: "\2013 \0020"; }
@@ -346,7 +346,7 @@ kbd kbd:last-child { margin-right: 0; }
 
 .imageblock, .literalblock, .listingblock, .verseblock, .videoblock { margin-bottom: 1.33333em; }
 
-.admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-align: left; font-weight: bold; }
+.admonitionblock td.content > .title, .exampleblock > .title, .imageblock > .title, .videoblock > .title, .listingblock > .title, .literalblock > .title, .openblock > .title, .paragraph > .title, .quoteblock > .title, .sidebarblock > .title, .tableblock > .title, .verseblock > .title, .dlist > .title, .olist > .title, .ulist > .title, .qlist > .title, .hdlist > .title { text-align: center;; font-weight: bold; }
 
 .tableblock > caption { text-align: left; font-weight: bold; white-space: nowrap; overflow: visible; max-width: 0; }
 
@@ -378,7 +378,7 @@ table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p { font-si
 
 .exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child, .sidebarblock > .content > :last-child > :last-child, .sidebarblock > .content .olist > ol > li:last-child > :last-child, .sidebarblock > .content .ulist > ul > li:last-child > :last-child, .sidebarblock > .content .qlist > ol > li:last-child > :last-child { margin-bottom: 0; }
 
-.literalblock > .content pre, .listingblock > .content pre { background: #cccbc9; border-width: 2px; border-style: solid; border-color: #dddddd; -webkit-border-radius: 3px; border-radius: 3px; padding: 0.66667em; word-wrap: break-word; }
+.literalblock > .content pre, .listingblock > .content pre { background: #F7F7F7; border-width: 2px; border-style: solid; border-color: #dddddd; -webkit-border-radius: 3px; border-radius: 3px; padding: 0.66667em; word-wrap: break-word; }
 .literalblock > .content pre.nowrap, .listingblock > .content pre.nowrap { overflow-x: auto; white-space: pre; word-wrap: normal; }
 .literalblock > .content pre > code, .listingblock > .content pre > code { display: block; }
 @media only screen { .literalblock > .content pre, .listingblock > .content pre { font-size: 0.69333em; } }
