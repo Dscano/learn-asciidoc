@@ -16,4 +16,4 @@ ${SPEC}.html: ${SPEC}.adoc grammar.adoc grammar.trimmed.adoc
 	time asciidoctor -v -r asciidoctor-mathematical -a rouge-css=$(ROUGE_CSS) $<
 
 clean:
-	/bin/rm -f ${SPEC}.pdf ${SPEC}.html grammar.trimmed.adoc
+	/bin/rm -f ${SPEC}.pdf ${SPEC}.html grammar.trimmed.adoc resources/figs/stem-*.png
