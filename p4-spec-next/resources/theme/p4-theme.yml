@@ -97,7 +97,9 @@ heading:
   line_height: 1
   margin_top: $vertical_rhythm * 0.4
   margin_bottom: $vertical_rhythm * 0.9
-  min_height_after: $base_line_height_length * 1.5
+  min_height_after: auto
+  chapter:
+    break-before: auto
 title_page:
   font-family: OpenSans
   font-color: #080808
