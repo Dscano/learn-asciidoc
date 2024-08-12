@@ -16,7 +16,9 @@
 :stylesdir: resources/theme/
 :stylesheet: p4-stylesheet.css
 :source-highlighter: rouge
-:bibliography-database: resources/theme/references.bib
+:bibtex-file: resources/theme/references.bib
+:bibtex-order: appearance
+:bibtex-style: ieee
 
 
 [abstract]
@@ -34,7 +36,7 @@ toc::[]
 == Introduction and Scope
 
 This document is published by the *P4.org API Working Group*, which was
-chartered [@P4APIWGCharter] to design and standardize vendor-independent,
+chartered cite:[P4APIWGCharter] to design and standardize vendor-independent,
 protocol-independent runtime APIs for P4-defined or P4-described data
 planes. This document specifies one such API, called *P4Runtime*. It is meant to
 disambiguate and augment the programmatic API definition expressed in Protobuf
@@ -46,23 +48,23 @@ format and available at
 P4Runtime is designed to be implemented in conjunction with the P4~16~ language
 version or later. P4~14~ programs should be translated into P4~16~ to be made
 compatible with P4Runtime. This version of P4Runtime utilizes features which are
-not in P4~16~ 1.0, but were introduced in P4~16~ 1.2.4 [@P4Revisions124]. For
-this version of P4Runtime, we recommend using P4~16~ 1.2.4 [@P4Revisions124].
+not in P4~16~ 1.0, but were introduced in P4~16~ 1.2.4 cite:[P4Revisions124]. For
+this version of P4Runtime, we recommend using P4~16~ 1.2.4 cite:[P4Revisions124].
 
 This version of the P4Runtime specification does not yet explicitly
 address compatibility with the following P4~16~ language features
 introduced in versions 1.2.2 or 1.2.4 of the language specification:
 
-* Added support for generic structures [@P4Revisions122].
-* Added support for additional enumeration types [@P4Revisions122].
-* Added support for 0-width bitstrings and varbits [@P4Revisions122].
+* Added support for generic structures cite:[P4Revisions122].
+* Added support for additional enumeration types cite:[P4Revisions122].
+* Added support for 0-width bitstrings and varbits cite:[P4Revisions122].
 * Clarified restrictions for parameters with default values
-  [@P4Revisions124].
+  cite:[P4Revisions124].
 * Allow ranges to be specified by serializable enums
-  [@P4Revisions124].
-* Added `list` type [@P4Revisions124].
+  cite:[P4Revisions124].
+* Added `list` type cite:[P4Revisions124].
 * Clarified behavior of table with no `key` property, or if its list
-  of keys is empty [@P4Revisions124].
+  of keys is empty cite:[P4Revisions124].
 
 
 === In Scope
@@ -72,7 +74,7 @@ whose syntax is defined in Protobuf format. The following are in scope of
 P4Runtime:
 
 * Runtime control of P4 built-in objects (tables and Value Sets) and Portable
-  Switch Architecture (PSA) [@PSA] externs (&eg; Counters, Meters, Action
+  Switch Architecture (PSA) cite:[PSA] externs (e.g. Counters, Meters, Action
   Profiles, ...). We recommend that this version of P4Runtime be used with
   targets that are compliant with PSA version 1.1.0.
 * Runtime control of architecture-specific (non-PSA) externs, through an
@@ -102,8 +104,8 @@ The following are not in scope of P4Runtime:
   outside of the P4 language and are thus not covered by P4Runtime. Efforts are
   underway to standardize the control of these via gNMI and gNOI APIs, using
   description models defined and maintained by the OpenConfig project
-  [@OpenConfig]. An open source implementation of these APIs is also in progress
-  as part of the Stratum project [@Stratum].
+  cite:[OpenConfig]. An open source implementation of these APIs is also in progress
+  as part of the Stratum project cite:[Stratum].
 * Protobuf message definitions for runtime control of non-PSA externs. While
   P4Runtime includes an extension mechanism to support additional P4
   architectures, it does not define the syntax or semantics of any additional
@@ -112,9 +114,9 @@ The following are not in scope of P4Runtime:
 The following are not in scope of this specification document:
 
 * Description of the P4 programming language; it is assumed that the reader is
-  already familiar with P4~16~ [@P4Spec].
+  already familiar with P4~16~ cite:[P4Spec].
 * Descriptions of gRPC and Protobuf files in general.
-* Controller [role](#sec-arbitration-role-config) definition (for partition of
+* Controller xref:sec-arbitration-role-config[role] definition (for partition of
   P4 entities); the P4.org API Working Group may publish a companion document in
   the future describing one possible role definition scheme.
 
@@ -123,7 +125,7 @@ The following are not in scope of this specification document:
 
 * arbitration
   : Refers to the process through which P4Runtime ensures that at any given
-    time, there is a single primary controller (&ie; a client with write access)
+    time, there is a single primary controller (i.e. a client with write access)
     for a given role. Also referred to as "client arbitration".
 * client
   : The gRPC client is the software entity which controls the P4 target or
@@ -140,7 +142,7 @@ The following are not in scope of this specification document:
     any other architecture).
 * gRPC
   : gRPC Remote Procedure Calls, an open-source client-server RPC framework. See
-    [@gRPC].
+    cite:[gRPC].
 * HA
   : High-Availability. Refers to a redundancy architecture.
 * Instrumentation
@@ -162,9 +164,9 @@ The following are not in scope of this specification document:
   : Abbreviation for P4Runtime.
 * Protobuf (Protocol Buffers)
   : The wire serialization format for P4Runtime. Protobuf version 3 (proto3) is
-    used to define the P4Runtime interface. See [@Proto].
+    used to define the P4Runtime interface. See cite:[Proto].
 * PSA
-  : Portable Switch Architecture [@PSA]; a target architecture that describes
+  : Portable Switch Architecture cite:[PSA]; a target architecture that describes
     common capabilities of network switch devices that process and forward
     packets across multiple interface ports.
 * RPC
@@ -203,7 +205,8 @@ The following are not in scope of this specification document:
   : Uniform Resource Identifier; a string of characters designed for unambiguous
     identification of resources.
 
-== Reference Architecture { #sec-reference-architecture}
+[#sec-reference-architecture]
+== Reference Architecture 
 
 Figure <<#fig-reference-arch>> represents the P4Runtime Reference
 Architecture. The device or target to be controlled is at the bottom, and one or
@@ -219,15 +222,15 @@ may refer to one or more controllers.
 The P4Runtime API defines the messages and semantics of the interface between
 the client(s) and the server. The API is specified by the p4runtime.proto
 Protobuf file, which is available on GitHub as part of the standard
-[@P4RuntimeRepo].  It may be compiled via protoc --- the Protobuf compiler ---
+cite:[P4RuntimeRepo].  It may be compiled via protoc --- the Protobuf compiler ---
 to produce both client and server implementation stubs in a variety of
 languages. It is the responsibility of target implementers to instrument the
 server.
 
 Reference implementations of P4 targets supporting P4Runtime, as well as sample
-clients, may be available on the p4lang/PI GitHub repository [@PIRepo]. A future
+clients, may be available on the p4lang/PI GitHub repository cite:[PIRepo]. A future
 goal may be to produce a reference gRPC server which can be instrumented in a
-generic way, &eg; via callbacks, thus reducing the burden of implementing
+generic way, e.g. via callbacks, thus reducing the burden of implementing
 P4Runtime.
 
 The controller can access the P4 entities which are declared in the P4Info
@@ -349,7 +352,7 @@ number of reasons, the most likely of which are:
 2. The target was not implemented using P4 code to begin with, although it still
    obeys the control plane API specified in the P4Info.
 
-As discussed in Section [#sec-p4-as-behavioral-description-language], in the
+As discussed in Section <<sec-p4-as-behavioral-description-language>>, in the
 absence of a P4 program describing the data plane behavior, the detailed
 knowledge required to write correct control plane code must come from other
 sources, &eg; documentation.
@@ -384,7 +387,7 @@ may have the ability to access information from memory before the upgrade.
 == Controller Use-cases
 
 P4Runtime allows for more than one controller. The mechanisms and semantics are
-described in a later(<<sec-client-arbitration>>). Here we
+described in a later<<sec-client-arbitration>>. Here we
 present a number of use-cases. Each use-case highlights a particular aspect of
 P4Runtime's flexibility and is not intended to be exhaustive. Real-world
 use-cases may combine various techniques and be more complex.
@@ -5526,7 +5529,7 @@ when reading the config. If the config is installed with a mechanism other than
 
 If a P4Runtime server supports both `SetForwardingPipelineConfig` as well as
 returning the `p4_device_config`, there should be read-write symmetry between
-`SetForwardingPipelineConfig` and `GetForwardingPipelineConfig` RPCs.
+`SetForwardingPipelineConfig` /a>and `GetForwardingPipelineConfig` RPCs.
 
 # P4Runtime Stream Messages
 
@@ -6664,4 +6667,6 @@ a P4Runtime server with the contents of the entries file, the server
 must return an error for each entry that has `is_const` true, as
 described in Section [#sec-table-entry].
 
-bibliography::[]
+[bibliography]
+== References
+bibliography::references.bib[ieee]
