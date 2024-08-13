@@ -244,8 +244,8 @@ metadata. Furthermore, the controller can query the target for the
 `ForwardingPipelineConfig` to retrieve the device config and the P4Info.
 
 .P4Runtime Reference Architecture.
-[#fig-reference-arch]
-image::reference-architecture.odg[]
+[#fig-reference-architecture]
+image::reference-architecture.png[]
 
 
 === P4Runtime Service Implementation
@@ -259,7 +259,7 @@ using a configuration file or flag when starting the server. Uses of other
 port numbers as the default should be discontinued.
 
 [#sec-security-concerns]
-=== Security concerns
+==== Security concerns
 
 Appropriate measures and security best practices must be in place to protect
 the P4Runtime server and client, and the communication channel between the two.
@@ -331,7 +331,7 @@ as API metadata, some other workflows are possible. The scenarios below are just
 examples and actual situations may vary.
 
 [#sec-p4-source-available]
-=== P4 Source Available, Compiled into P4Info but not Compiled into P4 Device Config
+==== P4 Source Available, Compiled into P4Info but not Compiled into P4 Device Config
 
 In this situation, P4 source code is available mainly as a behavioral model and
 compiled to produce P4Info, but it is not compiled to produce the
@@ -341,7 +341,7 @@ can be studied to understand the pipeline, and the P4Info can be used to
 implement the control plane.
 
 [#sec-no-p4-source-available]
-=== No P4 Source Available, P4Info Available
+==== No P4 Source Available, P4Info Available
 
 In this situation, P4Info is available but no P4 source is available for any
 number of reasons, the most likely of which are:
@@ -358,7 +358,7 @@ knowledge required to write correct control plane code must come from other
 sources, &eg; documentation.
 
 [#sec-partial-p4info]
-=== Partial P4Info and P4 Source are Available
+==== Partial P4Info and P4 Source are Available
 
 In this situation, a subset of the target's pipeline configuration is exposed as
 P4 source code and P4Info. The complete device behavior might be expressed as a
@@ -368,7 +368,7 @@ and APIs might be available to select users who would have access to the
 complete P4Info and possibly P4 source code.
 
 [#sec-p4info-role]
-=== P4Info Role-Based Subsets
+==== P4Info Role-Based Subsets
 
 In this situation, P4Info is selectively packaged into role-based subsets to
 allow some controllers access to just the functionality required. For example, a
@@ -407,7 +407,7 @@ an IPC.
 
 .Use-Case: Single Embedded Controller
 [#fig-single-embedded-controller]
-image::single-embedded-controller.odg[]
+image::single-embedded-controller.png[]
 
 
 === Single Remote Controller
@@ -419,7 +419,7 @@ practical to have a hybrid use-case as described in subsequent sections.
 
 .Use-Case: Use-Case: Single Remote Controller
 [#fig-single-remote-controller]
-image::single-embedded-controller.odg[]
+image::single-embedded-controller.png[]
 
 
 === Embedded + Single Remote Controller
@@ -437,7 +437,7 @@ controller might manage the contents of routing tables.
 
 .Use-Case: Use-Case: Embedded Plus Single Remote Controller
 [#fig-embedded-plus-single-remote-controller]
-image::embedded-plus-single-remote-controller.odg[]
+image::embedded-plus-single-remote-controller.png[]
 
 === Embedded + Two Remote Controllers
 
@@ -449,12 +449,12 @@ entities, perhaps statistics tables. Role-based access divides the ownership.
 
 .Use-Case: Embedded Plus Two Remote Controllers
 [#fig-embedded-plus-two-remote-controllers]
-image::embedded-plus-two-remote-controllers.odg[]
+image::embedded-plus-two-remote-controllers.png[]
 
 === Embedded Controller + Two High-Availability Remote Controllers
 
 Figure <<fig-embedded-plus-two-remote-ha-controllers>> illustrates a single
-embedded controller plus two remote controllers in an active-standby (&ie;
+embedded controller plus two remote controllers in an active-standby (i.e.
 primary-backup) HA (High-Availability) configuration. Controller #1 is the
 active controller and is in charge of some entities. If it fails, Controller #2
 takes over and manages the tables formerly owned by Controller #1. The mechanics
@@ -463,12 +463,12 @@ role-based client arbitration scheme supports it.
 
 .Use-Case: Embedded Plus Two Remote High-Availability Controllers
 [#fig-embedded-plus-two-remote-ha-controllers]
-image::embedded-plus-two-remote-controllers.odg[]
+image::embedded-plus-two-remote-controllers.png[]
 
 [#sec-client-arbitration-and-controller-replication]
 == Client Arbitration and Controller Replication
 
-The P4Runtime interface allows multiple clients (&ie; controllers) to be
+The P4Runtime interface allows multiple clients (i.e. controllers) to be
 connected to the P4Runtime server running on the device at the same time for the
 following reasons:
 
@@ -476,7 +476,7 @@ following reasons:
    non-overlapping, "roles" (or "realms") and should be able to push forwarding
    entities simultaneously. The control plane can be partitioned into multiple
    roles and each role will have a set of controllers, one of which is the
-   primary and the rest are backups. Role definition, &ie; how P4 entities get
+   primary and the rest are backups. Role definition, i.e. how P4 entities get
    assigned to each role, is **out-of-scope** of this document.
 
 2. Redundancy and fault tolerance: Supporting multiple controllers allows having
@@ -489,7 +489,7 @@ To support multiple controllers, P4Runtime uses the streaming channel (available
 via `StreamChannel` RPC) for session management. The workflow is described as
 follows:
 
-* Each controller instance (&eg; a controller process) can participate in one or
+* Each controller instance (e.g. a controller process) can participate in one or
   more roles. For each (`device_id`, `role`), the controller receives an
   `election_id`. This `election_id` can be the same for different roles and/or
   devices, as long as the tuple (`device_id`, `role`, `election_id`) is
@@ -503,7 +503,7 @@ follows:
   for the same (`device_id`, `role`) values.  A connection between a controller
   instance and a device id --- which involves a persistent `StreamChannel` ---
   can be referred to as a P4Runtime client.
-
+  
   Note that the P4Runtime server does not assign a `role` or `election_id` to
   any controller. It is up to an arbitration mechanism outside of the server to
   decide on the controller roles, and the `election_id` values used for each
@@ -529,18 +529,17 @@ follows:
       not populated by the controller. This field is populated by the P4Runtime
       server when it sends a response back to the client, as explained below.
 
-    * **Streaming of notifications (&eg; digests) and packet I/O:** The same
+    * **Streaming of notifications (e.g. digests) and packet I/O:** The same
       streaming channel will be used for streaming notifications, as well as for
       packet-in and packet-out messages. Note that unless specified otherwise by
       the role definitions, only the primary controller can participate in
-      packet I/O. This feature is explained in more details in the [Packet
-      I/O](#sec-packet-i_o) section.
+      packet I/O. This feature is explained in more details in the xref:sec-packet-i_o[Packet I/O] section.
 
   Note that a controller session is only required if the controller wants to do
   Packet I/O, or modify the forwarding state.
 
 * Note that the stream is opened per device. In case a switching platform has
-  multiple devices (&eg; multi-ASIC line card) which are all controlled via the
+  multiple devices (e.g. multi-ASIC line card) which are all controlled via the
   same P4Runtime server, it is possible to have different primary clients for
   different devices. In this case, it is the responsibility of the P4Runtime
   server to keep track of the primary for each device (and role). More
@@ -554,12 +553,11 @@ follows:
   broken. When a primary channel gets broken:
 
   1. An advisory message is sent to all other controllers for that `device_id`
-     and `role`, as described in a
-     [later section](#sec-arbitration-notification); and
+     and `role`, as described in a xref:sec-arbitration-notification[later section]; and
 
   2. The P4Runtime server will be without a primary controller, until a client
      sends a successful `MasterArbitrationUpdate` (as per the rules in a
-     [later section](#sec-arbitration-updates)).
+     xref:sec-arbitration-updates[later section]).
 
 * The mechanism through which the controller receives the P4Runtime server
   details are implementation specific and beyond the scope of this
@@ -572,11 +570,11 @@ follows:
   prevent eavesdropping attacks.
 
 gRPC enables the server to identify which client originated each message in the
-`StreamChannel` stream. For example, the C++ gRPC library [@gRPCStreamC] in
+`StreamChannel` stream. For example, the C++ gRPC library cite:[gRPCStreamC] in
 synchronous mode enables a server process to cause a function to be called when
 a new client creates a `StreamChannel` stream. This function should not return
 until the stream is closed and the server has completed any cleanup required
-when a `StreamChannel` is closed normally (or broken, &eg; because a client
+when a `StreamChannel` is closed normally (or broken, e.g. because a client
 process unexpectedly terminated). Thus the server can easily associate all
 `StreamChannel` messages received from the same client, because they are
 processed within the context of the same function call.
@@ -588,7 +586,7 @@ read state from the data plane, among others described later. P4Runtime relies
 on clients identifying themselves in every write request, by including the
 values `device_id`, `role`, and `election_id` in all write requests. The
 server trusts clients not to use a triple of values other than their own in
-their write requests. gRPC provides authentication methods [@gRPCAuth] that
+their write requests. gRPC provides authentication methods cite:[gRPCAuth] that
 should be deployed to prevent untrusted clients from creating channels, and thus
 from making changes or even reading the state of the server.
 
@@ -597,7 +595,7 @@ from making changes or even reading the state of the server.
 A controller can omit the role message in `MasterArbitrationUpdate`. This
 implies the "default role", which corresponds to "full pipeline access".
 This also implies that a default role has a `role_id` of `""` (default).
-If using a default role, all RPCs from the controller (&eg; `Write`) must
+If using a default role, all RPCs from the controller (e.g. `Write`) must
 leave the `role` unset.
 
 [#sec-arbitration-role-config]
@@ -609,7 +607,7 @@ scope of a given role. In particular, the definition of a role may include the
 following:
 
 * A list of P4 entities for which the controller may issue `Write` updates and
-  receive notification messages (&eg; `DigestList` and
+  receive notification messages (e.g. `DigestList` and
   `IdleTimeoutNotification`).
 * Whether the controller is able to receive `PacketIn` messages, along with a
   filtering mechanism based on the values of the `PacketMetadata` fields to
@@ -620,7 +618,7 @@ following:
 
 An unset `role.config` implies "full pipeline access" (similar to the default
 role explained above). In order to support different role definition schemes,
-`role.config` is defined as an `Any` Protobuf message [@ProtoAny]. Such schemes
+`role.config` is defined as an `Any` Protobuf message cite:[ProtoAny]. Such schemes
 are out-of-scope of this document. When partitioning of the control plane is
 desired, the P4Runtime client(s) and server need to agree on a role definition
 scheme in an out-of-band fashion.
@@ -632,7 +630,7 @@ It is the job of the P4Runtime server to remember the `role.config` for every
 === Rules for Handling `MasterArbitrationUpdate` Messages Received from Controllers
 
 1. If the `MasterArbitrationUpdate` message is received for the first time on
-   this particular channel (&ie; for a newly connected controller):
+   this particular channel (i.e. for a newly connected controller):
 
     1. If `device_id` does not match any of the devices known to the P4Runtime
        server, the server shall terminate the stream by returning a
@@ -695,7 +693,7 @@ current primary if there is one).
        there are no `Write` requests still processing from a previous primary,
        then the server immediately sends an advisory notification to all
        controllers for this `device_id` and `role`. See the
-       [following section](#sec-arbitration-notification) for the format of the
+       xref:sec-arbitration-notification[following section] for the format of the
        advisory message.
 
     2. If there was a previous primary, including this controller, or `Write`
@@ -708,7 +706,7 @@ current primary if there is one).
 
         2. The server notifies all controllers other than the new primary client
            of the change by sending the advisory notification described in
-           the [following section](#sec-arbitration-notification).
+           the xref:sec-arbitration-notification[following section].
 
         3. The server will finish processing any `Write` requests that have
            already started. If there are errors, they are reported as usual to
@@ -717,18 +715,18 @@ current primary if there is one).
 
         4. The server now accepts the current controller as the new primary,
            thus accepting `Write` requests from this controller. The server
-           updates the highest election ID (&ie; `election_id_past`) it has seen
+           updates the highest election ID (i.e. `election_id_past`) it has seen
            for this `device_id` and `role` to `election_id`.
 
         5. The server notifies the new primary by sending the advisory message
-           described in the [following section](#sec-arbitration-notification).
+           described in the xref:sec-arbitration-notification[following section].
 
 2. Otherwise, the controller becomes a backup. If the controller was previously
    a primary (and downgraded itself), then an advisory message is sent to all
    controllers for this `device_id` and `role`.  Otherwise, the advisory
    message is only sent to the controller that sent the initial
    `MasterArbitrationUpdate`.  See the
-   [following section](#sec-arbitration-notification) for the format of the
+   xref:sec-arbitration-notification[following section] for the format of the
    advisory message.
 
 [#sec-arbitration-notification]
@@ -770,12 +768,12 @@ primary downgrades its status to a backup, a primary disconnects, or the
 
 Note that on primary client changes with outstanding `Write` request, some
 notifications might be delayed, see the
-[previous section](#sec-arbitration-updates) for details.
+xref:sec-arbitration-updates[previous section] for details.
 
 == The P4Info Message
 
 The purpose of P4Info was described under
-[Reference Architecture](#sec-reference-architecture).
+xref:sec-reference-architecture[Reference Architecture].
 Here we describe the various
 components.
 
@@ -783,7 +781,7 @@ components.
 
 These messages appear nested within many other messages.
 
-=== `Documentation` Message
+==== `Documentation` Message
 
 `Documentation` is used to carry both brief and long descriptions of something.
 Good content within a documentation field is extremely helpful to P4Runtime
@@ -799,7 +797,7 @@ message Documentation {
 }
 ~ End Proto
 
-=== `Preamble` Message
+==== `Preamble` Message
 
 The preamble serves as the "descriptor" for each entity and contains the unique
 instance ID, name, alias, annotations and documentation.
@@ -837,37 +835,35 @@ message Preamble {
 }
 ----
 
-### Annotating P4 Entities with `Documentation` { #sec-annotating-p4-entities-with-documentation}
+[#sec-annotating-p4-entities-with-documentation]
+==== Annotating P4 Entities with `Documentation`
 
 P4 entities may be annotated using the following annotations:
 
-~ Begin p4example
+[source,p4]
+----
 @brief(string...)
 @description(string...)
-~ End p4example
-
+----
 Attaching either or both of these annotations to an entity will generate a
-P4Info [Documentation Message](#sec-documentation-message), which in turn will
-appear in the [Preamble Message](#sec-preamble-message) for the entity.
-
+P4Info xref:sec-documentation-message[Documentation Message], which in turn will
+appear in the xref:sec-preamble-message[Preamble Message]for the entity.
 The P4 compiler should not emit `annotation` messages in the P4Info for these
 specific cases; instead, it should generate the `Documentation` messages as
 described.
-
 The following example shows documentation annotations for a `table` entity:
-
-~ Begin p4example
+[source,p4]
+----
 @brief("Match IPv4 addresses to next-hop MAC and port")
 @description("Match IPv4 addresses to next-hop MAC and port. \
 Uses LPM match type.")
 table my_ipv4_lkup {
   ...
 }
-~ End p4example
+----
+==== Structured Annotations
 
-### Structured Annotations
-
-P4 supports both unstructured and structured annotations [@P4Annotations].
+P4 supports both unstructured and structured annotations cite:[P4Annotations].
 Unstructured annotations of the form `MyAnno1` or `MyAnno2(body-content)` can
 either be empty, or contain free-form content; anything between the pair of
 matched parentheses is legal. Conversely, structured annotations of the form
@@ -876,7 +872,7 @@ which allows declaring key-value lists or expression lists. Both unstructured
 and structured annotations may be used simultaneously on a P4 element and
 P4Info supports this.
 
-The annotations described up to this point, &eg; `@brief()`, have all been
+The annotations described up to this point, e.g. `@brief()`, have all been
 unstructured annotations, or simply annotations. These are represented in
 P4Info as `repeated string annotations` fields in the various `message`s.
 Similarly, structured annotations are represented in `repeated
@@ -887,8 +883,8 @@ expression-evaluation, so the resulting P4Info may contain a simplified
 replica of the original structured annotations.
 
 The structured annotation messages are defined in p4types.proto.
-
-~ Begin Proto
+[source,p4]
+----
 message KeyValuePair {
   string key = 1;
   Expression value = 2;
@@ -919,7 +915,7 @@ message StructuredAnnotation {
   // Optional. Location of the '@' symbol of this annotation in the source code.
   SourceLocation source_location = 4;
 }
-~ End Proto
+----
 
 The `StructuredAnnotation` message can represent either a `KeyValuePairList`
 or an `ExpressionList`.
@@ -946,36 +942,39 @@ same `key.`
 We omit the `source_location` field in the following examples.
 
 **Empty Expression List**
-
-~ Begin P4Example
+[source,p4]
+----
 @Empty[]
 table t {
     ...
 }
-~ End P4Example
+----
 
 The generated P4Info will contain the following.
 
-~ Begin Proto
+[source,p4]
+----
 structured_annotations {
   name: "Empty"
 }
-~ End Proto
+----
 
 **Mixed Expression List**
 
-~ Begin P4Example
+[source,p4]
+----
 #define TEXT_CONST "hello"
 #define NUM_CONST 6
 @MixedExprList[1,TEXT_CONST,true,1==2,5+NUM_CONST]
 table t {
     ...
 }
-~ End P4Example
+----
 
 The generated P4Info will contain:
 
-~ Begin Proto
+[source,p4]
+----
 structured_annotations {
   name: "MixedExprList"
   expression_list {
@@ -996,20 +995,22 @@ structured_annotations {
     }
   }
 }
-~ End Proto
+----
 
 **kvList of Mixed Expressions**
 
-~ Begin P4Example
+[source,p4]
+----
 @MixedKV[label="text", my_bool=true, int_val=2*3]
 table t {
     ...
 }
-~ End P4Example
+----
 
 The generated P4Info will contain:
 
-~ Begin Proto
+[source,p4]
+----
 structured_annotations {
   name: "MixedKV"
   kv_pair_list {
@@ -1033,14 +1034,15 @@ structured_annotations {
     }
   }
 }
-~ End Proto
+----
 
-### `SourceLocation` Message
+==== `SourceLocation` Message
 
 A source location describes a location within a *.p4*-source file. The
 `SourceLocation` message is defined in p4types.proto as follows:
 
-~ Begin Proto
+[source,p4]
+----
 // Location of code relative to a given source file.
 message SourceLocation {
   // Path to the source file (absolute or relative to the working directory).
@@ -1049,7 +1051,7 @@ message SourceLocation {
   int32 line = 2;
   int32 column = 3;
 }
-~ End Proto
+----
 
 We provide source locations for structured and unstructured annotations. This
 information may be useful when annotations require further parsing or
@@ -1071,8 +1073,7 @@ be found in the following place:
   an optional field `SourceLocation source_location` holding its source
   location, if present.
 
-
-## `PkgInfo` Message
+=== `PkgInfo` Message
 
 The `PkgInfo` message contains package-level metadata which describes the
 overall P4 program itself, as opposed to P4 entities. `PkgInfo` can be extracted
@@ -1081,7 +1082,8 @@ library. Although all fields are technically "optional," every implementation
 should include as a minimum the name, version, doc and arch fields. The other
 fields are recommended to be included.
 
-~ Begin Proto
+[source,p4]
+----
 // Can be used to manage multiple P4 packages.
 message PkgInfo {
   // a definitive name for this configuration, e.g. switch.p4_v1.0
@@ -1110,10 +1112,10 @@ message PkgInfo {
   // reject the P4Info when used with a SetForwardingPipelineConfigRequest.
   PlatformProperties platform_properties = 11;
 }
-~ End Proto
-
+----
 where the `PlatformProperties` message looks as follows:
-~ Begin Proto
+[source,p4]
+----
 // Used to describe the required properties of the underlying platform.
 message PlatformProperties {
   // The minimum number of multicast entries (i.e. multicast groups) that the
@@ -1127,14 +1129,15 @@ message PlatformProperties {
   // Must be no larger than `multicast_group_table_total_replicas`.
   int32 multicast_group_table_max_replicas_per_entry = 3;
 }
-~ End Proto
-
-### Annotating P4 code with PkgInfo { #sec-annotating-p4-code-with-pkginfo}
+----
+[#sec-annotating-p4-code-with-pkginfo]
+==== Annotating P4 code with PkgInfo 
 
 A P4 program's `PkgInfo` may be declared using one or more of the following
 annotations, attached to the `main` block only:
 
-~ Begin p4example
+[source,p4]
+----
 @pkginfo(key=value)
 @pkginfo(key=value[,key=value,...])
 @brief("A brief description")
@@ -1144,7 +1147,7 @@ description")
 @another_custom_annotation(...)
 @platform_property(key=value)
 @platform_property(key=value[,key=value,...])
-~ End p4example
+----
 
 Above we see several different types of annotations:
 
@@ -1181,7 +1184,7 @@ Above we see several different types of annotations:
 
 Declaring one or more of these annotations on `main` will
 generate a single corresponding `PkgInfo` message in the P4Info as described in
-[PkgInfo Message](#sec-pkginfo-message).
+xref:#sec-pkginfo-message[PkgInfo Message].
 
 The following example shows `@pkginfo` annotations using a mixture of single and
 multiple key-value pairs. It also shows `@brief` and `@description` annotations,
@@ -1189,7 +1192,8 @@ plus some additional custom annotations. The well-known annotations will produce
 corresponding fields inside the `PkgInfo` message. The custom annotations will
 be appended to the `PkgInfo.annotations` list.
 
-~ Begin p4example
+[source,p4]
+----
 @pkginfo(name="switch.p4",version="2")
 @pkginfo(organization="p4.org")
 @pkginfo(contact="info@p4.org")
@@ -1201,19 +1205,20 @@ Built for data-center profile.")
 @my_annotation2(...) // Not well-known, this will appear in PkgInfo annotations
 PSA_Switch(IgPipeline, PacketReplicationEngine(), EgPipeline,
            BufferingQueueingEngine()) main;
-~ End p4example
+----
 
-## ID Allocation for P4Info Objects { #sec-id-allocation}
+[#sec-id-allocation]
+=== ID Allocation for P4Info Objects
 
 P4Info objects receive a unique ID, which is used to identify the object in
 P4Runtime messages. IDs are 32-bit unsigned integers which are assigned by the
 compiler during the P4Info generation process. IDs are assigned in such a way
 that it is possible based on the ID value alone to deduce the type of the object
-(&eg; table, action, counter, ...). The most significant 8 bits of the ID
+(e.g. table, action, counter, ...). The most significant 8 bits of the ID
 encodes the object type (as per Table [#tab-mapping-p4-obj-ids]). The
 p4info.proto file includes a mapping from object type to 8-bit prefix value,
 encoded as an enum definition (`p4.config.v1.P4Ids.Prefix`). These values must
-be used (&eg; by the compiler) when allocating IDs. The remaining 24 bits must
+be used (e.g. by the compiler) when allocating IDs. The remaining 24 bits must
 be generated in such a way that the resulting IDs must be globally unique in
 the scope of the P4Info message. Table [#tab-format-p4-obj-ids] shows the ID
 layout.
@@ -1293,9 +1298,9 @@ and the programmer is free to choose any 32-bit number. The compiler must fail
 if the IDs chosen by the programmer are not unique (within a table, action, or
 header, respectively).
 
-## P4Info Objects
+=== P4Info Objects
 
-### `Table`
+==== `Table`
 
 Table messages are used to specify all possible match-action tables exposed to a
 control plane. This message contains the following fields:
@@ -1342,7 +1347,7 @@ control plane. This message contains the following fields:
     * `scope`, an enum value which can take one of three values:
        `TABLE_AND_DEFAULT`, `TABLE_ONLY` and `DEFAULT_ONLY`. The `scope` of the
        action is determined by the use of the P4 standard annotations
-       `@tableonly` and `@defaultonly` [@P4ActionAnnotations]. `TABLE_ONLY`
+       `@tableonly` and `@defaultonly` cite:[P4ActionAnnotations]. `TABLE_ONLY`
        (`@tableonly` annotation) means that the action can only appear within
        the table, and never as the default action. `DEFAULT_ONLY`
        (`@defaultonly` annotation) means that the action can only be used as the
@@ -1375,17 +1380,17 @@ control plane. This message contains the following fields:
 * `size`, an `int64` describing the desired number of table entries that the
   target should support for the table.  See the "Size" subsection within the
   "Table Properties" section of the P4~16~ language specification for details
-  [@P4TableProperties].
+  cite:[P4TableProperties].
 
 * `idle_timeout_behavior`, which describes the behavior of the data plane when
   the idle timeout of a table entry expires (see
-  [Idle-Timeout](#sec-idle-timeout) section). Value can be any of the
+  xref:sec-idle-timeout[Idle-Timeout] section). Value can be any of the
   `IdleTimeoutBehavior` enum:
     * `NO_TIMEOUT` (default value), which means that idle timeout is not
       supported for this table.
     * `NOTIFY_CONTROL`, which means that the control plane should be notified of
       the expiration of a table entry by means of a notification (see section on
-      [Table Idle Timeout Notifications](#sec-table-idle-timeout-notification)).
+      xref:sec-table-idle-timeout-notification[Table Idle Timeout Notifications]).
 
 * `is_const_table`, a boolean flag indicating that the table is filled with
   static entries and cannot be modified by the control plane at runtime.
@@ -1396,11 +1401,11 @@ control plane. This message contains the following fields:
   `const entries` properties, and there is at least one entry in the
   list.
 
-* `other_properties`, an `Any` Protobuf message [@ProtoAny] to embed
-  architecture-specific table properties [@P4TableProperties] which are not part
+* `other_properties`, an `Any` Protobuf message cite:[ProtoAny] to embed
+  architecture-specific table properties cite:[P4TableProperties] which are not part
   of the core P4 language or of the PSA architecture.
 
-### `Action`
+==== `Action`
 
 `Action` messages are used to specify all possible actions of all match-action
 tables.
@@ -1429,7 +1434,8 @@ The `Action` message defines the following fields:
       [user-defined type](#sec-user-defined-types); this is useful for
       [translation](#sec-psa-metadata-translation).
 
-### `ActionProfile` { #sec-p4info-action-profile}
+[#sec-p4info-action-profile]
+==== `ActionProfile` { #sec-p4info-action-profile}
 
 `ActionProfile` messages are used to specify all available instances of Action
 Profile and Action Selector PSA externs.
@@ -5529,7 +5535,7 @@ when reading the config. If the config is installed with a mechanism other than
 
 If a P4Runtime server supports both `SetForwardingPipelineConfig` as well as
 returning the `p4_device_config`, there should be read-write symmetry between
-`SetForwardingPipelineConfig` /a>and `GetForwardingPipelineConfig` RPCs.
+`SetForwardingPipelineConfig` and `GetForwardingPipelineConfig` RPCs.
 
 # P4Runtime Stream Messages
 
