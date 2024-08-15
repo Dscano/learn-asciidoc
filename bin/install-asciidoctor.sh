@@ -160,7 +160,8 @@ cd rouge
 git log -n 1 | cat
 gem build rouge.gemspec
 gem install rouge-4.3.0.gem
- gem install asciidoctor-bibtex
+gem install asciidoctor-bibtex
+gem install asciidoctor-lists
 
 which ruby
 ruby --version
