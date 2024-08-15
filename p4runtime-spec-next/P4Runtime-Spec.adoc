@@ -31,6 +31,9 @@ document includes developers who want to write controller applications for P4
 devices or switches.
 
 toc::[]
+//add toc od figures
+//add toc of table
+
 
 [#sec-scope]
 == Introduction and Scope
@@ -629,51 +632,51 @@ It is the job of the P4Runtime server to remember the `role.config` for every
 [#sec-arbitration-updates]
 === Rules for Handling `MasterArbitrationUpdate` Messages Received from Controllers
 
-1. If the `MasterArbitrationUpdate` message is received for the first time on
+.  If the `MasterArbitrationUpdate` message is received for the first time on
    this particular channel (i.e. for a newly connected controller):
 
-    1. If `device_id` does not match any of the devices known to the P4Runtime
+    ..  If `device_id` does not match any of the devices known to the P4Runtime
        server, the server shall terminate the stream by returning a
        `NOT_FOUND` error.
 
-    2. If the `election_id` is set and is already used by another live
+    ..  If the `election_id` is set and is already used by another live
        controller for the same (`device_id`, `role`), the P4Runtime server shall
        terminate the stream by returning an `INVALID_ARGUMENT` error.
 
-    3. If `role.config` does not match the "out-of-band" scheme previously
+    ..  If `role.config` does not match the "out-of-band" scheme previously
        agreed upon, the server must return an `INVALID_ARGUMENT` error.
 
-    4. If the number of open streams for the given (`device_id`, `role`)
+    ..  If the number of open streams for the given (`device_id`, `role`)
        exceeds the supported limit, the P4Runtime server shall terminate the
        stream by returning a `RESOURCE_EXHAUSTED` error.
 
-    5. Otherwise, the controller is added to a list of live controllers for
+    ..  Otherwise, the controller is added to a list of live controllers for
        the given (`device_id`, `role`) and the server remembers the
        controllers `device_id`, `role` and `election_id` for this gRPC
        channel. See below for the rules to determine if this controller becomes
        a primary or backup, and what notifications are sent as a consequence.
 
-2. Otherwise, if the `MasterArbitrationUpdate` message is received from an
+.  Otherwise, if the `MasterArbitrationUpdate` message is received from an
    already live controller:
 
-    1. If the `device_id` does not match the one already assigned to this
+    .. If the `device_id` does not match the one already assigned to this
        stream, the P4Runtime server shall terminate the stream by returning a
        `FAILED_PRECONDITION` error.
 
-    2. If the `role` does not match the current `role` assigned to this
+    .. If the `role` does not match the current `role` assigned to this
        stream, the P4Runtime server shall terminate the stream by returning a
        `FAILED_PRECONDITION` error. If the controller wishes to change its role,
        it must close the current stream channel and open a new one.
 
-    3. If `role.config` does not match the "out-of-band" scheme previously
+    .. If `role.config` does not match the "out-of-band" scheme previously
        agreed upon, the server must return an `INVALID_ARGUMENT` error.
 
-    4. If the `election_id` is set and is already used by another live
+    .. If the `election_id` is set and is already used by another live
        controller (excluding the controller making the request) for the same
        (`device_id`, `role`), the P4Runtime server shall terminate the stream
        by returning an `INVALID_ARGUMENT` error.
 
-    5. Otherwise, the server updates the `election_id` it has stored for this
+    .. Otherwise, the server updates the `election_id` it has stored for this
        controller. This change might cause a change in the primary client (this
        controller might become primary, or the controller might have downgraded
        itself to a backup, see below), as well as notifications being sent to
@@ -685,43 +688,43 @@ the primary client. Let `election_id_past` be the highest election ID the server
 has ever seen for the given `device_id` and `role` (including the one of the
 current primary if there is one).
 
-1. If `election_id` is greater than or equal to `election_id_past`, then the
+.  If `election_id` is greater than or equal to `election_id_past`, then the
    controller becomes, or stays, primary. The server updates the role
    configuration to `role.config` for the given `role`. Furthermore:
 
-    1. If there was no primary for this `device_id` and `role` before and
+    .. If there was no primary for this `device_id` and `role` before and
        there are no `Write` requests still processing from a previous primary,
        then the server immediately sends an advisory notification to all
        controllers for this `device_id` and `role`. See the
        xref:sec-arbitration-notification[following section] for the format of the
        advisory message.
 
-    2. If there was a previous primary, including this controller, or `Write`
+    .. If there was a previous primary, including this controller, or `Write`
        requests in flight, then the server carries out the following steps
        (in this order):
 
-        1. The server stops accepting `Write` requests from the previous primary
+        ... The server stops accepting `Write` requests from the previous primary
            (if there is one). At this point, the server will reject all `Write`
            requests with `PERMISSION_DENIED`.
 
-        2. The server notifies all controllers other than the new primary client
+        ... The server notifies all controllers other than the new primary client
            of the change by sending the advisory notification described in
            the xref:sec-arbitration-notification[following section].
 
-        3. The server will finish processing any `Write` requests that have
+        ... The server will finish processing any `Write` requests that have
            already started. If there are errors, they are reported as usual to
            the previous primary. If the previous primary has already
            disconnected, any possible errors are dropped and not reported.
 
-        4. The server now accepts the current controller as the new primary,
+        ... The server now accepts the current controller as the new primary,
            thus accepting `Write` requests from this controller. The server
            updates the highest election ID (i.e. `election_id_past`) it has seen
            for this `device_id` and `role` to `election_id`.
 
-        5. The server notifies the new primary by sending the advisory message
+        ... The server notifies the new primary by sending the advisory message
            described in the xref:sec-arbitration-notification[following section].
 
-2. Otherwise, the controller becomes a backup. If the controller was previously
+. Otherwise, the controller becomes a backup. If the controller was previously
    a primary (and downgraded itself), then an advisory message is sent to all
    controllers for this `device_id` and `role`.  Otherwise, the advisory
    message is only sent to the controller that sent the initial
@@ -745,24 +748,24 @@ primary downgrades its status to a backup, a primary disconnects, or the
 
 * `election_id` is populated as follows:
 
-    * If there has not been any primary at all, the election_id is left unset.
+    ** If there has not been any primary at all, the election_id is left unset.
 
-    * Otherwise, `election_id` is set to the highest election ID that the server
+    ** Otherwise, `election_id` is set to the highest election ID that the server
       has seen for this `device_id` and `role` (which is the `election_id` of
       the current primary if there is any).
 
 * `status` is set differently based on whether the notification is sent to the
   primary or a backup controller:
 
-    * If there is a primary:
+    ** If there is a primary:
 
-        * For the primary, `status` is OK (with `status.code` set to
+        *** For the primary, `status` is OK (with `status.code` set to
           `google.rpc.OK`).
 
-        * For all backup controllers, `status` is set to non-OK (with
+        *** For all backup controllers, `status` is set to non-OK (with
           `status.code` set to `google.rpc.ALREADY_EXISTS`).
 
-    * Otherwise, if there is no primary currently, for all backup controllers,
+    ** Otherwise, if there is no primary currently, for all backup controllers,
       `status` is set to non-OK (with `status.code` set to
       `google.rpc.NOT_FOUND`).
 
@@ -787,7 +790,8 @@ These messages appear nested within many other messages.
 Good content within a documentation field is extremely helpful to P4Runtime
 application developers.
 
-~ Begin Proto
+[source,p4]
+----
 message Documentation {
   // A brief description of something, e.g. one sentence
   string brief = 1;
@@ -795,7 +799,7 @@ message Documentation {
   // Multiline is accepted. Markup format (if any) is TBD.
   string description = 2;
 }
-~ End Proto
+----
 
 ==== `Preamble` Message
 
@@ -847,7 +851,7 @@ P4 entities may be annotated using the following annotations:
 ----
 Attaching either or both of these annotations to an entity will generate a
 P4Info xref:sec-documentation-message[Documentation Message], which in turn will
-appear in the xref:sec-preamble-message[Preamble Message]for the entity.
+appear in the xref:sec-preamble-message[Preamble Message] for the entity.
 The P4 compiler should not emit `annotation` messages in the P4Info for these
 specific cases; instead, it should generate the `Documentation` messages as
 described.
@@ -874,13 +878,9 @@ P4Info supports this.
 
 The annotations described up to this point, e.g. `@brief()`, have all been
 unstructured annotations, or simply annotations. These are represented in
-P4Info as `repeated string annotations` fields in the various `message`s.
-Similarly, structured annotations are represented in `repeated
-StructuredAnnotation structured_annotations` fields which are siblings to the
-unstructured `annotations`. The `structured_annotations` contain parsed
-representations of the original annotation source. This parsing includes
-expression-evaluation, so the resulting P4Info may contain a simplified
-replica of the original structured annotations.
+P4Info as `repeated string annotations` fields in the various `messages`.
+Similarly, structured annotations are represented in `repeated StructuredAnnotation structured_annotations` fields which are siblings to the unstructured `annotations`. 
+The `structured_annotations` contain parsed representations of the original annotation source. This parsing includes expression-evaluation, so the resulting P4Info may contain a simplified replica of the original structured annotations.
 
 The structured annotation messages are defined in p4types.proto.
 [source,p4]
@@ -931,13 +931,13 @@ conversions.
 
 The following invariants hold:
 
-1. For any P4 entity, there are no two `StructuredAnnotation`s that have the
+. For any P4 entity, there are no two `StructuredAnnotation`s that have the
 same name.
 
-2. Within a `KeyValuePairList`, there are no two `KeyValuePair`s that have the
+. Within a `KeyValuePairList`, there are no two `KeyValuePair`s that have the
 same `key.`
 
-#### Structured Annotation Examples
+===== Structured Annotation Examples
 
 We omit the `source_location` field in the following examples.
 
@@ -1215,57 +1215,53 @@ P4Runtime messages. IDs are 32-bit unsigned integers which are assigned by the
 compiler during the P4Info generation process. IDs are assigned in such a way
 that it is possible based on the ID value alone to deduce the type of the object
 (e.g. table, action, counter, ...). The most significant 8 bits of the ID
-encodes the object type (as per Table [#tab-mapping-p4-obj-ids]). The
+encodes the object type (as per Table <<#tab-mapping-p4-obj-ids>>). The
 p4info.proto file includes a mapping from object type to 8-bit prefix value,
 encoded as an enum definition (`p4.config.v1.P4Ids.Prefix`). These values must
 be used (e.g. by the compiler) when allocating IDs. The remaining 24 bits must
 be generated in such a way that the resulting IDs must be globally unique in
-the scope of the P4Info message. Table [#tab-format-p4-obj-ids] shows the ID
+the scope of the P4Info message. Table <<#tab-format-p4-obj-ids>> shows the ID
 layout.
 
-~ TableFigure { #tab-mapping-p4-obj-ids; \
-    caption: "Mapping of P4Info object type to 8-bit ID prefix value"; \
-    page-align: forcehere; }
-|--------------------|----------------------------------------------------------------------|
-| 8-bit prefix value | P4 object type                                                       |
-+--------------------+----------------------------------------------------------------------+
-| 0x00               | Reserved (unspecified)                                               |
-| 0x01               | Action                                                               |
-| 0x02               | Table                                                                |
-| 0x03               | Value-set                                                            |
-| 0x04               | Controller header (header type with `@controller_header` annotation) |
-| 0x05...0x0f        | Reserved (for future P4 built-in objects)                            |
-| 0x10               | Reserved (start of PSA extern types)                                 |
-| 0x11               | PSA Action profiles / selectors                                      |
-| 0x12               | PSA Counter                                                          |
-| 0x13               | PSA Direct counter                                                   |
-| 0x14               | PSA Meter                                                            |
-| 0x15               | PSA Direct meter                                                     |
-| 0x16               | PSA Register                                                         |
-| 0x17               | PSA Digest                                                           |
-| 0x18...0x7f        | Reserved (for future PSA extern types)                               |
-| 0x80               | Reserved (start of vendor-specific extern types)                     |
-| 0x81...0xfe        | Vendor-specific extern types                                         |
-| 0xff               | Reserved (max prefix value)                                          |
-+--------------------+----------------------------------------------------------------------+
-~
+//The row 0x04 as to be fixed as is in the madoko document
+.Mapping of P4Info object type to 8-bit ID prefix value
+[width=90%, cols="2", grid=cols,align=center, options=header, unbreakable]
+[#tab-mapping-p4-obj-ids]
+|===
+| 8-bit prefix value | P4 object type                                                       
+| 0x00               | Reserved (unspecified)                                               
+| 0x01               | Action                                                               
+| 0x02               | Table                                                                
+| 0x03               | Value-set                                                            
+| 0x04               | Controller header (header type with `@controller_header` annotation) 
+| 0x05...0x0f        | Reserved (for future P4 built-in objects)                            
+| 0x10               | Reserved (start of PSA extern types)                                 
+| 0x11               | PSA Action profiles / selectors                                      
+| 0x12               | PSA Counter                                                          
+| 0x13               | PSA Direct counter                                                   
+| 0x14               | PSA Meter                                                            
+| 0x15               | PSA Direct meter                                                     
+| 0x16               | PSA Register                                                         
+| 0x17               | PSA Digest                                                           
+| 0x18...0x7f        | Reserved (for future PSA extern types)                               
+| 0x80               | Reserved (start of vendor-specific extern types)                     
+| 0x81...0xfe        | Vendor-specific extern types                                         
+| 0xff               | Reserved (max prefix value)                                          
+|===
 
-~ TableFigure { #tab-format-p4-obj-ids; \
-    caption: "Format of P4Info object IDs"; \
-    breakable: true; \
-    page-align: forcehere; }
-|----------------------------|------------------------------------------|
-| MSB bit 31 ........ bit 24 | bit 23 ....................... bit 0 LSB |
-+:--------------------------:+:----------------------------------------:+
-| Object type prefix         | Generated suffix (&eg; by the compiler)  |
-+----------------------------+------------------------------------------+
-~
+.Format of P4Info object IDs
+[.center,cols="2",width=70%, grid=cols,align=center, options=header, unbreakable]
+[#tab-format-p4-obj-ids]
+|===
+| MSB bit 31 ........ bit 24 | bit 23 ....................... bit 0 LSB 
+| Object type prefix         | Generated suffix (e.g. by the compiler)  
+|===
 
 It is possible to statically set the least-significant 24 bits of the ID in the
 P4 program source by annotating the object with `@id` (see Table
-[#tab-exmpl-p4-obj-ids]). The compiler must honor the `@id` annotations when
+<<#tab-exmpl-p4-obj-ids>>). The compiler must honor the `@id` annotations when
 generating the P4Info message and must fail the compilation if
-statically-assigned ID suffixes lead to non-unique IDs (&ie; if the P4
+statically-assigned ID suffixes lead to non-unique IDs (i.e. if the P4
 programmer tries to assign the same ID suffix to two different P4 objects of the
 same type by annotating them with the same `@id` value). Note that it is not
 possible for the P4 programmer to change the value of the 8-bit ID prefix, which
@@ -1276,21 +1272,18 @@ the 8-bit prefix with a non-zero value, in which case the compiler will give an
 error if the 8-bit prefix does not contain the correct value, or leave it as is
 if it is correct.
 
-~ TableFigure { #tab-exmpl-p4-obj-ids; \
-    caption: "Example of statically-assigned P4Info object IDs"; \
-    page-align: forcehere; }
-|--------------------------------|------------------------------------------------------------|
-| P4 declaration(s)              | Compiler-allocated ID(s)                                   |
-+---{width:7cm}------------------+------------------------------------------------------------+
-| `@id(0x12ab34) table tA...`    | 0x0212ab34                                                 |
-+--------------------------------+------------------------------------------------------------+
-| `@id(0x12ab34) table tA...`    | **Error**(same ID suffixes for 2 objects of the same type) |
-| `@id(0x12ab34) table tB...`    |                                                            |
-+--------------------------------+------------------------------------------------------------+
-| `@id(0x12ab34) table tA...`    | 0x0212ab34                                                 |
-| `@id(0x12ab34) action act1...` | 0x0112ab34                                                 |
-+--------------------------------+------------------------------------------------------------+
-~
+//The second row as to be fixed as is in the madoko document
+.Example of statically-assigned P4Info object IDs
+[cols="2",width=80%, align=center, options=header, unbreakable]
+[#tab-exmpl-p4-obj-ids]
+|===
+| P4 declaration(s)              | Compiler-allocated ID(s)                                   
+| `@id(0x12ab34) table tA...`    | 0x0212ab34                                                 
+| `@id(0x12ab34) table tA...`    | **Error**(same ID suffixes for 2 objects of the same type) 
+| `@id(0x12ab34) table tB...`    |                                                            
+| `@id(0x12ab34) table tA...`    | 0x0212ab34                                                 
+| `@id(0x12ab34) action act1...` | 0x0112ab34                                                 
+|===
 
 The `@id` annotation can also be used to choose the ID for match fields,
 action parameters, and packet metadata. In this case, there is no 8-bit prefix
@@ -1311,7 +1304,7 @@ control plane. This message contains the following fields:
   be used to construct the lookup key matched in this table. Each `MatchField`
   message is defined with the following fields:
 
-    * id, the `uint32` identifier of this `MatchField`, unique in the scope of
+    ** id, the `uint32` identifier of this `MatchField`, unique in the scope of
       this table. No rules are prescribed on the way `MatchField` IDs should be
       allocated, as long as two `MatchField` of the same table do not have the
       same ID. Nonetheless, if the P4Info message was generated from a P4
@@ -1320,31 +1313,29 @@ control plane. This message contains the following fields:
       can either choose the IDs using the `@id` annotation, or let the compiler
       choose them.
 
-    * `name`, the string representing the name of this `MatchField`.
+    ** `name`, the string representing the name of this `MatchField`.
 
-    * `annotations`, a repeated field of strings, each one representing a P4
+    ** `annotations`, a repeated field of strings, each one representing a P4
       annotation associated to this match field.
 
-    * `bitwidth`, an `int32` value set to the size in bits of this match field.
+    ** `bitwidth`, an `int32` value set to the size in bits of this match field.
 
-    * `match`, a `oneof` describing the match behavior for this field; it can be
+    ** `match`, a `oneof` describing the match behavior for this field; it can be
       either:
-        * `match_type`, an enum field of type `MatchType`, which includes all
+     *** `match_type`, an enum field of type `MatchType`, which includes all
           possible PSA match kinds.
-        * `other_match_type`, a string field which can be used to encode any
+      *** `other_match_type`, a string field which can be used to encode any
           architecture-specific match type.
 
-    * `doc`, a `Documentation` message describing this match field.
+    ** `doc`, a `Documentation` message describing this match field.
 
-    * `type_name`, which indicates whether the match field has a [user-defined
-      type](#sec-user-defined-types); this is useful for
-      [translation](#sec-psa-metadata-translation).
+    ** `type_name`, which indicates whether the match field has a xref:sec-user-defined-types[user-definedtype]; this is useful for xref:sec-psa-metadata-translation[translation].
 
 * `action_refs`, a repeated `ActionRef` field representing the set of possible
   actions for this table. The `ActionRef` message is used to reference an action
   specified in the same P4Info message and it includes the following fields:
-    * `id`, the `uint32` identifier of the action.
-    * `scope`, an enum value which can take one of three values:
+    ** `id`, the `uint32` identifier of the action.
+    ** `scope`, an enum value which can take one of three values:
        `TABLE_AND_DEFAULT`, `TABLE_ONLY` and `DEFAULT_ONLY`. The `scope` of the
        action is determined by the use of the P4 standard annotations
        `@tableonly` and `@defaultonly` cite:[P4ActionAnnotations]. `TABLE_ONLY`
@@ -1354,7 +1345,7 @@ control plane. This message contains the following fields:
        default action. `TABLE_AND_DEFAULT` is the default value for the enum and
        means that neither annotation was used in P4 and that the action can be
        used both within the table and as the default action.
-    * `annotations`, a repeated string field, each one representing a P4
+    ** `annotations`, a repeated string field, each one representing a P4
       annotation associated to the action *reference* in this table.
 
 * `const_default_action_id`, if this table has a constant default action, this
@@ -1367,7 +1358,7 @@ control plane. This message contains the following fields:
 * `implementation_id`, the `uint32` identifier of the "implementation" of this
   table. 0 (default value) means that the table is a regular (direct) match
   table. Otherwise, this field will carry the ID of an extern instance specified
-  in the same P4Info message (&eg; a PSA `ActionProfile` or `ActionSelector`
+  in the same P4Info message (e.g. a PSA `ActionProfile` or `ActionSelector`
   instance). The table is then referred to as an indirect match table.
 
 * `direct_resource_ids`, repeated `uint32` identifiers for all the direct
@@ -1386,9 +1377,9 @@ control plane. This message contains the following fields:
   the idle timeout of a table entry expires (see
   xref:sec-idle-timeout[Idle-Timeout] section). Value can be any of the
   `IdleTimeoutBehavior` enum:
-    * `NO_TIMEOUT` (default value), which means that idle timeout is not
+    ** `NO_TIMEOUT` (default value), which means that idle timeout is not
       supported for this table.
-    * `NOTIFY_CONTROL`, which means that the control plane should be notified of
+    ** `NOTIFY_CONTROL`, which means that the control plane should be notified of
       the expiration of a table entry by means of a notification (see section on
       xref:sec-table-idle-timeout-notification[Table Idle Timeout Notifications]).
 
@@ -1418,24 +1409,22 @@ The `Action` message defines the following fields:
   parameters that should be provided by the control plane when inserting or
   modifying a table entry with this action. Each `Param` message contains the
   following fields:
-    * `id`, the `uint32` identifier of this parameter. No rules are prescribed
+    ** `id`, the `uint32` identifier of this parameter. No rules are prescribed
       on the way `Param` IDs should be allocated, as long as two `Param` of the
       same action do not have the same ID. Nonetheless, if the P4Info message
       was generated from a P4 compiler, we recommend that the IDs be assigned
       incrementally, starting from 1, in the same order as in the P4 action
       declaration. The programmer can either choose the IDs using the `@id`
       annotation, or let the compiler choose them.
-    * `name`, the string representing the name of this parameter.
-    * `annotations`, a repeated field of strings, each one representing a P4
+    ** `name`, the string representing the name of this parameter.
+    ** `annotations`, a repeated field of strings, each one representing a P4
       annotation associated to this parameter.
-    * `bitwidth`, an `int32` value set to the size in bits of this parameter.
-    * `doc`, which describes this parameter using a `Documentation` message.
-    * `type_name`, which indicates whether the action parameter has a
-      [user-defined type](#sec-user-defined-types); this is useful for
-      [translation](#sec-psa-metadata-translation).
+    ** `bitwidth`, an `int32` value set to the size in bits of this parameter.
+    ** `doc`, which describes this parameter using a `Documentation` message.
+    ** `type_name`, which indicates whether the action parameter has a xref:sec-user-defined-types[user-defined type]; this is useful for xref:sec-psa-metadata-translation[translation].
 
 [#sec-p4info-action-profile]
-==== `ActionProfile` { #sec-p4info-action-profile}
+==== `ActionProfile`
 
 `ActionProfile` messages are used to specify all available instances of Action
 Profile and Action Selector PSA externs.
@@ -1485,10 +1474,10 @@ The `ActionProfile` message includes the following fields:
 
 * `selector_size_semantics`, a oneof for Action Selectors that
   specifies how `size` and `max_group_size` are interpreted. It can be either:
-    * `sum_of_weights`, indicating that `size` and `max_group_size` represent
+    ** `sum_of_weights`, indicating that `size` and `max_group_size` represent
       the maximum sum of weights that can be present across all selector groups
       and within a single selector group respectively.
-    * `sum_of_members`, indicating that `size` and `max_group_size` represent
+    ** `sum_of_members`, indicating that `size` and `max_group_size` represent
       the maximum number of members that can be present across all selector
       groups and within a single selector group respectively, irrespective of
       their weight. The `SumOfMembers` message used to represent this value also
@@ -1506,7 +1495,7 @@ The `ActionProfile` message includes the following fields:
   `sum_of_weights` for backwards compatibility in Action Selectors. In Action
   Profiles, this value must be unset.
 
-### `Counter` & `DirectCounter`
+=== `Counter` & `DirectCounter`
 
 `Counter` and `DirectCounter` messages are used to specify all possible
 instances of Counter and Direct Counter PSA externs respectively. Both externs
@@ -1530,10 +1519,10 @@ Both `Counter` and `DirectCounter` messages share the following fields:
   configuration of this counter. Currently, the `CounterSpec` message is used to
   carry only the counter unit, which can be any of the `CounterSpec.Unit` enum
   values:
-    * `UNSPECIFIED`: reserved value.
-    * `BYTES`: byte counter.
-    * `PACKETS`: packet counter.
-    * `BOTH`: combination of both byte and packet counter.
+    ** `UNSPECIFIED`: reserved value.
+    ** `BYTES`: byte counter.
+    ** `PACKETS`: packet counter.
+    ** `BOTH`: combination of both byte and packet counter.
 
 For indexed counters, the `Counter` message contains also a `size` field, an
 `int64` representing the maximum number of independent values that can be held
@@ -1542,12 +1531,10 @@ by this counter array. Conversely, the `DirectCounter` message contains a
 which this direct counter is attached.
 
 For indexed counters, the `Counter` message contains also an `index_type_name`
-field, which indicates whether the index has a [user-defined
-type](#sec-user-defined-types). This is useful for
-[translation](#sec-psa-metadata-translation). The underlying built-in type must
-be a fixed-width unsigned bitstring (`bit<W>`).
+field, which indicates whether the index has a xref:sec-user-defined-types[user-defined
+type]. This is useful for xref:sec-psa-metadata-translation[translation].The underlying built-in type must be a fixed-width unsigned bitstring (`bit<W>`).
 
-### `Meter` & `DirectMeter`
+=== `Meter` & `DirectMeter`
 
 `Meter` and `DirectMeter` messages are used to specify all possible instances of
 Meter and Direct Meter PSA externs. Both externs provide mechanism to keep data
@@ -1557,7 +1544,7 @@ meters and direct meters is:
 
 * Indexed meters provide a fixed number of independent meter values, also called
   cells. Each cell can be accessed by the control plane using an integer index,
-  &eg; to set the rate threshold.
+  e.g. to set the rate threshold.
 
 * Direct meters are associated to match-action tables, providing as many cells
   as the number of entries in the table.
@@ -1571,31 +1558,32 @@ Both `Meter` and `DirectMeter` messages share the following fields:
   this meter extern instance. The `MeterSpec` message is used to describe the
   meter unit and the meter type. The meter unit can be any of the
   `MeterSpec.Unit` enum values:
-    * `UNSPECIFIED`: reserved value.
-    * `BYTES`, which signifies that this meter can be configured with rates
+    ** `UNSPECIFIED`: reserved value.
+    ** `BYTES`, which signifies that this meter can be configured with rates
       expressed in bytes/second.
-    * `PACKETS`, for rates expressed in packets/second.
+    ** `PACKETS`, for rates expressed in packets/second.
 
   The meter type can be any of the `MeterSpec.Type` enum values:
     * `TWO_RATE_THREE_COLOR`: This is the *Two Rate Three Color Marker* (trTCM)
-      defined in RFC 2698 [@RFC2698]. This is the standard P4Runtime meter type
+      defined in RFC 2698 cite:[RFC2698]. This is the standard P4Runtime meter type
       and allows meters to use two rates to split packets into three potential
       colors: GREEN, YELLOW, or RED. This mode is the default, but can also be
       set explicitly in a P4 program by adding the `@two_rate_three_color`
       annotation to the meter definition.
       For example, in a V1Model P4 program, we might define a trTCM direct meter
       as follows:
-      ~ Begin P4Example
+      [source,p4]
+      ----
       @two_rate_three_color
       direct_meter<color_type>(MeterType.bytes) my_meter;
-      ~ End P4Example
+      ----
     * `SINGLE_RATE_THREE_COLOR`: This is the *Single Rate Three Color Marker*
-      (srTCM) defined in RFC 2697 [@RFC2697]. This allows meters to use one rate
+      (srTCM) defined in RFC 2697 cite:[RFC2697]. This allows meters to use one rate
       and an Excess Burst Size (EBS) to split packets into three potential
       colors: GREEN, YELLOW, or RED. In a P4 program, this mode can be set by
       adding the `@single_rate_three_color` annotation to the meter definition.
     * `SINGLE_RATE_TWO_COLOR`: This is a simplified version of RFC 2697
-      [@RFC2697], and the `SINGLE_RATE_THREE_COLOR` mode above.
+      cite:[RFC2697], and the `SINGLE_RATE_THREE_COLOR` mode above.
       `SINGLE_RATE_TWO_COLOR` restricts meters to use only a single rate
       specified by the Committed Information Rate (CIR) and Committed Burst Size
       (CBS) to mark packets GREEN or RED. In a P4 program, this mode can be set
@@ -1608,12 +1596,11 @@ that carries the `uint32` identifier of the table to which this direct meter is
 attached.
 
 For indexed meters, the `Meter` message contains also an `index_type_name`
-field, which indicates whether the index has a [user-defined
-type](#sec-user-defined-types). This is useful for
-[translation](#sec-psa-metadata-translation). The underlying built-in type must
-be a fixed-width unsigned bitstring (`bit<W>`).
+field, which indicates whether the index has a xref:sec-user-defined-types[user-defined
+type]. This is useful for xref:sec-psa-metadata-translation[translation]. The underlying built-in type must be a fixed-width unsigned bitstring (`bit<W>`).
 
-### `ControllerPacketMetadata` { #sec-controller-packet-meta}
+[#sec-controller-packet-meta]
+=== `ControllerPacketMetadata` 
 
 `ControllerPacketMetadata` messages are used to describe any metadata associated
 with controller packet-in and packet-out. A packet-in is defined as a data plane
@@ -1644,29 +1631,30 @@ message contains the following fields:
 
 * `metadata`, a repeated field of type `Metadata`, where each `Metadata` message
   includes the following fields:
-    * `id`, a `uint32` identifier of this metadata. No rules are prescribed on
+    ** `id`, a `uint32` identifier of this metadata. No rules are prescribed on
       the way metadata IDs should be allocated, as long as two `Metadata` of the
       same `ControllerPacketMetadata` message do not have the same ID. If the
       P4Info message was generated from a P4 compiler, we recommend that the IDs
       be assigned incrementally, starting from 1, in the same order as the
       fields in the P4 header declaration. The P4 programmer can either choose
       the IDs using the `@id` annotation, or let the compiler choose them.
-    * `name`, a string representation of the name of this metadata. If the
+    ** `name`, a string representation of the name of this metadata. If the
       P4Info message was generated from a P4 compiler, then this field is
       expected to be set to the name of the P4 controller header field (see
       example below).
-    * `annotations`, a repeated field of strings, each one representing a P4
+    ** `annotations`, a repeated field of strings, each one representing a P4
       annotation associated to this metadata.
-    * `bitwidth`, an `int32` representing the size in bits of this metadata.
-    * `type_name`, which indicates whether the metadata field has a
-      [user-defined type](#sec-user-defined-types); this is useful for
-      [translation](#sec-psa-metadata-translation).
+    ** `bitwidth`, an `int32` representing the size in bits of this metadata.
+    ** `type_name`, which indicates whether the metadata field has a 
+        xref:sec-user-defined-typee[user-defined type]; this is useful for
+        xref:sec-psa-metadata-translation[translation].
 
 As an example, consider the following snippet of a P4 program where controller
 headers are specified and we show the corresponding `ControllerPacketMetadata`
 messages.
 
-~ Begin P4Example
+[source,p4]
+----
 @controller_header("packet_out")
 header PacketOut_t {
   bit<9> egress_port; /* suggested port where the packet
@@ -1681,8 +1669,9 @@ header PacketIn_t {
   bit<1> is_clone;     /* 1 if this is a clone of the
                           original packet */
 }
-~ End P4Example
-~ Begin Prototext
+----
+[source,p4]
+----
 controller_packet_metadata {
   preamble {
     id: 2868916615
@@ -1718,21 +1707,20 @@ controller_packet_metadata {
     bitwidth: 1
   }
 }
-~End Prototext
-
+----
 Note that the use of `@controller_header` is optional for Packet I/O. The P4
 program may define controller headers without this annotation and use them to
 encapsulate controller packets. However, in this case the client will be
 responsible for extracting the metadata from the serialized header in packet-in
 messages and for serializing the metadata when generating packet-out messages.
 
-### `ValueSet`
+=== `ValueSet`
 
 `ValueSet` messages are used to specify all possible P4 Parser Value
 Sets. Parser Value Sets can be used by the control plane to specify runtime
 matches used by the P4 parser to determine transitions from one state to
 another. For more information on Parser Value Sets, refer to the P4~16~
-specification [@P4ValueSets].
+specification cite:[P4ValueSets].
 
 The `ValueSet` message defines the following fields:
 
@@ -1753,10 +1741,10 @@ According to the P4 specification, the type parameter of a Value Set, which
 defines the type of the expression that can be matched against the Value Set in
 a parser transition, and therefore determines the format of the members that can
 be inserted into the Value Set by the control plane, must be one of `bit<W>`,
-`tuple`, or `struct` [@P4SelectExpr]. The rest of this section looks at all 3 of
+`tuple`, or `struct` cite:[P4SelectExpr]. The rest of this section looks at all 3 of
 these cases and gives an example `ValueSet` message when appropriate.
 
-1. If the type parameter is `bit<W>`, `match` will include exactly one
+. If the type parameter is `bit<W>`, `match` will include exactly one
    `MatchField` message, with the following fields (if a field is omitted here,
    it means the default Protobuf value should be used):
 
@@ -1764,7 +1752,8 @@ these cases and gives an example `ValueSet` message when appropriate.
  * `bitwidth`: set to the value of `W`
  * `match_type`: set to `EXACT`
 
-~ Begin P4Example
+[source,p4]
+----
 @id(1) value_set<bit<8> >(4) pvs;
 select (hdr.f8) { /* ... */ }
 ~ End P4Example
@@ -1781,14 +1770,14 @@ value_sets {
   }
   size: 4
 }
-~ End Prototext
+----
 
-2. If the type parameter is a `tuple`, this version of P4Runtime does not
+. If the type parameter is a `tuple`, this version of P4Runtime does not
    support runtime programming of the Value Set. If the P4Info message is
    generated by a compiler, and the P4 program includes such a Value Set, the
    compiler must reject the program.
 
-3. If the type parameter is a `struct`, this version of P4Runtime requires that
+. If the type parameter is a `struct`, this version of P4Runtime requires that
    all the fields of the struct be of type `bit<W>` (where `W` can be different
    for each field). Otherwise, if the P4Info message is generated by a compiler,
    the compiler must reject the program. If the Value Set is supported, the
@@ -1805,15 +1794,14 @@ value_sets {
    field, except for the `@match` annotation, if present (see the `match` field
    below).
  * `bitwidth`: set to the value of `W` for the corresponding struct field.
- * `type_name`, which indicates whether the struct field has a [user-defined
-   type](#sec-user-defined-types); this is useful for
-   [translation](#sec-psa-metadata-translation).
+ * `type_name`, which indicates whether the struct field has a xref:sec-user-defined-types[user-defined type]; this is useful for xref:sec-psa-metadata-translation[translation].
  * `match`: by default `match_type` is set to `EXACT`; the P4 programmer can
    specify a different match type by using the `@match` annotation
-   [@P4SelectExpr].
+   cite:[P4SelectExpr].
  * `doc`: documentation associated with the struct field.
 
-~ Begin P4Example
+[source,p4]
+----
 struct match_t {
   @id(1) bit<8> f8;
   @id(2) @match(ternary) bit<16> f16;
@@ -1821,8 +1809,9 @@ struct match_t {
 }
 @id(1) value_set<match_t>(4) pvs;
 select ({ hdr.f8, hdr.f16, hdr.f32 }) { /* ... */ }
-~ End P4Example
-~ Begin Prototext
+----
+[source,p4]
+----
 value_sets {
   preamble {
     id: 0x03000001
@@ -1848,20 +1837,20 @@ value_sets {
   }
   size: 4
 }
-~ End Prototext
+----
 
 In the above example, the `@id` annotations on the P4 struct fields are
 optional. When omitted, the compiler will choose appropriate IDs.
 
 Although not mentioned in the P4 specification, P4Runtime also supports the
-cases where the Value Set type parameter is a [user-defined
-type](#sec-user-defined-types) that resolves to a `bit<W>`, or a `struct` where
-one or more fields is a [user-defined type](#sec-user-defined-types) that
+cases where the Value Set type parameter is a xref:sec-user-defined-types[user-defined
+type]that resolves to a `bit<W>`, or a `struct` where
+one or more fields is a xref:sec-user-defined-types[user-defined type] that
 resolves to a `bit<W>`. For each `MatchField` that corresponds to a user-defined
-type, the `type_name` field must be set to the appropriate value (&ie; the name
+type, the `type_name` field must be set to the appropriate value (i.e. the name
 of the type).
 
-### `Register`
+=== `Register`
 
 `Register` messages are used to specify all possible instances of Register PSA
 externs.
@@ -1876,18 +1865,17 @@ The `Register` message defines the following fields:
   instance.
 
 * `type_spec`, which specifies the data type stored by this register, expressed
-  using a `P4DataTypeSpec` message (see section on [Representation of Arbitrary
-  P4 Types](#sec-representation-of-arbitrary-p4-types)).
+  using a `P4DataTypeSpec` message (see section on xref:sec-representation-of-arbitrary-p4-types[Representation of ArbitraryP4 Types]).
 
 * `size`, an `int32` value representing the total number of independent register
   cells available.
 
 * `index_type_name`, which indicates whether the register index has a
-  [user-defined type](#sec-user-defined-types). This is useful for
-  [translation](#sec-psa-metadata-translation). The underlying built-in type
+  xref:sec-user-defined-types[user-defined type]. This is useful for
+  xref:sec-psa-metadata-translation[translation]. The underlying built-in type
   must be a fixed-width unsigned bitstring (`bit<W>`).
 
-### `Digest`
+=== `Digest`
 
 `Digest` messages are used to specify all possible instances of Packet Digest
 PSA externs.
@@ -1907,10 +1895,10 @@ The `Digest` message defines the following fields:
   instance.
 
 * `type_spec`, which specifies the data type of an individual digest
-  notification using a `P4DataTypeSpec` message (see section on [Representation
-  of Arbitrary P4 Types](#sec-representation-of-arbitrary-p4-types)).
+  notification using a `P4DataTypeSpec` message (see section on xref:sec-representation-of-arbitrary-p4-types[Representation of Arbitrary P4 Types]).
 
-### `Extern` { #sec-p4info-extern}
+[#sec-p4info-extern]
+=== `Extern` 
 
 `Extern` messages are used to specify all extern instances across all extern
 types for a non-PSA architecture. This is useful when extending P4Runtime to
@@ -1919,8 +1907,8 @@ to at most one `Extern` message instance in P4Info. The `Extern` message defines
 the following fields:
 
 * `extern_type_id`, a 32-bit unsigned integer which uniquely identifies the
-  extern type in the context of the architecture. It must be in the [reserved
-  range](#sec-id-allocation) `[0x81, 0xfe]`. Note that this value does not need
+  extern type in the context of the architecture. It must be in the 
+  xref:sec-id-allocation[reserved range]`[0x81, 0xfe]`. Note that this value does not need
   to be unique across all architectures from all organizations, since at any
   given time every device managed by a P4Runtime server maps to a single P4Info
   message and a single architecture.
@@ -1934,30 +1922,30 @@ the following fields:
 
   * `preamble`, a `Preamble` message with the ID, name, and alias of this digest
     instance.
-  * `info`, an `Any` Protobuf message [@ProtoAny] which is used to embed
+  * `info`, an `Any` Protobuf message cite:[ProtoAny] which is used to embed
     arbitrary information specific to the extern instance. Note that the
     underlying Protobuf message type for `info` should be the same for all
     instances of this extern type. That Protobuf message should be defined in a
-    separate architecture-specific Protobuf file. See section on [Extending
-    P4Runtime for non-PSA Architectures](#sec-extending-p4runtime) for more
-    information.
+    separate architecture-specific Protobuf file. See section on xref:sec-extending-p4runtime[Extending P4Runtime for non-PSA Architectures] for more information.
 
 If the P4 program does not include any instance of a given extern type, the
 `Extern` message instance for that type should be omitted from the P4Info.
 
-## Support for Arbitrary P4 Types with P4TypeInfo
+== Support for Arbitrary P4 Types with P4TypeInfo
 
-See section on [Representation of Arbitrary P4
-Types](#sec-representation-of-arbitrary-p4-types).
+See section on xref:sec-representation-of-arbitrary-p4-types[Representation of Arbitrary P4
+Types].
 
-# P4 Forwarding-Pipeline Configuration { #sec-p4-fwd-pipe-config}
+[#sec-p4-fwd-pipe-config]
+== P4 Forwarding-Pipeline Configuration 
 
 The `ForwardingPipelineConfig` captures data needed to realize a P4
 forwarding-pipeline and map various IDs passed in P4Runtime entity messages. It
 is formally called the "Device Configuration" and sometimes also referred to as
 the "P4 Blob". It is defined as:
 
-~ Begin Proto
+[source,p4]
+----
 message ForwardingPipelineConfig {
   config.P4Info p4info = 1;
   bytes p4_device_config = 2;
@@ -1966,7 +1954,7 @@ message ForwardingPipelineConfig {
   }
   Cookie cookie = 3;
 }
-~ End Proto
+----
 
 The `p4info` field captures the P4 program metadata as described by the P4Info.
 This message is the output of the P4 compiler and is target-agnostic.
@@ -1985,14 +1973,16 @@ When writing the config via a `SetForwardingPipelineConfig` RPC, the cookie
 field is optional. For this reason, the actual value is wrapped in its own
 message to clearly identify cases where a cookie is not present.
 
-# General Principles for Message Formatting {#sec-message-formatting-principles}
+[#sec-message-formatting-principles]
+== General Principles for Message Formatting 
 
-## Default-valued Fields {#sec-default-valued-fields}
+[#sec-default-valued-fields]
+=== Default-valued Fields 
 
 There is a subtle distinction between the treatment of default-valued scalar
 fields vs default-valued message fields in P4Runtime.
 
-### Set / Unset Scalar Fields
+=== Set / Unset Scalar Fields
 
 In Protobuf version 3 (*proto3*), the default value of scalar fields is `0` for
 numeric types such as `int32`, and the empty string `""` for string types
@@ -2009,10 +1999,10 @@ In contrast to scalar fields, note that for message fields, we often do make
 a distinction between an unset message field vs a message field set to its
 default value, see the next section.
 
-### Set / Unset Message Fields
+=== Set / Unset Message Fields
 
 In Protobuf version 3 (*proto3*), the default value for a message field is
-"unset" [@ProtoDefaults]. An application, such as the P4Runtime client or
+"unset" cite:[ProtoDefaults]. An application, such as the P4Runtime client or
 server, is **able to distinguish** between an unset message field and a message
 field set to its default value. We often use this distinction in P4Runtime
 and the meaning of a message can vary based on which of its message fields are
@@ -2025,7 +2015,9 @@ set, a single entry will be read.
 Let's look at the counter example in more details. Based on this specification
 document, the C++ server code which processes `CounterEntry` messages may look
 like this:
-~ Begin CPP
+
+[source,c++]
+----
 auto *counter_entry = ...
 if (counter_entry->has_index()) {
   auto index = counter_entry->index().index();
@@ -2033,24 +2025,30 @@ if (counter_entry->has_index()) {
 } else {
   read_all_entries(counter_entry->id());
 }
-~ End CPP
+----
 
-1. Reading a single counter entry at index 0 in the counter array with id
+. Reading a single counter entry at index 0 in the counter array with id
 `<id>`:
     * Here is the C++ client code:
-~ Begin CPP
+
+[source,c++]
+----
 p4::v1::CounterEntry entry;
 entry.set_counter_id(<id>);
 entry.mutable_index();
 // The above line sets the index field; it is equivalent to:
 // auto *index = entry.mutable_index();
 // index->set_index(0);
-~ End CPP
+----
+
     * Here is the corresponding Protobuf message in text format:
-~ Begin Prototext
+
+[source,p4]
+----
 counter_id: <id>
 index {}
-~ End Prototext
+----
+
     * **Expected behavior**: Counter entry at index 0 is read. Notice that the
       `index` subfield is missing under the `index` field message of
       `CounterEntry` in the text dump of the message. This is because the
@@ -2058,39 +2056,48 @@ index {}
       value. Scalar fields with default values are omitted from the textual
       representation of Protobuf messages.
 
-2. Reading all counter entries by leaving the `index` field unset
+
+. Reading all counter entries by leaving the `index` field unset
     * Here is the C++ client code:
-~ Begin CPP
+
+[source,c++]
+----
 p4::v1::CounterEntry entry;
 entry.set_counter_id(<id>);
-~ End CPP
+----
+
     * Here is the corresponding Protobuf message in text format:
-~ Begin Prototext
+
+[source,p4]
+----
 counter_id: <id>
-~ End Prototext
+----
+
     * **Expected behavior**: All counter entries for the provided counter
       instance are read. Notice that the `index` message field is unset (default
       value) and is therefore omitted from the textual representation of the
       message.
 
-## Read-Write Symmetry { #sec-read-write-symmetry}
+[#sec-read-write-symmetry]
+== Read-Write Symmetry 
 
 The reads and writes a client issues towards a server should be symmetrical and
 unambiguous. More specifically, if a client writes a P4 entity and then reads it
 back then the client should expect that the message it wrote and the message it
 read should match if the RPCs finished successfully (with the exception of parts
 of the response known to be data plane volatile, as explained in section
-[#sec-data-plane-volatile-objects]). Consider the following pseudocode as an
+<<#sec-data-plane-volatile-objects>>). Consider the following pseudocode as an
 example:
 
-~ Begin Pseudo
+[source,pseudo]
+----
 intended_value = value
 
 status = server.write(intended_value, p4_entity)
 observed_value = server.read(p4_entity)
 
 assert(intended_value == observed_value)
-~ End Pseudo
+----
 
 To ensure read-write symmetry, the rest of this document tries to offer
 canonical representations for various data types, but this principle should be
@@ -2107,12 +2114,13 @@ Protobuf repeated field be preserved. For example, the server is not required to
 preserve the order of the `match` fields in a `TableEntry` message. If there is
 a specific case for which the order is significant and / or needs to be
 preserved, it will be explicitly stated in this document. The
-`MessageDifferencer` class [@ProtoMessageDifferencer] included in the Protobuf
+`MessageDifferencer` class cite:[ProtoMessageDifferencer] included in the Protobuf
 C++ API supports comparing messages while treating repeated fields as sets, so
 that different orderings of the same elements are considered equal. This method
 of comparing Protobuf messages may come at a cost in performance.
 
-### Data plane volatile objects { #sec-data-plane-volatile-objects }
+[#sec-data-plane-volatile-objects]
+=== Data plane volatile objects 
 
 An exception to read-write symmetry are objects whose contents or
 fields can change by the action of the data plane alone, even if no
@@ -2125,12 +2133,12 @@ modify objects in the data plane via an `Update` message.  For each, a
 description is given of the parts of that entity that are data plane
 volatile.
 
-#### ExternEntry
+==== ExternEntry
 
 Data plane volatility depends upon the definition of the extern and
 its control plane API.
 
-#### TableEntry
+==== TableEntry
 
 For a table with a direct counter associated with it, the `counter_data`
 field of a `TableEntry` can be modified by the data plane when packets
@@ -2140,12 +2148,12 @@ For a table with a direct meter associated with it, the
 `meter_counter_data` field of a `TableEntry` can be modified by the data
 plane when packets match the entry.
 
-For a PSA [@PSA] table with property `psa_idle_timeout` equal to
+For a PSA cite:[PSA] table with property `psa_idle_timeout` equal to
 `PSA_IdleTimeout_t.NOTIFY_CONTROL`, the data plane can modify the
 `elapsed_ns` field of a `TableEntry` when _no_ packets match the entry
 for an implementation-specific amount of time.
 
-For a PNA [@PNA] table with property `pna_idle_timeout` equal to
+For a PNA cite:[PNA] table with property `pna_idle_timeout` equal to
 `PNA_IdleTimeout_t.NOTIFY_CONTROL` or `PNA_IdleTimeout_t.AUTO_DELETE`
 the data plane can modify the `elapsed_ns` field of a `TableEntry`
 when _no_ packets cause the extern function `restart_expire_timer` to
@@ -2160,67 +2168,68 @@ and the action calls the `set_entry_expire_time` extern function (or any
 of the other extern functions defined to have an effect similar to
 calling `set_entry_expire_time`).
 
-For a PNA [@PNA] table with the property `add_on_miss` equal to `true`
+For a PNA cte:[PNA] table with the property `add_on_miss` equal to `true`
 the data plane can insert new entries into the table without any
 controller's involvement.
 
-For a PNA [@PNA] table with the property `pna_idle_timeout` equal to
+For a PNA cite:[PNA] table with the property `pna_idle_timeout` equal to
 `PNA_IdleTimeout_t.AUTO_DELETE`, the data plane can delete existing
 entries from the table without any controller's involvement.
 
-#### ActionProfileMember
+==== ActionProfileMember
 
 Not data plane volatile in any architectures defined by P4.org
 specifications.
 
-#### ActionProfileGroup
+==== ActionProfileGroup
 
 Not data plane volatile in any architectures defined by P4.org
 specifications. The `watch_port` feature does affect how action
 selectors behave while processing packets, but this feature does not
 affect what a P4Runtime client sees when it reads the configuration.
 
-#### MeterEntry
+==== MeterEntry
 
 The field `counter_data` is modified by the data plane when the
 corresponding meter is updated in the data plane.
 
-#### DirectMeterEntry
+==== DirectMeterEntry
 
 The field `counter_data` is modified by the data plane when the
 corresponding meter is updated in the data plane.
 
-#### CounterEntry
+==== CounterEntry
 
 The field `data` is modified by the data plane when the corresponding
 counter is updated in the data plane.
 
-#### DirectCounterEntry
+==== DirectCounterEntry
 
 The field `data` is modified by the data plane when the corresponding
 counter is updated in the data plane.
 
-#### PacketReplicationEngineEntry
+==== PacketReplicationEngineEntry
 
 Not data plane volatile in any architectures defined by P4.org
 specifications.
 
-#### ValueSetEntry
+==== ValueSetEntry
 
 Not data plane volatile in any architectures defined by P4.org
 specifications.
 
-#### RegisterEntry
+==== RegisterEntry
 
 The field `data` can be modified by the data plane when the
 corresponding register entry is updated in the data plane.
 
-#### DigestEntry
+==== DigestEntry
 
 Not data plane volatile in any architectures defined by P4.org
 specifications.
 
-## Bytestrings { #sec-bytestrings}
+[#sec-bytestrings]
+== Bytestrings 
 
 P4Runtime integer values may be too large to fit in Protobuf primitive data
 types (32-bit and 64-bit words). The P4 language does not put any limit on the
@@ -2237,7 +2246,7 @@ fits the encoded integer value. This representation achieves three goals:
 * It ensures that a properly encoded binary string's integer value conforms
   to the P4Info-specified bitwidth.
 
-* It supports [read-write symmetry](#sec-read-write-symmetry).
+* It supports xref:sec-read-write-symmetry[read-write symmetry].
 
 * It helps facilitate non-disruptive P4 program updates.
 
@@ -2259,9 +2268,9 @@ range.
 
 In the P4Runtime API version 1.0 (including minor version revisions), values
 of table key fields, action parameters, and fields in packet-in and packet-out
-headers between a device and the controller (see [#sec-controller-packet-meta]),
+headers between a device and the controller (see <<#sec-controller-packet-meta>>),
 may not be of type `int<W>`. The rules for encoding signed values thus only
-apply to messages of type `P4Data` (see [#sec-p4data-in-p4runtime-proto]).
+apply to messages of type `P4Data` (see <<#sec-p4data-in-p4runtime-proto>>).
 
 For a value of type `bit<W>`, the fewest number of bits required to represent
 the integer value $V > 0$ is the smallest integer $A$ such that $V \leq 2^A -
@@ -2276,9 +2285,10 @@ represent, regardless of whether it is signed or unsigned.
 
 The shortest possible binary string for an integer $V$ that needs $A$ bits to
 represent it is computed as:
-~ Begin CPP
+[source,c++]
+----
 minimum_string_size = floor((A + 7) / 8)
-~ End CPP
+----
 
 Binary strings with the byte length computed as `minimum_string_size` promote
 P4Runtime read-write symmetry in both client-to-server requests and
@@ -2289,10 +2299,10 @@ Any additional bits in the bytes sent for an unsigned integer value (type
 `minimum_string_size` minimum required, they must be filled with 0.
 
 Any additional bits in the bytes sent for a signed integer value (type `int<W>`)
-must be copies of the sign bit, &ie; 0 for non-negative values, or 1 for
+must be copies of the sign bit, i.e. 0 for non-negative values, or 1 for
 negative values. If additional bytes are transmitted above the
 `minimum_string_size` minimum required, they must be filled with copies of the
-sign bit, &ie; 0 for non-negative values, or 0xff for negative values. In 2's
+sign bit, i.e. 0 for non-negative values, or 0xff for negative values. In 2's
 complement representation, this is called "sign extension", and leaves the
 numeric value represented unchanged.
 
@@ -2325,47 +2335,46 @@ complement bitwise representation as P4. Table [#tab-valid-bytestring-encoding]
 shows various examples of integer values that the server accepts as valid
 P4Runtime binary strings according to the criteria in the list above.
 
-~ TableFigure { #tab-valid-bytestring-encoding; \
-    caption: "Examples of Valid Bytestring Encoding"; }
-|-----------|----------------|-------------------------|---------------------|
-| P4 type   | Integer value  | P4Runtime binary string | Read-write symmetry |
-+-----------+----------------+-------------------------+---------------------+
-| `bit<8>`  | 99 (0x63)      | `\x63`                  | yes                 |
-| `bit<16>` | 99 (0x63)      | `\x00\x63`              | no                  |
-| `bit<16>` | 99 (0x63)      | `\x63`                  | yes                 |
-| `bit<16>` | 12388 (0x3064) | `\x30\x64`              | yes                 |
-| `bit<16>` | 12388 (0x3064) | `\x00\x30\x64`          | no                  |
-| `bit<12>` | 99 (0x63)      | `\x00\x63`              | no                  |
-| `bit<12>` | 99 (0x63)      | `\x63`                  | yes                 |
-| `bit<12>` | 99 (0x63)      | `\x00\x00\x63`          | no                  |
-| `int<8>`  | 99 (0x63)      | `\x63`                  | yes                 |
-| `int<8>`  | -99 (-0x63)    | `\x9d`                  | yes                 |
-| `int<8>`  | -99 (-0x63)    | `\xff\x9d`              | no                  |
-| `int<12>` | -739 (-0x2e3)  | `\xfd\x1d`              | yes                 |
-| `int<16>` | 0 (0x0)        | `\x00\x00`              | no                  |
-| `int<16>` | 0 (0x0)        | `\x00`                  | yes                 |
-|-----------|----------------|-------------------------|---------------------|
-~
+.Examples of Valid Bytestring Encoding
+[.center,cols="4",width=70%,align=center, options=header, unbreakable]
+[#tab-valid-bytestring-encoding]
+|===
+| P4 type   | Integer value  | P4Runtime binary string | Read-write symmetry 
+| `bit<8>`  | 99 (0x63)      | `\x63`                  | yes                 
+| `bit<16>` | 99 (0x63)      | `\x00\x63`              | no                  
+| `bit<16>` | 99 (0x63)      | `\x63`                  | yes                 
+| `bit<16>` | 12388 (0x3064) | `\x30\x64`              | yes                 
+| `bit<16>` | 12388 (0x3064) | `\x00\x30\x64`          | no                  
+| `bit<12>` | 99 (0x63)      | `\x00\x63`              | no                  
+| `bit<12>` | 99 (0x63)      | `\x63`                  | yes                 
+| `bit<12>` | 99 (0x63)      | `\x00\x00\x63`          | no                  
+| `int<8>`  | 99 (0x63)      | `\x63`                  | yes                 
+| `int<8>`  | -99 (-0x63)    | `\x9d`                  | yes                 
+| `int<8>`  | -99 (-0x63)    | `\xff\x9d`              | no                  
+| `int<12>` | -739 (-0x2e3)  | `\xfd\x1d`              | yes                 
+| `int<16>` | 0 (0x0)        | `\x00\x00`              | no                  
+| `int<16>` | 0 (0x0)        | `\x00`                  | yes                 
+|===
 
-Table [#tab-invalid-bytestring-encoding] shows some examples of invalid
+Table <<#tab-invalid-bytestring-encoding>> shows some examples of invalid
 P4Runtime binary strings:
 
-~ TableFigure { #tab-invalid-bytestring-encoding; \
-    caption: "Examples of Invalid Bytestring Encoding"; }
-|-----------|-------------------------|
-| P4 type   | P4Runtime binary string |
-+-----------+-------------------------+
-| `bit<8>`  | `\x01\x63`              |
-| `bit<8>`  | `empty string`          |
-| `bit<16>` | `\x01\x00\x63`          |
-| `bit<12>` | `\x10\x63`              |
-| `bit<12>` | `\x01\x00\x63`          |
-| `bit<12>` | `\x00\x40\x63`          |
-| `int<8>`  | `\x00\x9d`              |
-| `int<12>` | `\x8d\x1d`              |
-| `int<16>` | `empty string`          |
-|-----------|-------------------------|
-~
+
+.Examples of Invalid Bytestring Encoding
+[.center,cols="2",width=70%,align=center, options=header, unbreakable]
+[#tab-invalid-bytestring-encoding]
+|===
+| P4 type   | P4Runtime binary string 
+| `bit<8>`  | `\x01\x63`              
+| `bit<8>`  | `empty string`          
+| `bit<16>` | `\x01\x00\x63`          
+| `bit<12>` | `\x10\x63`              
+| `bit<12>` | `\x01\x00\x63`          
+| `bit<12>` | `\x00\x40\x63`          
+| `int<8>`  | `\x00\x9d`              
+| `int<12>` | `\x8d\x1d`              
+| `int<16>` | `empty string`          
+|===
 
 As the preceding examples illustrate, a P4Runtime server must accept a wide
 assortment of possible binary string encodings for the same integer value.
@@ -2377,8 +2386,7 @@ running the `bit<9>` version of the P4 program will accept requests from
 clients that remain on the `bit<8>` P4Runtime version.
 
 Despite the server's binary string flexibility for P4 program update support,
-the client and server must both remain aware of the
-[read-write symmetry](#sec-read-write-symmetry)
+the client and server must both remain aware of the xref:sec-read-write-symmetry[read-write symmetry]
 requirements. As described earlier, read-write symmetry requires that
 the encoder of a P4Runtime request or reply uses the shortest strings that
 fit the encoded integer values.
@@ -2390,41 +2398,43 @@ is provided by the P4Runtime client, the server must verify that the length of
 the binary string is less than the maximum length specified in the P4 program,
 and return an `OUT_OF_RANGE` error code otherwise.
 
-## Representation of Arbitrary P4 Types { #sec-representation-of-arbitrary-p4-types}
+[#sec-representation-of-arbitrary-p4-types]
+== Representation of Arbitrary P4 Types 
 
-### Problem Statement
+=== Problem Statement
 
 The P4~16~ language includes more complex types than just binary strings
-[@P4ComplexTypes]. Most of these complex data types can be exposed to the
+cite:[P4ComplexTypes]. Most of these complex data types can be exposed to the
 control plane through table key expressions, Value Set lookup expressions,
 Register (PSA extern type) value types, etc. Not supporting these more complex
-types can be very limiting. Table [#tab-p4-type-usage] shows the different
+types can be very limiting. Table <<#tab-p4-type-usage>> shows the different
 P4~16~ types and how they are allowed to be used, as per the P4~16~
 specification.
 
-~ TableFigure { #tab-p4-type-usage; \
-    caption: "P4 Type Usage"; }
-|----------------|-----------------------|--------------|-----------------|
-|                | Container type                                       |||
-|                |-----------------------|--------------|-----------------|
-| Element type   | header                | header_union | struct or tuple |
-+:---------------+:----------------------+:-------------+:----------------+
-| `bit<W>`       | allowed               | error        | allowed         |
-| `int<W>`       | allowed               | error        | allowed         |
-| `varbit<W>`    | allowed               | error        | allowed         |
-| `int`          | error                 | error        | error           |
-| `void`         | error                 | error        | error           |
-| `error`        | error                 | error        | allowed         |
-| `match_kind`   | error                 | error        | error           |
-| `bool`         | error                 | error        | allowed         |
-| `enum`         | allowed[^enum_header] | error        | allowed         |
-| `header`       | error                 | allowed      | allowed         |
-| header stack   | error                 | error        | allowed         |
-| `header_union` | error                 | error        | allowed         |
-| `struct`       | error                 | error        | allowed         |
-| `tuple`        | error                 | error        | allowed         |
-|----------------|-----------------------|--------------|-----------------|
-~
+//looking for a better solution because is horrible
+.P4 Type Usage
+[.center,cols="4",width=70%, grid=cols,align=center, options=header, unbreakable]
+[#tab-p4-type-usage]
+|===
+|                | Container type                                       
+|                |                       |              |
+| Element type   | header                | header_union | struct or tuple 
+| `bit<W>`       | allowed               | error        | allowed         
+| `int<W>`       | allowed               | error        | allowed         
+| `varbit<W>`    | allowed               | error        | allowed         
+| `int`          | error                 | error        | error           
+| `void`         | error                 | error        | error           
+| `error`        | error                 | error        | allowed         
+| `match_kind`   | error                 | error        | error           
+| `bool`         | error                 | error        | allowed         
+| `enum`         | allowed[^enum_header] | error        | allowed         
+| `header`       | error                 | allowed      | allowed         
+| header stack   | error                 | error        | allowed         
+| `header_union` | error                 | error        | allowed         
+| `struct`       | error                 | error        | allowed         
+| `tuple`        | error                 | error        | allowed         
+
+|===
 
 [^enum_header]: an `enum` type used as a field in a `header` must specify a
     underlying type and representation for `enum` elements.
@@ -2432,7 +2442,8 @@ specification.
 For example, the following P4~16~ objects involve complex types that need to be
 exposed in P4Runtime in order to support runtime operations on these objects.
 
-~ Begin P4Example
+[source,p4]
+----
 Digest<tuple<bit<4>, bit<8> > >() digest_complex;
 digest_complex.pack({ hdr.ipv4.version, hdr.ipv4.protocol });
 // ...
@@ -2441,7 +2452,7 @@ header_union ip_t {
    ipv6_t ipv6;
 }
 Register<ip_t, bit<32> >(128) register_ip;
-~ End P4Example
+----
 
 One solution would be to use only binary string (`bytes` type) in
 p4runtime.proto and to define a custom serialization format for complex P4~16~
@@ -2453,7 +2464,7 @@ in addition to the binary contents of this header. Rather than coming-up with a
 serialization format from scratch, we decided to use a Protobuf representation
 for all P4~16~ types.
 
-### P4 Type Specifications in p4info.proto
+=== P4 Type Specifications in p4info.proto
 
 In order for the P4Runtime client to generate correctly-formatted messages and
 for the P4Runtime service implementation to validate them, P4Info needs to
@@ -2479,7 +2490,7 @@ a `P4ErrorTypeSpec` message.
 `P4DataTypeSpec` is meant to be used in P4Info, to specify the expected format
 of the P4-dependent values being exchanged between the P4Runtime client and
 server. Each `P4DataTypeSpec` message corresponds to a compile-time type in the
-original P4~16~ program (&eg; the type parameter of an extern). This
+original P4~16~ program (e.g. the type parameter of an extern). This
 compile-time type is represented as a Protobuf `oneof`, which can be:
 
 * a string representing the name of the type in case of a named type (`struct`,
@@ -2501,7 +2512,8 @@ is guaranteed to be the same as the order of the members in the corresponding
 P4~16~ declaration. The same goes for the order of members of an `enum`
 (serializable or not) or members of `error`.
 
-### `P4Data` in p4runtime.proto { #sec-p4data-in-p4runtime-proto }
+[#sec-p4data-in-p4runtime-proto]
+=== `P4Data` in p4runtime.proto 
 
 P4Runtime uses the `P4Data` message to represent values of arbitrary types. The
 P4Runtime client must generate correct `P4Data` messages based on the type
@@ -2523,7 +2535,7 @@ guaranteeing read-write symmetry --- by introducing the following requirements:
  * An invalid header is represented by a `P4Header` message where the `is_valid`
    field is false and the `bitstrings` repeated field is empty.
 
- * An invalid header union (&ie; all headers in the union are invalid) is
+ * An invalid header union (i,e, all headers in the union are invalid) is
    represented by a `P4HeaderUnion` message where the `valid_header_name` is the
    empty string (default value for the field) and the `valid_header` is unset.
 
@@ -2534,21 +2546,23 @@ guaranteeing read-write symmetry --- by introducing the following requirements:
    included in the P4Info, in the corresponding `P4HeaderStackTypeSpec` or
    `P4HeaderUnionStackTypeSpec` message.
 
-### Example
+=== Example
 
 Let's look at the Register example again:
 
-~ Begin P4Example
+[source,p4]
+----
 header_union ip_t {
    ipv4_t ipv4;
    ipv6_t ipv6;
 }
 Register<ip_t, bit<32> >(128) register_ip;
-~ End P4Example
+----
 
 Here's the corresponding entry in the P4Info message:
 
-~ Begin Prototext
+[source,proto]
+----
 registers {
   preamble {
     id: 369119267
@@ -2604,10 +2618,11 @@ type_info {
     }
   }
 }
-~ End Prototext
+----
 Here's a `p4.WriteRequest` to set the value of `register_ip[12]`:
 
-~ Begin Prototext
+[source,proto]
+----
 update {
   type: INSERT
   entity {
@@ -2629,13 +2644,13 @@ update {
     }
   }
 }
-~ End Prototext
+----
 
-### `enum`, serializable `enum` and `error`
+=== `enum`, serializable `enum` and `error`
 
 P4~16~ supports 2 different classes of enumeration types: without underlying
 type (safe enum) and with underlying type (serializable enum or "unsafe" enum)
-[@P4Enums]. For `enum` types with no underlying type --- as well as `error` ---
+cite:[P4Enums]. For `enum` types with no underlying type --- as well as `error` ---
 there is no integer value associated with each symbolic member entry (whether
 assigned automatically by the compiler or directly in the P4 source). We
 therefore use a human-readable string in `P4Data` to represent `enum` and
@@ -2649,19 +2664,20 @@ mapping between entry name and entry value. When providing serializable enum
 values through `P4Data`, one must use the assigned integer value (`enum_value`
 bytestring field). P4Runtime does not provide a way for the client to use the
 name --- even when the enum member has one --- instead of the value, as it makes
-it easier for the server to respect the [read-write
-symmetry](#sec-read-write-symmetry) principle.
+it easier for the server to respect the xref:sec-read-write-symmetry[read-write
+symmetry] principle.
 
-### User-defined types { #sec-user-defined-types}
+[#sec-user-defined-types]
+=== User-defined types 
 
-P4~16~ enables programmers to introduce new types [@P4NewTypes]. While similar
+P4~16~ enables programmers to introduce new types cite:[P4NewTypes]. While similar
 to `typedef`, this mechanism introduces in fact a new type, which is not a
 strict synonym of the original type. It is important to preserve this
 distinction in the P4Info message, in particular for the purposes of
-[translation](#sec-psa-metadata-translation). When introducing a new type, the
+xref:sec-psa-metadata-translation[translation]. When introducing a new type, the
 declaration can be annotated with `@p4runtime_translation` to indicate that the
 type exposed to the P4Runtime client is different from the original P4 type. One
-important use-case is for [port numbers](#sec-translation-of-port-numbers),
+important use-case is for xref:sec-translation-of-port-numbers[port numbers],
 whose underlying data plane representation may vary on different targets, but
 for which it may be convenient to present a unified representation and numbering
 scheme to the control plane. **The `@p4runtime_translation` annotation can only
@@ -2690,14 +2706,14 @@ the following fields:
 * `representation`, a Protobuf `oneof` specifying how values of this type are
   exchanged between client and server; it can be either:
 
-    * `original_type`, if and only if no `@p4runtime_translation` annotation is
+    ** `original_type`, if and only if no `@p4runtime_translation` annotation is
       present. It specifies the underlying built-in P4 type for the user-defined
       type. If the underlying type used in the P4 `type` declaration is itself a
       user-defined type, `original_type` is obtained by "walking" the chain of
-      `type` declarations recursively until a built-in type (&eg; `bit<W>`) is
+      `type` declarations recursively until a built-in type (e.g. `bit<W>`) is
       found.
 
-    * `translated_type`, if and only if the P4 `type` declaration was annotated
+    ** `translated_type`, if and only if the P4 `type` declaration was annotated
       with `@p4runtime_translation`. It is of type `P4NewTypeTranslation`,
       which itself has two fields --- `uri` and either `sdn_string` or
       `sdn_bitwidth` ---, which map to the two input parameters to the
@@ -2708,7 +2724,9 @@ the following fields:
 
 For example, an architecture --- in this case PSA --- may introduce a new type
 for port numbers:
-~ Begin P4Example
+
+[source,p4]
+----
 // Controller refers to ports as a string, e.g. "eth0".
 @p4runtime_translation("p4.org/psa/v1/PortId_String_t", string)
 type bit<9> PortId_String_t;
@@ -2720,12 +2738,13 @@ type bit<9> PortId_Bit32_t;
 // Same as above.
 @p4runtime_translation("p4.org/psa/v1/PortId_32_t", 32)
 type bit<9> PortId_32_t;
-~ End P4Example
+----
 
 In this case, the P4Info message would include the following `P4TypeInfo`
 messages:
 
-~ Begin Prototext
+[source,proto]
+----
 type_info {
   new_types {
     key: "PortId_String_t"
@@ -2761,7 +2780,7 @@ type_info {
     }
   }
 }
-~ End Prototext
+----
 
 Note that a P4 compiler may provide a mechanism external to the language to
 specify if and how a user-defined type is to be translated (&eg; through some
@@ -2769,7 +2788,7 @@ configuration file passed on the command-line when invoking the compiler). This
 mechanism should take precedence over `@p4runtime_translation` to enable users
 to overwrite annotations included as part of the P4 architecture definition.
 
-### Trade-off for v1.x Releases
+=== Trade-off for v1.x Releases
 
 For the v1.x release ofs P4Runtime, it was decided not to replace occurrences of
 `bytes` with `P4Data` in the `p4.v1.FieldMatch` message, which is used to
@@ -2779,12 +2798,10 @@ implementations of P4Runtime. Similarly it has been decided to keep using
 values. However `P4Data` is used whenever appropriate for PSA externs and we
 encourage the use of `P4Data` in architecture-specific extensions.
 
-In order to support [translation](#sec-psa-metadata-translation) for action
-parameters and match fields, we include a `type_name` field in
-`p4.config.v1.MatchField`, `p4.config.v1.Action.Param` and
-`p4.config.v1.ControllerPacketMetadata.Metadata`. In addition, the `bitwidth`
-field for all of these message types must abide by the following rule when
-`type_name` names a translated user-defined type:
+In order to support xref:sec-psa-metadata-translation[translation]for action
+parameters and match fields, we include a `type_name` field in `p4.config.v1.MatchField` ,
+`p4.config.v1.Action.Param` and `p4.config.v1.ControllerPacketMetadata.Metadata`. In addition,
+the `bitwidth` field for all of these message types must abide by the following rule when `type_name` names a translated user-defined type:
 
  * If the *controller_type* is a fixed-width unsigned bitstring, the `bitwidth`
    field must be set to the bitwidth of the *controller_type*. This information
@@ -2794,13 +2811,15 @@ field for all of these message types must abide by the following rule when
    believe that using the bitwidth of the underlying type here would be
    inappropriate as it would make the P4Info message target-dependent.
 
- * Otherwise (&ie;, if the *controller_type* is a string), the `bitwidth` must
+ * Otherwise (i.e, if the *controller_type* is a string), the `bitwidth` must
    be "unset", which, in Protobuf version 3, is the same as setting the field to
    0.
 
 For example, consider the following P4 snippet, which declares a P4 table
 matching on two expressions with translated user-defined types:
-~ Begin P4Example
+
+[source,p4]
+----
 @p4runtime_translation("p4.org/psa/v1/PortId_String_t", string)
 type bit<9> PortId_String_t;
 
@@ -2817,11 +2836,12 @@ table t {
     drop;
   }
 }
-~ End P4Example
+----
 
 This table would have the following representation in the generated P4Info
 message:
-~ Begin Prototext
+[source,proto]
+----
 tables {
   preamble {
     id: 34728461
@@ -2848,15 +2868,17 @@ tables {
   }
   # ...
 }
-~ End Prototext
+----
 
-# P4 Entity Messages { #sec-p4-entity-msgs}
+[#sec-p4-entity-msgs]
+== P4 Entity Messages 
 
 P4Runtime covers P4 entities that are either part of the P4~16~ language, or
 defined as PSA externs. The sections below describe the messages for each
 supported entity.
 
-## `TableEntry` { #sec-table-entry}
+[#sec-table-entry]
+=== `TableEntry`
 
 The match-action table is the core packet-processing construct of the P4
 language. It consists of a collection of table entries, or flow rules, each
@@ -2894,30 +2916,28 @@ the `TableEntry` entity, which has the following fields:
   performs a read on the entry.
 
 * `meter_config`, which is used to read and write the configuration for the
-  direct meter entry attached to this table entry, if any. See [Direct
-  resources](#sec-direct-resources) section for more information.
+  direct meter entry attached to this table entry, if any. See 
+  xref:sec-direct-resources[Direct resources] section for more information.
 
 * `counter_data`, which is used to read and write the value for the direct
-  counter entry attached to this table entry, if any. See [Direct
-  resources](#sec-direct-resources) section for more information.
+  counter entry attached to this table entry, if any. See xref:sec-direct-resources[Direct resources] section for more information.
 
 * `meter_counter_data`, which is used to read and write the per-color counter
   values for the direct meter entry attached to this table entry, if any.
-  See [Direct resources](#sec-direct-resources) section for more information.
+  See xref:sec-direct-resources[Direct resources] section for more information.
 
 * `is_default_action`, a boolean flag which indicates whether the table entry is
-  the default entry for the table. See [Default entry](#sec-default-entry)
+  the default entry for the table. See xref:sec-default-entry[Default entry]
   section for more information.
 
 * `idle_timeout_ns` and `time_since_last_hit`, which are two fields used to
-  implement idle-timeout support for the table, if applicable. See
-  [Idle-timeout](#sec-idle-timeout) section for more information.
+  implement idle-timeout support for the table, if applicable. See xref:sec-idle-timeout[Idle-timeout]section for more information.
 
 * `is_const`, a boolean value that is `true` if and only if the entry
   cannot be modified or deleted by the client.
 
 The `priority` field must be set to a non-zero value if the match key includes a
-ternary match (&ie; in the case of PSA if the P4Info entry for the table
+ternary match (i.e. in the case of PSA if the P4Info entry for the table
 indicates that one or more of its match fields has an `OPTIONAL`, `TERNARY` or
 `RANGE` match
 type) or to zero otherwise. A higher priority number indicates that the entry
@@ -2940,7 +2960,7 @@ table (the table has an empty match key), the server must reject all attempts to
 The number of match entries that a table *should* support is indicated in P4Info
 (`size` field of `Table` message). The guarantees provided to the P4Runtime
 client are the same as the ones described in the P4~16~ specification for the
-`size` property [@P4TableProperties]. In particular, some implementations may
+`size` property cite:[P4TableProperties]. In particular, some implementations may
 not be able to always accommodate an arbitrary set of entries up to the
 requested size, and other implementations may provide the P4Runtime client with
 more entries than requested. The P4Runtime server must return
@@ -2953,16 +2973,17 @@ The `is_const` field must be `false` in any `INSERT`, `MODIFY`, or
 `DELETE` write request of a table entry.  If it is true, the server
 must reject the operation and return an `INVALID_ARGUMENT` error.
 
-### Match Format { #sec-match-format}
+[#sec-match-format]
+=== Match Format 
 
 The bytes fields in the `FieldMatch` message follow the format described in
-[Bytestrings](#sec-bytestrings).
+xref:sec-bytestrings[Bytestrings].
 
 For "don't care" matches, the P4Runtime client must omit the field's entire
 `FieldMatch` entry when building the `match` repeated field of the `TableEntry`
 message. This requirement leads to smaller Protobuf messages overall, while
 enabling a canonical representation for "don't care" matches, which is needed
-to ensure [read-write symmetry](#sec-read-write-symmetry). For PSA match types,
+to ensure xref:sec-read-write-symmetry[read-write symmetry]. For PSA match types,
 a "don't care" match for a specific match key field is defined as follows:
 
 * For a `TERNARY` match, it is logically equivalent to a mask of zeros.
@@ -2981,7 +3002,8 @@ The following example shows a P4Runtime message that treats a `TERNARY` field
 as a "don't care" match. The P4 program defines table `t` with `TERNARY`
 and `EXACT` fields in its match key:
 
-~ Begin P4Example
+[source,p4]
+----
 table t {
   key = {
     hdr.ipv4.dip: ternary;
@@ -2991,13 +3013,14 @@ table t {
     drop;
   }
 }
-~ End P4Example
+----
 
 In this P4Runtime request, the client omits the table's `TERNARY` field
 from the repeated `match` field to indicate a "don't care" match. As shown
 below, the `match` specifies only the `EXACT` field given by `field_id: 2`.
 
-~ Begin Prototext
+[source,proto]
+----
 device_id: 3
 entities {
   table_entry {
@@ -3014,7 +3037,7 @@ entities {
     }
   }
 }
-~ End Prototext
+----
 
 For every member of the `TableEntry` repeated `match` field, `field_id` must be
 a valid id for the table, as per the P4Info, and one of the fields in
@@ -3024,19 +3047,21 @@ P4Runtime server must return an `INVALID_ARGUMENT` error code.
 
 * `EXACT` match
     * The binary string encoding of the value must conform to the
-      [Bytestrings](#sec-bytestrings) requirements.
+      xref:sec-bytestrings[Bytestrings] requirements.
 
-~ Begin Pseudo
+[source,pseudo]
+----
 assert(BytestringValid(match.exact().value()))
-~ End Pseudo
+----
 
 * `LPM` match
     * The binary string encoding of the value (when present) must conform to the
-      [Bytestrings](#sec-bytestrings) requirements.
+      xref:sec-bytestrings[Bytestrings] requirements.
     * "Don't care" match must be omitted.
     * "Don't care" bits must be 0 in value.
 
-~ Begin Pseudo
+[source,pseudo]
+----
 assert(BytestringValid(match.lpm().value()))
 
 pLen = match.lpm().prefix_len()
@@ -3044,20 +3069,21 @@ assert(pLen > 0)
 
 trailing_zeros = countTrailingZeros(match.lpm().value())
 assert(trailing_zeros >= field_bits - pLen)
-~ End Pseudo
+----
 
 * `TERNARY` match
     * The binary string encoding of the value (when present) and mask (when
-      present) must conform to the [Bytestrings](#sec-bytestrings) requirements.
+      present) must conform to the xref:sec-bytestrings[Bytestrings] requirements.
     * "Don't care" match must be omitted.
     * Masked bits must be 0 in value.  This constraint taken together
-      with the [Bytestrings](#sec-bytestrings) requirements means that the
+      with the xref:sec-bytestrings[Bytestrings] requirements means that the
       value's binary string is never longer than the mask's binary string.
       When the value's string is shorter than the mask string, the
       most-significant value bits need zero-padding before any logical
       operations with the mask.
 
-~ Begin Pseudo
+[source,pseudo]
+----
 assert(BytestringValid(match.ternary().value()))
 assert(BytestringValid(match.ternary().mask()))
 assert(match.ternary().value().size() <= match.ternary().mask().size());
@@ -3068,16 +3094,17 @@ mask = parseInteger(match.ternary().mask())
 assert(mask != 0)
 
 assert(value & mask == value)
-~ End Pseudo
+----
 
 * `RANGE` match
     * The binary string encoding of the low bound (when present) and high bound
-      (when present) must conform to the [Bytestrings](#sec-bytestrings)
+      (when present) must conform to the xref:sec-bytestrings[Bytestrings] 
       requirements.
     * Low bound must be less than or equal to the high bound.
     * "Don't care" match must be omitted.
 
-~ Begin Pseudo
+[source,pseudo]
+----
 assert(BytestringValid(match.range().low()))
 assert(BytestringValid(match.range().high()))
 
@@ -3087,17 +3114,18 @@ high = parseInteger(match.range().high())
 assert(low <= high)
 
 assert(low != min_field_value || high != max_field_value)
-~ End Pseudo
+----
 
 * `OPTIONAL` match
     * The binary string encoding of the value must conform to the
-      [Bytestrings](#sec-bytestrings) requirements.
+      xref:sec-bytestrings[Bytestrings] requirements.
 
-~ Begin Pseudo
+[source,pseudo]
+----
 assert(BytestringValid(match.optional().value()))
-~ End Pseudo
+----
 
-### Action Specification
+=== Action Specification
 
 The `TableEntry` `action` field must be set for every `INSERT` update but may be
 left unset for `MODIFY` updates, in which case the action specification for the
@@ -3117,10 +3145,10 @@ the `oneof` in the `TableAction` message will either be:
 
 * an `ActionProfileActionSet` specification for indirect tables for
   which the `implementation` property is an action profile with
-  selector. This usage is described in [One Shot Action Selector
-  Programming](#sec-oneshot)
+  selector. This usage is described in xref:sec-oneshot[One Shot Action Selector
+  Programming].
 
-If the `oneof` does not match the table description in the P4Info (&eg; the
+If the `oneof` does not match the table description in the P4Info (e.g. the
 `oneof` is `action_profile_member_id` for a direct table), the server must
 return an `INVALID_ARGUMENT` error code.
 
@@ -3130,26 +3158,27 @@ The `Action` Protobuf message has the following fields:
   determined by the P4Info message and must match one of the possible action
   choices for the table, or the server must return an `INVALID_ARGUMENT` error
   code. If the client uses a valid `action_id` for the table but does not
-  respect the action scope specified in P4Info (&eg; tries to set a `TABLE_ONLY`
+  respect the action scope specified in P4Info (e.g. tries to set a `TABLE_ONLY`
   action as the default action), the server must return a `PERMISSION_DENIED`
   error code.
 
 * `params`: a repeated Protobuf field of action parameter values, each encoded
   as a `Param` message. For each parameter, `param_id` must be valid for the
   action (as per the P4Info) and value must follow the format described in
-  [Bytestrings](#sec-bytestrings). The P4Runtime client must provide a valid
+  xref:sec-bytestrings[Bytestrings]. The P4Runtime client must provide a valid
   value for each parameter of the P4 action; we do not support default values
   for action parameters. The server must return an `INVALID_ARGUMENT` error code
   if a parameter id is missing, if an extra parameter --- id not found in the
   P4Info --- was provided by the client, if a parameter value is missing, or if
   the value provided for one of the parameters does not conform to the
-  [Bytestrings](#sec-bytestrings) format.
+  xref:sec-bytestrings[Bytestrings] format.
 
 For indirect tables, if the P4Runtime client provides a member or group id which
 has not been inserted in the corresponding action profile instance yet, the
 P4Runtime server must return a `NOT_FOUND` error code.
 
-### Default Entry { #sec-default-entry}
+[#sec-default-entry]
+=== Default Entry 
 
 According to the P4 specification, the default entry for a table is always set.
 It can be set at compile-time by the P4 programmer --- or defaults to `NoAction`
@@ -3167,20 +3196,21 @@ on the default entry, the client can either provide a valid action for the table
 or leave the action field unset, in which case the default entry will be reset
 to its original value, as defined in the P4 program. When resetting the default
 entry, its `controller_metadata` and `metadata` value as well as the
-configurations for its [direct resources](#sec-direct-resources) will be reset
+configurations for its xref:sec-direct-resources[direct resources] will be reset
 to their defaults. If the default entry is constant (as indicated by the P4
 program and the P4Info message), the server must return a `PERMISSION_DENIED`
 error code if the client attempts to modify it.
 
 Apart from the above restrictions, the default entry is treated like a regular
-entry, including with regards to [direct resources](#sec-direct-resources).
+entry, including with regards to xref:sec-direct-resources[direct resources].
 
 In this P4Runtime release, we have decided to restrict the default entry for
 indirect tables --- tables with an ActionProfile or ActionSelector
 `implementation` property --- to a constant `NoAction` action entry, with the
 hope that it would simplify the implementation of the P4Runtime service.
 
-### Constant Tables { #sec-constant-tables }
+[#sec-constant-tables]
+=== Constant Tables 
 
 Constant tables are defined as tables whose match entries are
 immutable. They are identified by the table property `const entries`
@@ -3189,7 +3219,7 @@ in the P4~16~ source code.  In the P4Info, such tables have
 source code has at least one entry in it, they also have
 `has_initial_entries` flag equal to true.  For tables declared with
 the `entries` property, without `const` before `entries` see Section
-[#sec-preinitialized-tables].
+<<#sec-preinitialized-tables>>.
 
 The only write updates which are allowed for constant tables are `MODIFY`
 operations on direct resources, and the default action (assuming the default
@@ -3208,7 +3238,7 @@ the following fields must be set by the server: `table_id`, `match`, `action`,
 direct resources that are being queried.  Idle timeouts are not supported for
 static entries.
 
-When a priority value is required (&eg; for tables including `RANGE`,
+When a priority value is required (e.g. for tables including `RANGE`,
 `TERNARY` or `OPTIONAL` matches), it is inferred based on the order in
 which entries appear in the table declaration.  As of August 2023, the
 open source `p4c` compiler always assigns entry priority values in a
@@ -3218,14 +3248,15 @@ language specification does not preclude the P4 developer from
 explicitly specifying priorities for entries in constant tables, but
 `p4c` does not yet support this.
 
-### Preinitialized tables { #sec-preinitialized-tables }
+[#sec-preinitialized-tables]
+=== Preinitialized tables 
 
 Preinitialized tables are those defined with an `entries` table
 property in the P4~16~ source code, with no `const` qualifier before
 `entries`, and at least one entry in that list.  In the P4Info, such
 tables have `has_initial_entries` flag equal to true, but
 `is_const_table` is false.  For tables declared with `const entries`,
-see Section [#sec-constant-tables].
+see Section <<#sec-constant-tables>>.
 
 Every P4 table falls into one of three categories:
 
@@ -3251,7 +3282,7 @@ Entries not marked `const` may be modified or deleted, just as a
 client may do for any entry in a normal table.
 
 Entries marked `const` behave like entries in a constant table,
-&ie; only `MODIFY` operations on direct resources are allowed.
+i.e. only `MODIFY` operations on direct resources are allowed.
 
 Unlike a table with `is_const_table = true`, a client may insert
 entries into a table with `has_initial_entries = true` and
@@ -3261,7 +3292,7 @@ number of entries supported by the target for the table.
 The contents of preinitialized tables can be queried by the client
 through a `ReadRequest`.  The server fills in the same fields in the
 response as it does for constant tables, as described in Section
-[#sec-constant-tables], and with the same restrictions on table
+<<#sec-constant-tables>>, and with the same restrictions on table
 features supported.
 
 If the table requires a priority value for entries, the priorities of
@@ -3272,10 +3303,11 @@ in a normal table can.
 
 The contents of all table entries within the `entries` table
 properties in a P4 program can be written to a separate output file by
-the open source `p4c` compiler.  See Section [#sec-entries-files] for
+the open source `p4c` compiler.  See Section <<#sec-entries-files>> for
 details.
 
-### Wildcard Reads { #sec-table-wildcard-reads}
+[#sec-table-wildcard-reads]
+=== Wildcard Reads 
 
 When performing a `ReadRequest`, the P4Runtime client can select all entries
 from one or all tables on the target and use several of the `TableEntry` fields
