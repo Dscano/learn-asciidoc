@@ -6452,12 +6452,12 @@ properties, but we may include on in future versions of the API.
   in particular, there is no way for a client to query the supported minor +
   patch version numbers.
 
-[@h1:"A"]
-=== Appendix 
+[appendix]
+= Appendix 
 
-==== Revision History
+=== Revision History
 
-===== Changes in v1.4.0
+==== Changes in v1.4.0
 
 * Add a `Type` field to the `MeterSpec` message allowing users to restrict the
   type of meters that can be used for a table and a new `eburst` field to the
@@ -6494,7 +6494,7 @@ properties, but we may include on in future versions of the API.
 * Add a `selector_size_semantics` field to the `ActionProfile` message
   in P4Info.
 
-===== Changes in v1.3.0
+==== Changes in v1.3.0
 
 * Add IANA assigned TCP port, 9559, to P4Runtime server discussion.
 * Move "Security considerations" section to P4Runtime server discussion.
@@ -6505,7 +6505,7 @@ properties, but we may include on in future versions of the API.
 * Clarify that source locations for annotations are optional in the P4Info
   message.
 
-===== Changes in v1.2.0
+==== Changes in v1.2.0
 
 * Add new `OPTIONAL` match kind. At the moment, `OPTIONAL` is only supported by
   the v1model architecture cite:[v1model], and not by PSA. It will eventually be
@@ -6525,7 +6525,7 @@ properties, but we may include on in future versions of the API.
 * Add optional P4 source locations to both structured and unstructured
   annotations.
 
-===== Changes in v1.1.0
+==== Changes in v1.1.0
 
 * Major overhaul of master-arbitration: while the Protobuf messages did not
   change, the state machine that the server needs to implement is significantly
@@ -6550,7 +6550,7 @@ properties, but we may include on in future versions of the API.
 * Document that `@p4runtime_translation` need only be supported when applied to
   type declarations in P4.
 
-==== P4 Annotations
+=== P4 Annotations
 
 Table <<#tab-p4-annotations>> lists P4~16~ annotations introduced primarily for
 the purpose of adding features for the P4Runtime API.
@@ -6576,7 +6576,7 @@ the purpose of adding features for the P4Runtime API.
 |===
 
 [#sec-value-set-example]
-=== A More Complex Value Set Example 
+==== A More Complex Value Set Example 
 
 This section includes a more complex Value Set example, with multiple matches of
 different kinds.
