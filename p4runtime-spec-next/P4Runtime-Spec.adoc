@@ -611,7 +611,7 @@ leave the `role` unset.
 === Role Config
 
 The `role.config` field in the `MasterArbitrationUpdate` message sent by the
-controller describes the role configuration, &ie; which operations are in the
+controller describes the role configuration, i.e. which operations are in the
 scope of a given role. In particular, the definition of a role may include the
 following:
 
@@ -2335,9 +2335,9 @@ If the string's byte length is zero, the server always rejects the string.
 When the server rejects a binary string due to any of the previous criteria,
 it returns an `OUT_OF_RANGE` error.
 
-For all binary strings, P4Runtime uses big-endian (&ie; network) byte-order.
+For all binary strings, P4Runtime uses big-endian (i.e. network) byte-order.
 For signed integer values (`int<W>` P4 type), P4Runtime uses the same two's
-complement bitwise representation as P4. Table [#tab-valid-bytestring-encoding]
+complement bitwise representation as P4. Table <<#tab-valid-bytestring-encoding>>
 shows various examples of integer values that the server accepts as valid
 P4Runtime binary strings according to the criteria in the list above.
 
@@ -3269,7 +3269,7 @@ Every P4 table falls into one of three categories:
 * *Normal table*: Neither `entries` nor `const entries` are declared
   in the source code, and thus `is_const_table` and
   `has_initial_entries` will both be false.  A corner case is that if
-  it has `entries = { }` with no `const` before `entries`, &ie; an
+  it has `entries = { }` with no `const` before `entries`, i.e. an
   empty list of entries, that is also a normal table.
 * *Constant table*: The table has `const entries` declared, and thus a
   separate `entries` property is not permitted by the language.  Such
@@ -5099,7 +5099,7 @@ An update can be one of the following types:
   container is already full, a `RESOURCE_EXHAUSTED` error is returned.
 
 * `MODIFY`: Modifies the P4 entity to its new specified state. This uses
-  *assign* or *full-snapshot* semantics, &ie; the entity field contains the
+  *assign* or *full-snapshot* semantics, i.e. the entity field contains the
   complete new state of the entity, not a diff from its previous state. If the
   entity is malformed, an `INVALID_ARGUMENT` error is usually returned (unless a
   more specific error code applies cite:[gRPCStatusCodes]). If the entity does not
@@ -6004,7 +6004,7 @@ translated types which are not declared as part of the PSA architecture.
 
 .P4Runtime Metadata Translation for the Portable Switch Architecture
 [#fig-psa-metadata-translation]
-image::psa-metadata-translation..png[]
+image::psa-metadata-translation.png[]
 
 Figure <<#fig-psa-metadata-translation>> illustrates a motivating example,
 where a centralized controller is controlling two P4Runtime targets in a fabric.
@@ -6555,27 +6555,25 @@ properties, but we may include on in future versions of the API.
 Table <<#tab-p4-annotations>> lists P4~16~ annotations introduced primarily for
 the purpose of adding features for the P4Runtime API.
 
-~ TableFigure { #tab-p4-annotations; \
-    caption: "P4 annotations introduced by P4Runtime"; \
-    page-align: forcehere; }
-|--------------------------  |---------------------------------------|
-| Annotation                 | Description                           |
-+----------------------------+---------------------------------------+
-| `@brief`                   | See section [#sec-annotating-p4-entities-with-documentation] |
-| `@controller_header`       | See section [#sec-controller-packet-meta] |
-| `@description`             | See section [#sec-annotating-p4-entities-with-documentation] |
-| `@id`                      | See section [#sec-id-allocation] |
-| `@max_group_size`          | See sections [#sec-p4info-action-profile], [#sec-action-profile-group-programming] |
-| `@selector_size_semantics` | See section [#sec-p4info-action-profile] |
-| `@max_member_weight`       | See section [#sec-p4info-action-profile] |
-| `@two_rate_three_color`    | See section [#sec-meter-directmeter] |
-| `@single_rate_three_color` | See section [#sec-meter-directmeter] |
-| `@single_rate_two_color`   | See section [#sec-meter-directmeter] |
-| `@pkginfo`                 | See section [#sec-annotating-p4-code-with-pkginfo] |
-| `@platform_property`       | See section [#sec-annotating-p4-code-with-pkginfo] |
-| `@p4runtime_translation`   | See sections [#sec-user-defined-types], [#sec-translation-of-port-numbers] |
-+----------------------------+---------------------------------------+
-~
+.Example of statically-assigned P4Info object IDs
+[cols="2",width=80%, align=center, options=header, unbreakable]
+[#tab-p4-annotations]
+|===
+| Annotation                 | Description                           
+| `@brief`                   | See section <<#sec-annotating-p4-entities-with-documentation>> 
+| `@controller_header`       | See section <<#sec-controller-packet-meta>>
+| `@description`             | See section <<#sec-annotating-p4-entities-with-documentation>> 
+| `@id`                      | See section <<#sec-id-allocation>>
+| `@max_group_size`          | See sections <<#sec-p4info-action-profile>>, <<#sec-action-profile-group-programming>>
+| `@selector_size_semantics` | See section <<#sec-p4info-action-profile>> 
+| `@max_member_weight`       | See section <<#sec-p4info-action-profile>>
+| `@two_rate_three_color`    | See section <<#sec-meter-directmeter>>
+| `@single_rate_three_color` | See section <<#sec-meter-directmeter>>
+| `@single_rate_two_color`   | See section <<#sec-meter-directmeter>>
+| `@pkginfo`                 | See section <<#sec-annotating-p4-code-with-pkginfo>> 
+| `@platform_property`       | See section <<#sec-annotating-p4-code-with-pkginfo>> 
+| `@p4runtime_translation`   | See sections <<#sec-user-defined-types>>, <<#sec-translation-of-port-numbers>> 
+|===
 
 [#sec-value-set-example]
 === A More Complex Value Set Example 
@@ -6689,12 +6687,13 @@ channel.  As a rule of thumb, it might make sense to allow for at least
 `8192 + MAX_UPDATES_PER_WRITE * 100` bytes of metadata.
 
 For example, in C++, one can create a client channel as follows:
-~ Begin CPP
+[source,cpp]
+----
 const int MAX_UPDATES_PER_WRITE = 100;
 ::grpc::ChannelArguments arguments;
 arguments.SetInt(GRPC_ARG_MAX_METADATA_SIZE, 8192 + MAX_UPDATES_PER_WRITE*100);
 return grpc::CreateCustomChannel(address, credentials, arguments);
-~ End CPP
+----
 
 ==== gRPC Server Maximum Receive Message Size
 
