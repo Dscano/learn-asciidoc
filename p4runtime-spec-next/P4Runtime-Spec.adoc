@@ -8,6 +8,7 @@
 :toc: macro
 :toc-title: Contents
 :toclevels: 5
+:toc: left
 :!chapter-signifier:
 :xrefstyle: short
 :stem: latexmath
@@ -790,6 +791,7 @@ components.
 
 These messages appear nested within many other messages.
 
+[#sec-documentation-message]
 ==== `Documentation` Message
 
 `Documentation` is used to carry both brief and long descriptions of something.
@@ -807,6 +809,7 @@ message Documentation {
 }
 ----
 
+[#sec-preamble-message]
 ==== `Preamble` Message
 
 The preamble serves as the "descriptor" for each entity and contains the unique
@@ -1079,6 +1082,7 @@ be found in the following place:
   an optional field `SourceLocation source_location` holding its source
   location, if present.
 
+[#sec-pkginfo-message]
 === `PkgInfo` Message
 
 The `PkgInfo` message contains package-level metadata which describes the
@@ -1335,7 +1339,7 @@ control plane. This message contains the following fields:
 
     ** `doc`, a `Documentation` message describing this match field.
 
-    ** `type_name`, which indicates whether the match field has a xref:sec-user-defined-types[user-definedtype]; this is useful for xref:sec-psa-metadata-translation[translation].
+    ** `type_name`, which indicates whether the match field has a xref:sec-user-defined-types[user-defined type]; this is useful for xref:sec-psa-metadata-translation[translation].
 
 * `action_refs`, a repeated `ActionRef` field representing the set of possible
   actions for this table. The `ActionRef` message is used to reference an action
@@ -1540,6 +1544,7 @@ For indexed counters, the `Counter` message contains also an `index_type_name`
 field, which indicates whether the index has a xref:sec-user-defined-types[user-defined
 type]. This is useful for xref:sec-psa-metadata-translation[translation].The underlying built-in type must be a fixed-width unsigned bitstring (`bit<W>`).
 
+[#sec-meter-directmeter]
 === `Meter` & `DirectMeter`
 
 `Meter` and `DirectMeter` messages are used to specify all possible instances of
@@ -1652,7 +1657,7 @@ message contains the following fields:
       annotation associated to this metadata.
     ** `bitwidth`, an `int32` representing the size in bits of this metadata.
     ** `type_name`, which indicates whether the metadata field has a 
-        xref:sec-user-defined-type[user-defined type]; this is useful for
+        xref:sec-user-defined-types[user-defined type]; this is useful for
         xref:sec-psa-metadata-translation[translation].
 
 As an example, consider the following snippet of a P4 program where controller
