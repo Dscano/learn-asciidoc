@@ -15,7 +15,9 @@ contents, just before the first section of the contents.  Seems like a
 reasonable difference to me.
 
 M is 189 pages.  A is 176 pages.  Probably due to font and/or vertical
-whitespace difference.  Seems reasonable to me.
+whitespace difference.  It might also be due to smaller top, bottom,
+left, and right margins in A than there are in M.  Seems reasonable to
+me.
 
 Table of contents in A has level 4 and 5 headers, whereas M only has
 headings up to level 3.  I like _very much_ the extra headers in the
@@ -60,8 +62,10 @@ blue links on several PDF readers I have checked, including:
 This does not occur for cross-references in M.  Seems like a minor
 improvement in A.
 
-TODO: In M, section cross-references are "Section <number>".  In A
-they are "Chapter <number>".  Acceptable?
+TODO: In M, cross-references to a top-level section are "Section
+<number>".  In A they are "Chapter <number>".  In A they are "Section
+<number.number>" if it is a second level or lower level section.
+Acceptable?
 
 Figure captions in M have a horizontal rule line separating them from
 the figure, but no such line in A.  Something to try to improve in A
@@ -109,3 +113,13 @@ end of Section 6.1.1 "Grammar".
 Grammar snippet text in M has light blue background.  In A it is light
 gray.  TODO: Easily changeable?  Example: See grammar snippet in
 Section 6.1.1 "Grammar".
+
+TODO: Footnotes in M appear at the bottom of the page where the
+footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
+the bottom of the last page of the section where the footnote
+superscript appears, perhaps several pages later.  It would be nice to
+change this if possible.
+
+TODO: Tables look a bit different between A and M.  I like the visual
+style of M a bit better, but do not know how to improve A's PDF output
+here.
