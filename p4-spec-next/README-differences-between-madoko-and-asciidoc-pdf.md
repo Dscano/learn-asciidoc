@@ -22,16 +22,22 @@ TODO: In M, cross-references to a top-level section are "Section
 <number.number>" if it is a second level or lower level section.
 Acceptable?
 
-Figures in A appear wherever the markup for them does, relative to the
-text.  They "float" in A, typically appearing at the top of a page.
-TODO: It might be nice to change this in A, if there is a way.
-
 TODO: Second and third level bullet symbols in bullet lists of A
 appear as rectangular black-lined boxes with white interior in PDF
 output.  In M, second level bullets appear as dashes, and third level
 as asterisks.  It would be nice to improve this in A.  Example: See
 second bullet list in Section 3.  For third level bullet, see second
 bullet list in Section 6.8.
+
+TODO: Footnotes in M appear at the bottom of the page where the
+footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
+the bottom of the last page of the section where the footnote
+superscript appears, perhaps several pages later.  It would be nice to
+change this if possible.
+
+TODO: Tables look a bit different between A and M.  I like the visual
+style of M a bit better, but do not know how to improve A's PDF output
+here.
 
 Color backgrounds of code blocks:
 
@@ -52,15 +58,23 @@ Grammar snippet text in M has light blue background.  In A it is light
 gray.  TODO: Easily changeable?  Example: See grammar snippet in
 Section 6.1.1 "Grammar".
 
-TODO: Footnotes in M appear at the bottom of the page where the
-footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
-the bottom of the last page of the section where the footnote
-superscript appears, perhaps several pages later.  It would be nice to
-change this if possible.
 
-TODO: Tables look a bit different between A and M.  I like the visual
-style of M a bit better, but do not know how to improve A's PDF output
-here.
+# Differences that it might be nice to change, but maybe not easy to achieve
+
+Figures in A appear wherever the markup for them does, relative to the
+text.  They "float" in A, typically appearing at the top of a page.
+TODO: It might be nice to change this in A, if there is a way.
+
+M creates LaTeX source as an intermediate step after Madoko format,
+from which it generates PDF.  This gives it all of the goodness of
+LaTeX for control of widow/orphan lines, and other things.
+AsciiDoctor goes straight from AsciiDoc to PDF, without LaTeX as an
+intermediate step.  The AsciiDoctor developers are aware of this
+issue, and have explored some alternatives in AsciiDoctor
+implementation, but as far as I can tell there is no solution
+available at this time:
+
++ https://discuss.asciidoctor.org/widows-and-orphans-poor-typography-in-asciidoctor-pdf-td7531.html
 
 
 # Differences for which the AsciiDoc output seems good enough
