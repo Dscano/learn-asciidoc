@@ -1,14 +1,71 @@
-This comparison has been updated to version 1.2.5
+# Introduction
 
-M - PDF generated from Madoko source of version 1.2.5 of the language spec
+This comparison has been updated to version 1.2.5 of the language
+specification.
 
-A - PDF generated from AsciiDoc source, as of the version of AsciiDoc
-  files in this repository as of the latest commit made on 2024-Oct-13
+Abbreviations:
 
-Logo on title page of A looks pretty nice.
++ `M` - PDF generated from Madoko source of version 1.2.5 of the
+  language spec
++ `A` - PDF generated from AsciiDoc source, as of the version of
+  AsciiDoc files in this repository as of the latest commit made on
+  2024-Oct-13
+
+
+# Differences for which it would be nice to improve the AsciiDoc output
 
 TODO: M has date of revision on title page, but A does not.  Would be
 nice to add this to A.
+
+TODO: In M, cross-references to a top-level section are "Section
+<number>".  In A they are "Chapter <number>".  In A they are "Section
+<number.number>" if it is a second level or lower level section.
+Acceptable?
+
+Figures in A appear wherever the markup for them does, relative to the
+text.  They "float" in A, typically appearing at the top of a page.
+TODO: It might be nice to change this in A, if there is a way.
+
+TODO: Second and third level bullet symbols in bullet lists of A
+appear as rectangular black-lined boxes with white interior in PDF
+output.  In M, second level bullets appear as dashes, and third level
+as asterisks.  It would be nice to improve this in A.  Example: See
+second bullet list in Section 3.  For third level bullet, see second
+bullet list in Section 6.8.
+
+Color backgrounds of code blocks:
+
++ P4 code blocks, beginning [source,p4] in A source
+
+P4 code blocks in M have yellow background.  In A it is a light gray.
+TODO: acceptable?  Easily changeable?
+
++ P4 pseudocode blocks, beginning [source,p4pseudo] in A source
+
+Pseudocode blocks in M have light green background.  In A it is light
+gray.  TODO: Easily changeable?  Example: See pseudocode snippet at
+end of Section 6.1.1 "Grammar".
+
++ grammar blocks, beginning [source,bison] in A source
+
+Grammar snippet text in M has light blue background.  In A it is light
+gray.  TODO: Easily changeable?  Example: See grammar snippet in
+Section 6.1.1 "Grammar".
+
+TODO: Footnotes in M appear at the bottom of the page where the
+footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
+the bottom of the last page of the section where the footnote
+superscript appears, perhaps several pages later.  It would be nice to
+change this if possible.
+
+TODO: Tables look a bit different between A and M.  I like the visual
+style of M a bit better, but do not know how to improve A's PDF output
+here.
+
+
+# Differences for which the AsciiDoc output seems good enough
+
+Logo on title page of A looks pretty nice.
 
 M has abstract on first page.  A has abstract after the table of
 contents, just before the first section of the contents.  Seems like a
@@ -62,30 +119,14 @@ blue links on several PDF readers I have checked, including:
 This does not occur for cross-references in M.  Seems like a minor
 improvement in A.
 
-TODO: In M, cross-references to a top-level section are "Section
-<number>".  In A they are "Chapter <number>".  In A they are "Section
-<number.number>" if it is a second level or lower level section.
-Acceptable?
-
 Figure captions in M have a horizontal rule line separating them from
 the figure, but no such line in A.  Something to try to improve in A
 output?  It does not seem like a bad difference to me.  In addition, A
 has figure captions in Italic font, but not Italic in M.
 
-Figures in A appear wherever the markup for them does, relative to the
-text.  They "float" in A, typically appearing at the top of a page.
-TODO: It might be nice to change this in A, if there is a way.
-
 Monospaced terms like `extern` are red in A, but some dark color (dark
 purple?) in M.  I do not know if this is something people would prefer
 to change, or not.  It seems reasonable to me.
-
-TODO: Second and third level bullet symbols in bullet lists of A
-appear as rectangular black-lined boxes with white interior in PDF
-output.  In M, second level bullets appear as dashes, and third level
-as asterisks.  It would be nice to improve this in A.  Example: See
-second bullet list in Section 3.  For third level bullet, see second
-bullet list in Section 6.8.
 
 Cross-references to an appendix in M appear as "Section B", but as
 "Appendix B" in A.  I like A's better.
@@ -94,32 +135,3 @@ Paragraphs in A are separated by vertical whitespace, and have no
 indent on the first line of text.  No vertical whitespace between
 paragraphs in M, and the first line of each paragraph is indented.
 Both seem quite readable to me.
-
-Color backgrounds of code blocks:
-
-+ P4 code blocks, beginning [source,p4] in A source
-
-P4 code blocks in M have yellow background.  In A it is a light gray.
-TODO: acceptable?  Easily changeable?
-
-+ P4 pseudocode blocks, beginning [source,p4pseudo] in A source
-
-Pseudocode blocks in M have light green background.  In A it is light
-gray.  TODO: Easily changeable?  Example: See pseudocode snippet at
-end of Section 6.1.1 "Grammar".
-
-+ grammar blocks, beginning [source,bison] in A source
-
-Grammar snippet text in M has light blue background.  In A it is light
-gray.  TODO: Easily changeable?  Example: See grammar snippet in
-Section 6.1.1 "Grammar".
-
-TODO: Footnotes in M appear at the bottom of the page where the
-footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
-the bottom of the last page of the section where the footnote
-superscript appears, perhaps several pages later.  It would be nice to
-change this if possible.
-
-TODO: Tables look a bit different between A and M.  I like the visual
-style of M a bit better, but do not know how to improve A's PDF output
-here.
