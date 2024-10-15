@@ -29,12 +29,6 @@ as asterisks.  It would be nice to improve this in A.  Example: See
 second bullet list in Section 3.  For third level bullet, see second
 bullet list in Section 6.8.
 
-TODO: Footnotes in M appear at the bottom of the page where the
-footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
-the bottom of the last page of the section where the footnote
-superscript appears, perhaps several pages later.  It would be nice to
-change this if possible.
-
 TODO: Tables look a bit different between A and M.  I like the visual
 style of M a bit better, but do not know how to improve A's PDF output
 here.
@@ -75,6 +69,14 @@ implementation, but as far as I can tell there is no solution
 available at this time:
 
 + https://discuss.asciidoctor.org/widows-and-orphans-poor-typography-in-asciidoctor-pdf-td7531.html
+
+TODO: Footnotes in M appear at the bottom of the page where the
+footnote superscript [1], [2], etc. appears.  Footnotes in A appear at
+the bottom of the last page of the section where the footnote
+superscript appears, perhaps several pages later.  It would be nice to
+change this if possible, but like the widow/orphan line control issue
+mentioned above, this might be difficult given how AsciiDoctor
+generates PDF.
 
 
 # Differences for which the AsciiDoc output seems good enough
