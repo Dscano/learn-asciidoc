@@ -1,5 +1,6 @@
 = P4~16~ Language Specification : The P4 Language Consortium
 :doctype: book
+:revdate: {docdate}
 :revnumber: v1.2.5
 :imagesdir: resources/figs
 :font-size: 10
@@ -2074,9 +2075,9 @@ The types of integer literals are as follows:
 
 * An integer with no type prefix has type `int`.
 * A non-negative integer prefixed with an integer width `W` and the
-  character `w` has type `bit<W>`
+  character `w` has type `bit<W>`.
 * An integer prefixed with an integer width `W` and the character `s`
-  has type `int<W>`
+  has type `int<W>`.
 
 The table below shows several examples of integer literals and their
 types. For additional examples of literals see <<sec-literals>>.
@@ -2598,23 +2599,23 @@ The table below lists all types that may appear as base types in a
 
 | `bool`              | allowed            | allowed
 
-| `enumeration types` | allowed            | error
+| enumeration types   | allowed            | error
 
-| `header types`      | allowed            | error
+| header types        | allowed            | error
 
-| `header stacks`     | allowed            | error
+| header stacks       | allowed            | error
 
-| `header_unions`     | allowed            | error
+| header unions       | allowed            | error
 
-| `struct types`      | allowed            | error
+| struct types        | allowed            | error
 
-| `tuple types`       | allowed            | error
+| tuple types         | allowed            | error
 
-| `list types`       | allowed            | error
+| list types          | allowed            | error
 
-| a `typedef` name | allowed            | allowed footnote:type_allowed[`type B <name>` is allowed for a type name `B` defined via `typedef X B` if `type X <name>` is allowed.]
+| a `typedef` name    | allowed            | allowed footnote:type_allowed[`type B <name>` is allowed for a type name `B` defined via `typedef X B` if `type X <name>` is allowed.]
 
-| a `type` name    | allowed            | allowed
+| a `type` name       | allowed            | allowed
 |===
 
 Rationale: So far, no clear motivation for allowing `typedef` for `void`
@@ -3548,8 +3549,8 @@ to bit-strings of the same width:
 
 Bit-strings also support the following operations:
 
-* Logical shift left and right by a (which need not be
-  a compile-time known value) non-negative integer value, denoted by `<<` and `>>` respectively.
+* Logical shift left and right by a non-negative integer value (which need not be
+  a compile-time known value), denoted by `<<` and `>>` respectively.
   In a shift, the left operand is unsigned, and right operand must be either an
   expression of type `bit<S>` or a non-negative integer value that is known at
   compile time.  The result has the same type as the left operand.
@@ -7319,7 +7320,8 @@ because of the `@noWarn("duplicate_priorities")` annotation.
 ===== Size
 
 The `size` is an optional property of a table.  When present, its
-value must always be a compile-time known value that is an integer. The `size` property is specified in units of number of table entries.
+value must always be a compile-time known value that is an integer. The `size` property
+is specified in units of number of table entries.
 
 If a table is specified with a `size` property of value `N`, it is
 recommended that a compiler should choose a data plane implementation
@@ -8662,7 +8664,6 @@ a key and a value `expression`. Note the syntax for `expression` is rich, see
 
 All `expression`s within a `structuredAnnotationBody` must be compile-time known
 values with a result type that is either: `string`, `int`, or `bool`.
-
 In particular, structured `expression`s (e.g. an `expression` containing an
 `expressionList`, a `kvList`, etc.) are not allowed. Note that P4Runtime
 information (P4Info) may stipulate additional restrictions. For example, an
@@ -8989,9 +8990,9 @@ The P4 compiler should provide:
 
 === Summary of changes made in version 1.2.5, released October 11, 2024
 
-* Improved type nesting rules (Section <<#sec-type-nesting>>).
+* Improved type nesting rules (<<#sec-type-nesting>>).
 * Clarified that directionless extern parameters are passed by reference.
-* Introduced distinction between local compile-time known and compile-time known values (Section <<#sec-compile-time-known>>).
+* Introduced distinction between local compile-time known and compile-time known values (<<#sec-compile-time-known>>).
 
 === Summary of changes made in version 1.2.4,released May 15, 2023
 
