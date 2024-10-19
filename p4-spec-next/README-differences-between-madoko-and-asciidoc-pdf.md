@@ -14,9 +14,6 @@ Abbreviations:
 
 # Differences for which it would be nice to improve the AsciiDoc output
 
-TODO: M has date of revision on title page, but A does not.  Would be
-nice to add this to A.
-
 TODO: In M, cross-references to a top-level section are "Section
 <number>".  In A they are "Chapter <number>".  In A they are "Section
 <number.number>" if it is a second level or lower level section.
@@ -37,19 +34,19 @@ Color backgrounds of code blocks:
 
 + P4 code blocks, beginning [source,p4] in A source
 
-P4 code blocks in M have yellow background.  In A it is a light gray.
-TODO: acceptable?  Easily changeable?
+P4 code blocks in M have yellow background.  In A it is black.  TODO:
+acceptable?  Easily changeable?
 
 + P4 pseudocode blocks, beginning [source,p4pseudo] in A source
 
-Pseudocode blocks in M have light green background.  In A it is light
-gray.  TODO: Easily changeable?  Example: See pseudocode snippet at
-end of Section 6.1.1 "Grammar".
+Pseudocode blocks in M have light green background.  In A it is black.
+TODO: Easily changeable?  Example: See pseudocode snippet at end of
+Section 6.1.1 "Grammar".
 
 + grammar blocks, beginning [source,bison] in A source
 
-Grammar snippet text in M has light blue background.  In A it is light
-gray.  TODO: Easily changeable?  Example: See grammar snippet in
+Grammar snippet text in M has light blue background.  In A it is
+black.  TODO: Easily changeable?  Example: See grammar snippet in
 Section 6.1.1 "Grammar".
 
 
@@ -82,6 +79,9 @@ generates PDF.
 # Differences for which the AsciiDoc output seems good enough
 
 Logo on title page of A looks pretty nice.
+
+Order of elements on title page is formatted differently, but both M
+and A contain the title, version number, and date.
 
 M has abstract on first page.  A has abstract after the table of
 contents, just before the first section of the contents.  Seems like a
