@@ -147,7 +147,6 @@ rvm install ruby-3.3.1
 rvm use 3.3.1
 gem install asciidoctor
 gem install asciidoctor-pdf
-gem install asciidoctor-bibtex
 # Additional installations to enable installing
 # asciidoctor-mathematical
 sudo apt-get --yes install cmake flex libglib2.0-dev libcairo2-dev libpango1.0-dev libxml2-dev libwebp-dev libzstd-dev ${OS_SPECIFIC_PACKAGES}
