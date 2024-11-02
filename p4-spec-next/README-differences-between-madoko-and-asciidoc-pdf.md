@@ -19,13 +19,6 @@ TODO: In M, cross-references to a top-level section are "Section
 <number.number>" if it is a second level or lower level section.
 Acceptable?
 
-TODO: Second and third level bullet symbols in bullet lists of A
-appear as rectangular black-lined boxes with white interior in PDF
-output.  In M, second level bullets appear as dashes, and third level
-as asterisks.  It would be nice to improve this in A.  Example: See
-second bullet list in Section 3.  For third level bullet, see second
-bullet list in Section 6.8.
-
 TODO: Tables look a bit different between A and M.  I like the visual
 style of M a bit better, but do not know how to improve A's PDF output
 here.
@@ -74,6 +67,12 @@ superscript appears, perhaps several pages later.  It would be nice to
 change this if possible, but like the widow/orphan line control issue
 mentioned above, this might be difficult given how AsciiDoctor
 generates PDF.
+
+Note: Andy changed the AsciiDoc source so that at least for the three
+footnotes that were inside of a table, we just manually used text like
+[1], and put a regular paragraph headed [1] immediately after the
+table.  This causes that text to show up immediately after the table
+in the generated PDF output.
 
 
 # Differences for which the AsciiDoc output seems good enough
@@ -151,3 +150,12 @@ Paragraphs in A are separated by vertical whitespace, and have no
 indent on the first line of text.  No vertical whitespace between
 paragraphs in M, and the first line of each paragraph is indented.
 Both seem quite readable to me.
+
+Andy found a way to force all levels of unordered list bullet
+characters to be the same as the top level bullet symbol in the
+generated PDF output from AsciiDoc.  This is better than it was
+previously, where 2nd and 3rd level nested bullet items used a code
+point that the font did not have defined, so it showed up as an empty
+black rectangle around a white interior.  Examples: See second bullet
+list in Section 3.  For third level bullet, see second bullet list in
+Section 6.8.
