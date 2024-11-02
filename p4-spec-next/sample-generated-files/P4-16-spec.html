@@ -656,7 +656,8 @@ h2 { color: #030303; border-bottom: 1px solid #dddddd; }
 <div id="header">
 <h1>P4<sub>16</sub> Language Specification : The P4 Language Consortium</h1>
 <div class="details">
-<span id="revnumber">version v1.2.5</span>
+<span id="revnumber">version v1.2.5,</span>
+<span id="revdate">2024-11-02</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Contents</div>
@@ -4516,7 +4517,7 @@ arbitrary-precision integer, without a width specified.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>enumeration types</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">allowed <sup class="footnote" id="_footnote_enum_header">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allowed [1]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">error</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allowed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allowed</p></td>
@@ -4548,7 +4549,7 @@ arbitrary-precision integer, without a width specified.</p>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>struct types</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">allowed <sup class="footnote" id="_footnote_struct_header">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allowed [2]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">error</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allowed</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allowed</p></td>
@@ -4572,6 +4573,15 @@ arbitrary-precision integer, without a width specified.</p>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>[1] An <code>enum</code> type used as a field in a <code>header</code> must specify a
+underlying type and representation for <code>enum</code> elements.</p>
+</div>
+<div class="paragraph">
+<p>[2] A <code>struct</code> or nested <code>struct</code> type that has the same properties,
+used as a field in a <code>header</code> must contain only <code>bit&lt;W&gt;</code>, <code>int&lt;W&gt;</code>, a
+serializable <code>enum</code>, or a <code>bool</code>.</p>
+</div>
 <div class="paragraph">
 <p>Rationale: <code>int</code> does not have precise storage requirements,
 unlike <code>bit&lt;&gt;</code> or <code>int&lt;&gt;</code> types. <code>match_kind</code>
@@ -4688,7 +4698,7 @@ field in a header.</p>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">a <code>typedef</code> name</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">allowed</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">allowed <sup class="footnote" id="_footnote_type_allowed">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">allowed [3]</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">a <code>type</code> name</p></td>
@@ -4697,6 +4707,10 @@ field in a header.</p>
 </tr>
 </tbody>
 </table>
+<div class="paragraph">
+<p>[3] <code>type B &lt;name&gt;</code> is allowed for a type name <code>B</code> defined via
+<code>typedef X B</code> if <code>type X &lt;name&gt;</code> is allowed.</p>
+</div>
 <div class="paragraph">
 <p>Rationale: So far, no clear motivation for allowing <code>typedef</code> for <code>void</code>
 and <code>match_kind</code> was presented. Therefore, to be on the safe side this
@@ -8951,7 +8965,7 @@ expression).</p>
 <div class="paragraph">
 <p>See "Implementing generalized P4_16 switch statements"
 for possible techniques that one might
-use to implement generalized switch statements.<sup class="footnote" id="_footnote_GeneralizedSwitchStatements">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup></p>
+use to implement generalized switch statements.<sup class="footnote" id="_footnote_GeneralizedSwitchStatements">[<a id="_footnoteref_1" class="footnote" href="#_footnotedef_1" title="View footnote.">1</a>]</sup></p>
 </div>
 </div>
 </div>
@@ -9936,12 +9950,12 @@ value set:</p>
 table. If a value set has a <code>size</code> argument with value <code>N</code>, it is recommended
 that a compiler should choose a data plane implementation that is capable of
 storing <code>N</code> value set entries. See "Size property of P4 tables and parser value
-sets" <sup class="footnote" id="_footnote_P4SizeProperty">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup> for further discussion on the implementation of parser
+sets" <sup class="footnote" id="_footnote_P4SizeProperty">[<a id="_footnoteref_2" class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> for further discussion on the implementation of parser
 value set size.</p>
 </div>
 <div class="paragraph">
 <p>The value set is populated by the control plane by methods specified
-in the P4Runtime specification.<sup class="footnote" id="_footnote_P4RuntimeAPI">[<a id="_footnoteref_6" class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup></p>
+in the P4Runtime specification.<sup class="footnote" id="_footnote_P4RuntimeAPI">[<a id="_footnoteref_3" class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup></p>
 </div>
 </div>
 </div>
@@ -10693,7 +10707,7 @@ multiple prefixes, the longest prefix is always the winner.</p>
 field, in general it is possible to install multiple entries such that
 the same lookup key can match the key of multiple entries installed
 into the table at the same time.  Control plane APIs such as P4Runtime
-API <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup> and TDI <sup class="footnote" id="_footnote_TDI">[<a id="_footnoteref_7" class="footnote" href="#_footnotedef_7" title="View footnote.">7</a>]</sup> require control plane software to
+API <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup> and TDI <sup class="footnote" id="_footnote_TDI">[<a id="_footnoteref_4" class="footnote" href="#_footnotedef_4" title="View footnote.">4</a>]</sup> require control plane software to
 provide a numeric priority with each entry added to such a table.
 This enables the data plane to determine which of several matching
 entries is the "winner", i.e. the one entry whose action is invoked.</p>
@@ -10944,7 +10958,7 @@ a table, only that there is <em>some</em> set of <code>N</code> entries that can
 inserted.  For example, attempts to add some combinations of <code>N</code>
 entries may fail because the compiler selected a hash table with
 <code>O(1)</code> guaranteed search time.  See "Size property of P4 tables and
-parser value sets" <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup> for further discussion on some P4
+parser value sets" <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_2" title="View footnote.">2</a>]</sup> for further discussion on some P4
 table implementations and what they are able to guarantee.</p>
 </div>
 <div class="paragraph">
@@ -11161,7 +11175,7 @@ call:</p>
 <div class="paragraph">
 <p>Note that the second code example above is given in order to specify
 the behavior of the first one.  An implementation is free to choose
-any technique that achieves this behavior.<sup class="footnote" id="_footnote_MostP4ProgramsDontDoThis">[<a id="_footnoteref_8" class="footnote" href="#_footnotedef_8" title="View footnote.">8</a>]</sup></p>
+any technique that achieves this behavior.<sup class="footnote" id="_footnote_MostP4ProgramsDontDoThis">[<a id="_footnoteref_5" class="footnote" href="#_footnotedef_5" title="View footnote.">5</a>]</sup></p>
 </div>
 </div>
 </div>
@@ -12640,7 +12654,7 @@ literals, and symbols, but excluding parentheses.</p>
 <div class="paragraph">
 <p>Unstructured annotations may impose additional structure on their
 bodies, and are not confined to the P4 language. For example, the
-P4Runtime specification <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_6" title="View footnote.">6</a>]</sup> defines a <code>@pkginfo</code> annotation
+P4Runtime specification <sup class="footnoteref">[<a class="footnote" href="#_footnotedef_3" title="View footnote.">3</a>]</sup> defines a <code>@pkginfo</code> annotation
 that expects key-value pairs.</p>
 </div>
 </div>
@@ -15320,34 +15334,25 @@ nonBraceExpression
 <div id="footnotes">
 <hr>
 <div class="footnote" id="_footnotedef_1">
-<a href="#_footnoteref_1">1</a>. an <code>enum</code> type used as a field in a <code>header</code> must specify a underlying type and representation for <code>enum</code> elements.
+<a href="#_footnoteref_1">1</a>. <a href="https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md" class="bare">https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md</a>
 </div>
 <div class="footnote" id="_footnotedef_2">
-<a href="#_footnoteref_2">2</a>. a <code>struct</code> or nested <code>struct</code> type that has the same properties, used as a field in a <code>header</code> must contain only <code>bit&lt;W&gt;</code>, <code>int&lt;W&gt;</code>, a serializable <code>enum</code>, or a <code>bool</code>.
+<a href="#_footnoteref_2">2</a>. <a href="https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/p4-table-and-parser-value-set-sizes.md" class="bare">https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/p4-table-and-parser-value-set-sizes.md</a>
 </div>
 <div class="footnote" id="_footnotedef_3">
-<a href="#_footnoteref_3">3</a>. <code>type B &lt;name&gt;</code> is allowed for a type name <code>B</code> defined via <code>typedef X B</code> if <code>type X &lt;name&gt;</code> is allowed.
+<a href="#_footnoteref_3">3</a>. The P4Runtime API is defined as a Google Protocol Buffer <code>.proto</code> file and an accompanying English specification document here: <a href="https://github.com/p4lang/p4runtime" class="bare">https://github.com/p4lang/p4runtime</a>
 </div>
 <div class="footnote" id="_footnotedef_4">
-<a href="#_footnoteref_4">4</a>. <a href="https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md" class="bare">https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/implementing-generalized-switch-statements.md</a>
+<a href="#_footnoteref_4">4</a>. TDI is the Table Driven Interface.  More information can be found here: <a href="https://github.com/p4lang/tdi" class="bare">https://github.com/p4lang/tdi</a>
 </div>
 <div class="footnote" id="_footnotedef_5">
-<a href="#_footnoteref_5">5</a>. <a href="https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/p4-table-and-parser-value-set-sizes.md" class="bare">https://github.com/p4lang/p4-spec/blob/master/p4-16/spec/docs/p4-table-and-parser-value-set-sizes.md</a>
-</div>
-<div class="footnote" id="_footnotedef_6">
-<a href="#_footnoteref_6">6</a>. The P4Runtime API is defined as a Google Protocol Buffer <code>.proto</code> file and an accompanying English specification document here: <a href="https://github.com/p4lang/p4runtime" class="bare">https://github.com/p4lang/p4runtime</a>
-</div>
-<div class="footnote" id="_footnotedef_7">
-<a href="#_footnoteref_7">7</a>. TDI is the Table Driven Interface.  More information can be found here: <a href="https://github.com/p4lang/tdi" class="bare">https://github.com/p4lang/tdi</a>
-</div>
-<div class="footnote" id="_footnotedef_8">
-<a href="#_footnoteref_8">8</a>. Most existing P4<sub>16</sub> programs today do not use function or method calls in table key expressions, and the order of evaluation of these key expressions makes no difference in the resulting lookup key value. In this overwhelmingly common case, if an implementation chooses to insert extra assignment statements to implement side-effecting key expressions, but does not insert them when there are no side-effecting key expressions, then in typical programs they will almost never be inserted.
+<a href="#_footnoteref_5">5</a>. Most existing P4<sub>16</sub> programs today do not use function or method calls in table key expressions, and the order of evaluation of these key expressions makes no difference in the resulting lookup key value. In this overwhelmingly common case, if an implementation chooses to insert extra assignment statements to implement side-effecting key expressions, but does not insert them when there are no side-effecting key expressions, then in typical programs they will almost never be inserted.
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
 Version v1.2.5<br>
-Last updated 2024-10-14 02:00:51 UTC
+Last updated 2024-11-02 23:03:52 UTC
 </div>
 </div>
 </body>
